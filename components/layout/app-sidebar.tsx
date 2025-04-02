@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   ChevronDown,
   ChevronRight,
@@ -36,6 +36,7 @@ import {
   SidebarInput,
   SidebarGroupLabel,
   SidebarGroupAction,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { useRecentlyUsed } from "@/hooks/use-recently-used"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -65,6 +66,7 @@ const iconMap: Record<string, React.ElementType> = {
 
 export function AppSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const { recentItems, addRecentItem, clearRecentItems } = useRecentlyUsed()
 
@@ -140,6 +142,23 @@ export function AppSidebar() {
     },
   ]
 
+  const handleNavigation = (href: string) => {
+    // Check if the path exists in our navigation items
+    const isValidPath = navItems.some(
+      (item) => 
+        item.href === href || 
+        item.submenu?.some(subitem => subitem.href === href)
+    )
+
+    if (!isValidPath) {
+      // If the path doesn't exist, redirect to the home page
+      router.push("/")
+      return
+    }
+
+    router.push(href)
+  }
+
   // Track navigation and update recently used items
   useEffect(() => {
     // First try to find a submenu item that matches the current path
@@ -197,8 +216,9 @@ export function AppSidebar() {
   return (
     <Sidebar variant="inset">
       <SidebarHeader className="border-b border-border p-4">
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-between">
           <Logo className="w-full" showText={true} />
+          <SidebarTrigger />
         </div>
         <div className="mt-2">
           <SidebarInput
@@ -238,7 +258,10 @@ export function AppSidebar() {
                 return (
                   <SidebarMenuItem key={`recent-${index}`}>
                     <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.title}>
-                      <Link href={item.href}>
+                      <Link href={item.href} onClick={(e) => {
+                        e.preventDefault()
+                        handleNavigation(item.href)
+                      }}>
                         <IconComponent className="h-4 w-4" />
                         <span>{item.title}</span>
                       </Link>
@@ -258,7 +281,10 @@ export function AppSidebar() {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton asChild isActive={item.isActive} tooltip={item.title}>
-                    <Link href={item.href}>
+                    <Link href={item.href} onClick={(e) => {
+                      e.preventDefault()
+                      handleNavigation(item.href)
+                    }}>
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
                     </Link>
@@ -266,7 +292,7 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               </SidebarMenu>
             ) : (
-              <CollapsibleNavItem item={item} />
+              <CollapsibleNavItem item={item} onNavigate={handleNavigation} />
             )}
           </SidebarGroup>
         ))}
@@ -278,7 +304,7 @@ export function AppSidebar() {
   )
 }
 
-function CollapsibleNavItem({ item }: { item: NavItem }) {
+function CollapsibleNavItem({ item, onNavigate }: { item: NavItem; onNavigate: (href: string) => void }) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
 
@@ -290,7 +316,7 @@ function CollapsibleNavItem({ item }: { item: NavItem }) {
     if (shouldBeOpen && !isOpen) {
       setIsOpen(true)
     }
-  }, [pathname]) // Remove item.isActive from dependencies
+  }, [pathname])
 
   return (
     <div className="group/collapsible">
@@ -307,7 +333,10 @@ function CollapsibleNavItem({ item }: { item: NavItem }) {
             {item.submenu.map((subItem, idx) => (
               <SidebarMenuSubItem key={idx}>
                 <SidebarMenuSubButton asChild isActive={pathname === subItem.href}>
-                  <Link href={subItem.href}>
+                  <Link href={subItem.href} onClick={(e) => {
+                    e.preventDefault()
+                    onNavigate(subItem.href)
+                  }}>
                     <subItem.icon className="h-3 w-3" />
                     <span>{subItem.title}</span>
                   </Link>
