@@ -141,21 +141,42 @@ export function AppSidebar() {
 
   // Track navigation and update recently used items
   useEffect(() => {
-    const currentNavItem = navItems.find(
-      (item) => item.isActive || item.submenu?.some((subitem) => subitem.href === pathname),
+    // First try to find a submenu item that matches the current path
+    const parentItem = navItems.find(item => 
+      item.submenu?.some(subitem => subitem.href === pathname)
     )
+    const currentSubmenuItem = parentItem?.submenu?.find(subitem => subitem.href === pathname)
 
-    if (currentNavItem && pathname !== "/") {
-      // Only add if it's not already in recent items
-      const isAlreadyRecent = recentItems.some(item => item.href === currentNavItem.href)
+    if (currentSubmenuItem && parentItem) {
+      // If we found a submenu item, add it to recently used with parent's icon
+      const isAlreadyRecent = recentItems.some(item => item.href === currentSubmenuItem.href)
       if (!isAlreadyRecent) {
-        // Get the icon name from the iconMap
-        const iconName = Object.entries(iconMap).find(([_, component]) => component === currentNavItem.icon)?.[0] || 'Home'
+        // Get the parent's icon name from the iconMap
+        const parentIconName = Object.entries(iconMap).find(([_, component]) => component === parentItem.icon)?.[0] || 'Home'
         addRecentItem({
-          title: currentNavItem.title,
-          href: currentNavItem.href,
-          icon: iconName,
+          title: currentSubmenuItem.title,
+          href: currentSubmenuItem.href,
+          icon: parentIconName, // Use parent's icon instead of ChevronRight
         })
+      }
+    } else {
+      // If no submenu item found, try to find a parent menu item
+      const currentNavItem = navItems.find(
+        (item) => item.isActive || item.href === pathname
+      )
+
+      if (currentNavItem && pathname !== "/") {
+        // Only add if it's not already in recent items
+        const isAlreadyRecent = recentItems.some(item => item.href === currentNavItem.href)
+        if (!isAlreadyRecent) {
+          // Get the icon name from the iconMap
+          const iconName = Object.entries(iconMap).find(([_, component]) => component === currentNavItem.icon)?.[0] || 'Home'
+          addRecentItem({
+            title: currentNavItem.title,
+            href: currentNavItem.href,
+            icon: iconName,
+          })
+        }
       }
     }
   }, [pathname]) // Remove addRecentItem from dependencies
