@@ -20,6 +20,18 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
 import { useSidebar } from "@/components/ui/sidebar"
+import Image from "next/image"
+import "flag-icons/css/flag-icons.min.css"
+
+const countries = [
+  { value: "spain", label: "Spain", code: "es" },
+  { value: "italy", label: "Italy", code: "it" },
+  { value: "antwerp-softs", label: "Antwerp Softs", code: "be" },
+  { value: "antwerp-metal", label: "Antwerp Metal", code: "be" },
+  { value: "united-states", label: "United States", code: "us" },
+  { value: "south-africa", label: "South Africa", code: "za" },
+  { value: "china", label: "China", code: "cn" },
+]
 
 export function TopBar() {
   const router = useRouter()
@@ -53,15 +65,19 @@ export function TopBar() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Select defaultValue="default">
+        <Select defaultValue="spain">
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select workspace" />
+            <SelectValue placeholder="Select country" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="default">Default Workspace</SelectItem>
-            <SelectItem value="marketing">Marketing Team</SelectItem>
-            <SelectItem value="engineering">Engineering Team</SelectItem>
-            <SelectItem value="sales">Sales Department</SelectItem>
+            {countries.map((country) => (
+              <SelectItem key={country.value} value={country.value}>
+                <div className="flex items-center gap-2">
+                  <span className={`fi fi-${country.code} rounded-sm`}></span>
+                  <span>{country.label}</span>
+                </div>
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
 
