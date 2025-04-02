@@ -80,10 +80,6 @@ export function UsersTable({ onEditUser }: UsersTableProps) {
         const user = row.original
         return (
           <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
             <div>
               <div className="font-medium">{user.name}</div>
               <div className="text-sm text-muted-foreground">{user.email}</div>

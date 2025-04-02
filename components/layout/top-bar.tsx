@@ -3,6 +3,8 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useTheme } from "next-themes"
+import { signOut } from "next-auth/react"
+import { useRouter } from "next/navigation"
 import { HelpCircle, Home, LogOut, Moon, Settings, Sun, User } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
@@ -15,15 +17,36 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useToast } from "@/components/ui/use-toast"
 
 export function TopBar() {
   const { setTheme, theme } = useTheme()
   const [isThemeChanging, setIsThemeChanging] = useState(false)
+  const router = useRouter()
+  const { toast } = useToast()
 
   const toggleTheme = () => {
     setIsThemeChanging(true)
     setTheme(theme === "dark" ? "light" : "dark")
     setTimeout(() => setIsThemeChanging(false), 300)
+  }
+
+  const handleLogout = async () => {
+    try {
+      await signOut({ redirect: false })
+      router.push("/auth/signin")
+      router.refresh()
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      })
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to log out. Please try again.",
+      })
+    }
   }
 
   return (
@@ -58,11 +81,10 @@ export function TopBar() {
           </Link>
         </Button>
 
-
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          onClick={toggleTheme}
           className="relative"
         >
           <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -80,12 +102,17 @@ export function TopBar() {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
+            <DropdownMenuItem asChild>
+              <Link href="/session-info" className="flex items-center">
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive focus:text-destructive">
+            <DropdownMenuItem 
+              className="text-destructive focus:text-destructive"
+              onClick={handleLogout}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>
