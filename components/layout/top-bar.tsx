@@ -24,7 +24,7 @@ import Image from "next/image"
 import "flag-icons/css/flag-icons.min.css"
 
 const countries = [
-  { value: "spain", label: "Spain Meltals", code: "es" },
+  { value: "spain", label: "Spain Metals", code: "es" },
   { value: "spain-softs", label: "Spain Softs", code: "es" },
   { value: "netherlands", label: "Netherlands", code: "nl" },
   { value: "italy", label: "Italy", code: "it" },
