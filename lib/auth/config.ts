@@ -58,10 +58,15 @@ export const authConfig: NextAuthOptions = {
       return session
     },
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs
+      // Handle the clean URL without query parameters
+      if (url.includes('?callbackUrl=')) {
+        const cleanUrl = url.split('?')[0]
+        return cleanUrl
+      }
+      
+      // Regular redirect logic
       if (url.startsWith("/")) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url
+      if (new URL(url).origin === baseUrl) return url
       return baseUrl
     },
   },

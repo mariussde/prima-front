@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/use-toast"
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -21,12 +22,14 @@ export function LoginForm() {
     const formData = new FormData(e.currentTarget)
     const username = formData.get("username") as string
     const password = formData.get("password") as string
+    const callbackUrl = searchParams.get("callbackUrl") || "/"
 
     try {
       const result = await signIn("credentials", {
         username,
         password,
         redirect: false,
+        callbackUrl,
       })
 
       if (result?.error) {
@@ -36,7 +39,7 @@ export function LoginForm() {
           description: "Invalid username or password",
         })
       } else {
-        router.push("/")
+        router.push(callbackUrl)
         router.refresh()
       }
     } catch (error) {
