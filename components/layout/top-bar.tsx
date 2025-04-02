@@ -24,10 +24,12 @@ import Image from "next/image"
 import "flag-icons/css/flag-icons.min.css"
 
 const countries = [
-  { value: "spain", label: "Spain", code: "es" },
+  { value: "spain", label: "Spain Meltals", code: "es" },
+  { value: "spain-softs", label: "Spain Softs", code: "es" },
+  { value: "netherlands", label: "Netherlands", code: "nl" },
   { value: "italy", label: "Italy", code: "it" },
   { value: "antwerp-softs", label: "Antwerp Softs", code: "be" },
-  { value: "antwerp-metal", label: "Antwerp Metal", code: "be" },
+  { value: "antwerp-metal", label: "Antwerp Metals", code: "be" },
   { value: "united-states", label: "United States", code: "us" },
   { value: "south-africa", label: "South Africa", code: "za" },
   { value: "china", label: "China", code: "cn" },
