@@ -31,8 +31,10 @@ const countries = [
   { value: "antwerp-softs", label: "Antwerp Softs", code: "be" },
   { value: "antwerp-metal", label: "Antwerp Metals", code: "be" },
   { value: "united-states", label: "United States", code: "us" },
+  { value: "canada", label: "Canada", code: "ca" },
   { value: "south-africa", label: "South Africa", code: "za" },
   { value: "china", label: "China", code: "cn" },
+  { value: "singapur", label: "Singapur", code: "sg" },
 ]
 
 export function TopBar() {
