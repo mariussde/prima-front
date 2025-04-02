@@ -218,7 +218,6 @@ export function AppSidebar() {
       <SidebarHeader className="border-b border-border p-4">
         <div className="flex items-center justify-between">
           <Logo className="w-full" showText={true} />
-          <SidebarTrigger />
         </div>
         <div className="mt-2">
           <SidebarInput
