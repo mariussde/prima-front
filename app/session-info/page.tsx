@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
 
-
 export default function SessionInfoPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
@@ -40,6 +39,12 @@ export default function SessionInfoPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // Format JSON to respect container width and wrap long lines
+  const formatJsonWithWordBreak = (obj: any) => {
+    if (!obj) return ''
+    return JSON.stringify(obj, null, 2)
   }
 
   if (status === 'loading' || isLoading) {
@@ -85,19 +90,19 @@ export default function SessionInfoPage() {
             <div className="space-y-4">
               <div>
                 <h3 className="text-lg font-semibold mb-2">User Information</h3>
-                <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-auto text-gray-900 dark:text-gray-100">
-                  {JSON.stringify(sessionInfo?.user, null, 2)}
+                <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-gray-900 dark:text-gray-100 whitespace-pre-wrap break-all">
+                  {formatJsonWithWordBreak(sessionInfo?.user)}
                 </pre>
               </div>
               <div>
                 <h3 className="text-lg font-semibold mb-2">Token Information</h3>
-                <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-auto text-gray-900 dark:text-gray-100">
-                  {JSON.stringify({
+                <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-gray-900 dark:text-gray-100 whitespace-pre-wrap break-all">
+                  {formatJsonWithWordBreak({
                     accessToken: sessionInfo?.accessToken,
                     refreshToken: sessionInfo?.refreshToken,
                     expiresIn: sessionInfo?.expiresIn,
                     expires: sessionInfo?.expires,
-                  }, null, 2)}
+                  })}
                 </pre>
               </div>
             </div>
@@ -106,4 +111,4 @@ export default function SessionInfoPage() {
       </main>
     </div>
   )
-} 
+}
