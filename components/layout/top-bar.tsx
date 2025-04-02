@@ -2,12 +2,13 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useTheme } from "next-themes"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { HelpCircle, Home, LogOut, Moon, Settings, Sun, User } from "lucide-react"
+import { HelpCircle, Home, LogOut, Settings, User } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/ui/logo"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,22 +21,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/components/ui/use-toast"
 
 export function TopBar() {
-  const { setTheme, theme } = useTheme()
-  const [isThemeChanging, setIsThemeChanging] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
 
-  const toggleTheme = () => {
-    setIsThemeChanging(true)
-    setTheme(theme === "dark" ? "light" : "dark")
-    setTimeout(() => setIsThemeChanging(false), 300)
-  }
-
   const handleLogout = async () => {
     try {
-      await signOut({ redirect: false })
-      router.push("/auth/signin")
-      router.refresh()
+      await signOut({ 
+        redirect: true,
+        callbackUrl: '/login'
+      })
       toast({
         title: "Logged out",
         description: "You have been successfully logged out.",
@@ -53,12 +47,7 @@ export function TopBar() {
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
       <div className="flex items-center gap-2">
         <SidebarTrigger />
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-green-500 text-white">
-            <span className="font-bold">P</span>
-          </div>
-          <span className="hidden font-bold md:inline-block">Prima</span>
-        </Link>
+        <Logo />
       </div>
 
       <div className="flex items-center gap-4">
@@ -81,16 +70,7 @@ export function TopBar() {
           </Link>
         </Button>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleTheme}
-          className="relative"
-        >
-          <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
-        </Button>
+        <ThemeToggle />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -110,7 +90,7 @@ export function TopBar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
-              className="text-destructive focus:text-destructive"
+              className="text-red-600 dark:text-red-500 focus:text-red-600 dark:focus:text-red-500 font-semibold hover:font-semibold focus:font-semibold data-[highlighted]:font-semibold"
               onClick={handleLogout}
             >
               <LogOut className="mr-2 h-4 w-4" />

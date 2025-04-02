@@ -11,8 +11,8 @@ import { Breadcrumbs } from "@/components/layout/breadcrumbs"
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
-  // Don't show the layout on auth pages
-  if (pathname.startsWith("/auth")) {
+  // Don't show the layout on login page
+  if (pathname === "/login") {
     return <>{children}</>
   }
 

@@ -4,6 +4,9 @@ export default withAuth({
   callbacks: {
     authorized: ({ token }) => !!token,
   },
+  pages: {
+    signIn: "/login",
+  },
 })
 
 export const config = {
@@ -15,8 +18,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
-     * - auth/signin (signin page)
+     * - login (login page)
      */
-    "/((?!api/auth|_next/static|_next/image|favicon.ico|public|auth/signin).*)",
+    "/((?!api/auth|_next/static|_next/image|favicon.ico|public|login).*)",
   ],
 } 

@@ -17,7 +17,7 @@ export default function SessionInfoPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/auth/signin')
+      router.push('/login')
       return
     }
 
@@ -85,13 +85,13 @@ export default function SessionInfoPage() {
             <div className="space-y-4">
               <div>
                 <h3 className="text-lg font-semibold mb-2">User Information</h3>
-                <pre className="bg-gray-100 p-4 rounded-lg overflow-auto">
+                <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-auto text-gray-900 dark:text-gray-100">
                   {JSON.stringify(sessionInfo?.user, null, 2)}
                 </pre>
               </div>
               <div>
                 <h3 className="text-lg font-semibold mb-2">Token Information</h3>
-                <pre className="bg-gray-100 p-4 rounded-lg overflow-auto">
+                <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-auto text-gray-900 dark:text-gray-100">
                   {JSON.stringify({
                     accessToken: sessionInfo?.accessToken,
                     refreshToken: sessionInfo?.refreshToken,
