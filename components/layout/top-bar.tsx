@@ -19,10 +19,12 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
+import { useSidebar } from "@/components/ui/sidebar"
 
 export function TopBar() {
   const router = useRouter()
   const { toast } = useToast()
+  const { state } = useSidebar()
 
   const handleLogout = async () => {
     try {
@@ -47,7 +49,7 @@ export function TopBar() {
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
       <div className="flex items-center gap-2">
         <SidebarTrigger />
-        <Logo />
+        {state === "collapsed" && <Logo />}
       </div>
 
       <div className="flex items-center gap-4">

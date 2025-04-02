@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useRecentlyUsed } from "@/hooks/use-recently-used"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Logo } from "@/components/ui/logo"
 
 type NavItem = {
   title: string
@@ -197,7 +198,7 @@ export function AppSidebar() {
     <Sidebar variant="inset">
       <SidebarHeader className="border-b border-border p-4">
         <div className="flex items-center justify-center">
-          <span className="text-xl font-bold">Prima</span>
+          <Logo className="w-full" showText={true} />
         </div>
         <div className="mt-2">
           <SidebarInput
