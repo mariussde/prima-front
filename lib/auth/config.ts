@@ -20,14 +20,15 @@ export const authConfig: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) {
-          return null
+          throw new Error('Please provide both username and password')
         }
 
         try {
           const data = await getKeycloakToken(credentials.username, credentials.password)
 
           if (!data || data.error) {
-            throw new Error(data.error_description || 'Authentication failed')
+            console.log('Error from getKeycloakToken:', data?.error_description || data?.error);
+            throw new Error(data.error_description || data.error || 'Invalid username or password')
           }
 
           return {
@@ -35,11 +36,14 @@ export const authConfig: NextAuthOptions = {
             name: credentials.username,
             email: credentials.username,
             accessToken: data.access_token,
-            refreshToken: data.refresh_token
-          }
+            refreshToken: data.refresh_token,
+          };
         } catch (error) {
-          console.error('Auth error:', error)
-          return null
+          if (error instanceof Error) {
+            // Pass the error message directly to NextAuth
+            return Promise.reject(new Error(error.message))
+          }
+          return Promise.reject(new Error('Authentication failed'))
         }
       }
     })
@@ -58,10 +62,10 @@ export const authConfig: NextAuthOptions = {
       return session
     },
     async redirect({ url, baseUrl }) {
-      // Handle the clean URL without query parameters
-      if (url.includes('?callbackUrl=')) {
-        const cleanUrl = url.split('?')[0]
-        return cleanUrl
+      // Handle the clean URL without query parameters, only when redirecting from the sign-in page
+      if (url.startsWith("/login") && url.includes('?callbackUrl=')) {
+        const cleanUrl = url.split('?')[0];
+        return cleanUrl;
       }
       
       // Regular redirect logic
