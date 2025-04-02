@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth/next"
 import { NextResponse } from "next/server"
-import { authOptions } from "../auth/[...nextauth]/route"
+import { authConfig } from "@/lib/auth/config"
 
 export async function GET() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authConfig)
 
   if (!session) {
     return new NextResponse(
@@ -16,7 +16,6 @@ export async function GET() {
     user: session.user,
     accessToken: session.accessToken,
     refreshToken: session.refreshToken,
-    expiresIn: session.expiresIn,
     expires: session.expires,
   })
 } 
