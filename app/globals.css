@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 0 0% 0%; /* Changed to black */
+    --primary-foreground: 0 0% 100%; /* White text on black background */
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 0 0% 0%; /* Changed to match primary */
+    --radius: 0.5rem;
+
+    /* Sidebar specific variables */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 0 0% 0%; /* Changed to match primary */
+  }
+
+  .dark {
+    --background: 0 0% 9%; /* Changed from 222.2 84% 4.9% (blue-black) to neutral grey */
+    --foreground: 0 0% 98%;
+    --card: 0 0% 9%; /* Changed from 222.2 84% 4.9% to match background */
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 9%; /* Changed from 222.2 84% 4.9% to match background */
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 100%; /* White */
+    --primary-foreground: 0 0% 0%; /* Black text on white background */
+    --secondary: 0 0% 15%; /* Changed from 217.2 32.6% 17.5% (blueish) to neutral grey */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%; /* Changed from 217.2 32.6% 17.5% to neutral grey */
+    --muted-foreground: 0 0% 65%; /* Changed from 215 20.2% 65.1% to neutral grey */
+    --accent: 0 0% 15%; /* Changed from 217.2 32.6% 17.5% to neutral grey */
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 20%; /* Changed from 217.2 32.6% 17.5% to neutral grey */
+    --input: 0 0% 20%; /* Changed from 217.2 32.6% 17.5% to neutral grey */
+    --ring: 0 0% 100%; /* White */
+
+    /* Sidebar specific variables */
+    --sidebar-background: 0 0% 12%; /* Changed from 240 5.9% 10% to neutral grey */
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-accent: 0 0% 18%; /* Changed from 240 3.7% 15.9% to neutral grey */
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 20%; /* Changed from 240 3.7% 15.9% to neutral grey */
+    --sidebar-ring: 0 0% 100%; /* White */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
