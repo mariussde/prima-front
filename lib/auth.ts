@@ -1,7 +1,11 @@
 import NextAuth from "next-auth";
-import KeycloakProvider from "next-auth/providers/keycloak";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
+import https from "https";
+
+// Disable SSL verification completely
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 declare module "next-auth" {
   interface Session {
@@ -17,21 +21,75 @@ declare module "next-auth/jwt" {
 
 export const authOptions = {
   providers: [
-    KeycloakProvider({
-      clientId: process.env.KEYCLOAK_ID!,
-      clientSecret: process.env.KEYCLOAK_SECRET!,
-      issuer: process.env.KEYCLOAK_ISSUER!,
-      authorization: {
-        params: {
-          grant_type: "password",
-        },
+    CredentialsProvider({
+      name: "Keycloak",
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.username || !credentials?.password) {
+          throw new Error("Missing credentials");
+        }
+
+        try {
+          const tokenUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token`;
+          const tokenParams = new URLSearchParams({
+            grant_type: "password",
+            client_id: process.env.KEYCLOAK_ID!,
+            client_secret: process.env.KEYCLOAK_SECRET!,
+            username: credentials.username,
+            password: credentials.password,
+          });
+
+          const tokenResponse = await fetch(tokenUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: tokenParams,
+          });
+
+          if (!tokenResponse.ok) {
+            const error = await tokenResponse.text();
+            console.error("Keycloak error:", error);
+            throw new Error("Invalid credentials");
+          }
+
+          const tokenData = await tokenResponse.json();
+          
+          // Fetch user info
+          const userInfoUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/userinfo`;
+          const userResponse = await fetch(userInfoUrl, {
+            headers: {
+              Authorization: `Bearer ${tokenData.access_token}`,
+            },
+          });
+
+          if (!userResponse.ok) {
+            throw new Error("Failed to fetch user info");
+          }
+
+          const userInfo = await userResponse.json();
+
+          return {
+            id: userInfo.sub,
+            name: userInfo.name || userInfo.preferred_username,
+            email: userInfo.email,
+            accessToken: tokenData.access_token,
+          };
+        } catch (error) {
+          console.error("Authentication error:", error);
+          throw error;
+        }
       },
     }),
   ],
+  debug: process.env.NODE_ENV === "development",
   callbacks: {
-    async jwt({ token, account }: { token: JWT; account: any }) {
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ token, user }: { token: JWT; user: any }) {
+      if (user) {
+        token.accessToken = user.accessToken;
       }
       return token;
     },

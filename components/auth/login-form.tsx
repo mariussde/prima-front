@@ -19,21 +19,26 @@ export function LoginForm() {
     const password = formData.get("password") as string;
 
     try {
-      const result = await signIn("keycloak", {
+      const result = await signIn("credentials", {
         username,
         password,
         redirect: false,
       });
 
+      console.log("Sign in result:", result);
+
       if (result?.error) {
-        setError("Invalid credentials");
+        setError(result.error);
         return;
       }
 
-      router.push("/");
-      router.refresh();
+      if (result?.ok) {
+        router.push("/");
+        router.refresh();
+      }
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      console.error("Sign in error:", error);
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
