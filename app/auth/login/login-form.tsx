@@ -36,8 +36,15 @@ export function LoginForm() {
           description: result.error || "Invalid username or password",
         })
         setIsLoading(false)
+      } else if (!result?.ok && !result?.error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Invalid username or password",
+        })
+        setIsLoading(false)
       } else if (result?.ok) {
-        console.log("Login successful, result:", result); // Add log
+        console.log("Login successful, result:", result);
         // Instead of immediately redirecting, wait a moment to ensure
         // the session is fully established in the browser
         setTimeout(() => {
