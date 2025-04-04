@@ -37,11 +37,13 @@ export function LoginForm() {
         })
         setIsLoading(false)
       } else if (result?.ok) {
+        console.log("Login successful, result:", result); // Add log
         // Instead of immediately redirecting, wait a moment to ensure
         // the session is fully established in the browser
         setTimeout(() => {
+          console.log("Redirecting to /"); // Add log
           router.push("/")
-        }, 300)
+        }, 1000)
       }
     } catch (error) {
       toast({
