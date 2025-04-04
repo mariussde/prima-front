@@ -5,17 +5,45 @@ import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { GenericTable } from "@/components/ui/generic-table"
 
-// Define the type for carrier data
 export interface Carrier {
-  carID: string
-  carDsc: string
-  // Add other fields as needed based on your API response
+  ADDRL1: string
+  ADDRL2: string
+  CARDSC: string
+  CARID: string
+  CHGDAT: string
+  CHGTIM: string
+  CHGUSR: string
+  CNTYCOD: string
+  COMPID: string
+  CONNME: string
+  CRTDAT: string
+  CRTTIM: string
+  CRTUSR: string
+  City: string
+  Fax: string
+  Phone: string
+  RowNum: number
+  STAID: string
+  WebSite: string
+  ZIPCODE: string
+  eMail: string
 }
 
-// Define the columns for the carrier table
+interface CarrierTableProps {
+  data: Carrier[]
+  pagination?: {
+    currentPage: number
+    pageSize: number
+    totalPages: number
+    totalRecords: number
+    onPageChange: (page: number) => void
+  }
+  onRowClick?: (carrier: Carrier) => void
+}
+
 const columns: ColumnDef<Carrier>[] = [
   {
-    accessorKey: "carID",
+    accessorKey: "CARID",
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -26,7 +54,7 @@ const columns: ColumnDef<Carrier>[] = [
     },
   },
   {
-    accessorKey: "carDsc",
+    accessorKey: "CARDSC",
     header: ({ column }) => {
       return (
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -36,21 +64,49 @@ const columns: ColumnDef<Carrier>[] = [
       )
     },
   },
+  {
+    accessorKey: "Phone",
+    header: "Phone",
+  },
+  {
+    accessorKey: "eMail",
+    header: "Email",
+  },
+  {
+    accessorKey: "City",
+    header: "City",
+  },
+  {
+    accessorKey: "CHGUSR",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Last Modified By
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  },
+  {
+    accessorKey: "CHGDAT",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Last Modified Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+  },
 ]
 
-interface CarrierTableProps {
-  data: Carrier[]
-  onRowClick?: (carrier: Carrier) => void
-  className?: string
-}
-
-export function CarrierTable({ data, onRowClick, className }: CarrierTableProps) {
+export function CarrierTable({ data, pagination, onRowClick }: CarrierTableProps) {
   return (
     <GenericTable
       data={data}
       columns={columns}
+      pagination={pagination}
       onRowClick={onRowClick}
-      className={className}
     />
   )
 } 

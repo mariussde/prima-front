@@ -7,10 +7,26 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { CarrierTable, Carrier } from '@/components/carrier/carrier-table'
 
+interface CarrierResponse {
+  data: Carrier[]
+  pagination: {
+    currentPage: number
+    pageSize: number
+    totalPages: number
+    totalRecords: number
+  }
+}
+
 export default function SalesReportsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [carrierData, setCarrierData] = useState<Carrier[]>([])
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    pageSize: 100,
+    totalPages: 1,
+    totalRecords: 0,
+  })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -25,11 +41,11 @@ export default function SalesReportsPage() {
     }
   }, [status, router])
 
-  const fetchCarrierData = async () => {
+  const fetchCarrierData = async (page: number = 1) => {
     try {
       console.log('Fetching carrier data from our API...')
       
-      const response = await fetch('/api/carrier')
+      const response = await fetch(`/api/carrier?page=${page}`)
       console.log('Response Status:', response.status)
       console.log('Response Headers:', response.headers)
 
@@ -39,15 +55,20 @@ export default function SalesReportsPage() {
         throw new Error(`Failed to fetch carrier data: ${errorText}`)
       }
 
-      const data = await response.json()
+      const data: CarrierResponse = await response.json()
       console.log('Carrier Data:', data)
-      setCarrierData(data)
+      setCarrierData(data.data)
+      setPagination(data.pagination)
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to load carrier data')
       console.error('Error fetching carrier data:', error)
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handlePageChange = (page: number) => {
+    fetchCarrierData(page)
   }
 
   const handleRowClick = (carrier: Carrier) => {
@@ -76,7 +97,7 @@ export default function SalesReportsPage() {
           <CardContent>
             <p className="text-gray-600">{error}</p>
             <button
-              onClick={fetchCarrierData}
+              onClick={() => fetchCarrierData()}
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
               Retry
@@ -97,6 +118,10 @@ export default function SalesReportsPage() {
           <CardContent>
             <CarrierTable
               data={carrierData}
+              pagination={{
+                ...pagination,
+                onPageChange: handlePageChange,
+              }}
               onRowClick={handleRowClick}
             />
           </CardContent>

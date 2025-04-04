@@ -20,22 +20,25 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 interface GenericTableProps<TData> {
   data: TData[]
   columns: ColumnDef<TData>[]
-  pageSize?: number
+  pagination?: {
+    currentPage: number
+    pageSize: number
+    totalPages: number
+    totalRecords: number
+    onPageChange: (page: number) => void
+  }
   onRowClick?: (row: TData) => void
-  className?: string
 }
 
 export function GenericTable<TData>({
   data,
   columns,
-  pageSize = 10,
+  pagination,
   onRowClick,
-  className = "",
 }: GenericTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
     data,
@@ -47,41 +50,43 @@ export function GenericTable<TData>({
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection,
     },
   })
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className="space-y-4">
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                  </TableHead>
-                ))}
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  )
+                })}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
+                <TableRow 
+                  key={row.id} 
                   data-state={row.getIsSelected() && "selected"}
-                  className={onRowClick ? "cursor-pointer hover:bg-muted/50" : ""}
                   onClick={() => onRowClick?.(row.original)}
+                  className={onRowClick ? "cursor-pointer hover:bg-muted/50" : ""}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
@@ -95,24 +100,33 @@ export function GenericTable<TData>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
-          Showing {table.getFilteredRowModel().rows.length} of {data.length} results
+      {pagination && (
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            Showing {pagination.currentPage * pagination.pageSize - pagination.pageSize + 1} to{" "}
+            {Math.min(pagination.currentPage * pagination.pageSize, pagination.totalRecords)} of{" "}
+            {pagination.totalRecords} entries
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => pagination.onPageChange(pagination.currentPage - 1)}
+              disabled={pagination.currentPage === 1}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => pagination.onPageChange(pagination.currentPage + 1)}
+              disabled={pagination.currentPage === pagination.totalPages}
+            >
+              Next
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-            Next
-          </Button>
-        </div>
-      </div>
+      )}
     </div>
   )
 } 
