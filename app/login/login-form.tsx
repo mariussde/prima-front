@@ -10,15 +10,15 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 
 export function LoginForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (isLoading) return; // Prevent double submission
+    if (isLoading) return
     setIsLoading(true)
     setErrorMessage(null)
 
@@ -35,15 +35,31 @@ export function LoginForm() {
         callbackUrl,
       })
 
-      if (result?.error) {
+      if (!result) {
+        throw new Error("No response from authentication server")
+      }
+
+      if (result.error) {
+        // Handle specific Keycloak error messages
+        let errorMessage = result.error
+        if (result.error.includes("Invalid credentials")) {
+          errorMessage = "Invalid username or password"
+        } else if (result.error.includes("Failed to connect")) {
+          errorMessage = "Unable to connect to authentication server. Please try again later."
+        }
+
         toast({
           variant: "destructive",
           title: "Authentication Error",
-          description: result.error,
+          description: errorMessage,
         })
-        setErrorMessage(result.error)
-      } else if (result?.ok) {
-        router.push(callbackUrl)
+        setErrorMessage(errorMessage)
+        return
+      }
+
+      if (result.ok) {
+        // Ensure we have a valid session before redirecting
+        await router.push(callbackUrl)
         router.refresh()
       }
     } catch (error) {
@@ -66,7 +82,7 @@ export function LoginForm() {
         <CardTitle>Welcome to Prima</CardTitle>
         <CardDescription>Sign in to your account to continue</CardDescription>
         {errorMessage && (
-          <p className="text-red-500 text-sm">{errorMessage}</p>
+          <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
         )}
       </CardHeader>
       <CardContent>
@@ -80,6 +96,7 @@ export function LoginForm() {
               required
               disabled={isLoading}
               placeholder="Enter your username"
+              autoComplete="username"
             />
           </div>
           <div className="space-y-2">
@@ -91,6 +108,7 @@ export function LoginForm() {
               required
               disabled={isLoading}
               placeholder="Enter your password"
+              autoComplete="current-password"
             />
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
