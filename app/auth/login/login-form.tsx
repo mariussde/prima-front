@@ -23,6 +23,7 @@ export function LoginForm() {
     const password = formData.get("password") as string
 
     try {
+      console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
       const result = await signIn("credentials", {
         username,
         password,
