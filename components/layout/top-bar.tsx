@@ -34,7 +34,7 @@ const countries = [
   { value: "canada", label: "Canada", code: "ca" },
   { value: "south-africa", label: "South Africa", code: "za" },
   { value: "china", label: "China", code: "cn" },
-  { value: "singapur", label: "Singapur", code: "sg" },
+  { value: "singapore", label: "Singapore", code: "sg" },
 ]
 
 export function TopBar() {

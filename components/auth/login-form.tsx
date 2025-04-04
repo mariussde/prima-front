@@ -1,93 +1,121 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 
 export function LoginForm() {
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isLoading) return;
     setIsLoading(true);
-    setError(null);
+    setErrorMessage(null);
 
     const formData = new FormData(e.currentTarget);
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
 
     try {
       const result = await signIn("credentials", {
         username,
         password,
         redirect: false,
+        callbackUrl,
       });
 
-      console.log("Sign in result:", result);
+      if (!result) {
+        throw new Error("No response from authentication server");
+      }
 
-      if (result?.error) {
-        setError(result.error);
+      if (result.error) {
+        // Handle specific Keycloak error messages
+        let errorMessage = result.error;
+        if (result.error.includes("Invalid credentials")) {
+          errorMessage = "Invalid username or password";
+        } else if (result.error.includes("Failed to connect")) {
+          errorMessage = "Unable to connect to authentication server. Please try again later.";
+        }
+
+        toast({
+          variant: "destructive",
+          title: "Authentication Error",
+          description: errorMessage,
+        });
+        setErrorMessage(errorMessage);
         return;
       }
 
-      if (result?.ok) {
-        router.push("/");
+      if (result.ok) {
+        // Ensure we have a valid session before redirecting
+        await router.push(callbackUrl);
         router.refresh();
       }
     } catch (error) {
-      console.error("Sign in error:", error);
-      setError("An unexpected error occurred. Please try again.");
+      console.error("Login form error:", error);
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage,
+      });
+      setErrorMessage(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="rounded-md bg-red-50 p-4 text-sm text-red-700">
-          {error}
-        </div>
-      )}
-      <div>
-        <label
-          htmlFor="username"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Username
-        </label>
-        <input
-          id="username"
-          name="username"
-          type="text"
-          required
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-        />
-      </div>
-      <div>
-        <label
-          htmlFor="password"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-        />
-      </div>
-      <button
-        type="submit"
-        disabled={isLoading}
-        className="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-50"
-      >
-        {isLoading ? "Signing in..." : "Sign in"}
-      </button>
-    </form>
+    <Card className="w-[400px] bg-[hsl(var(--sidebar-background))]">
+      <CardHeader>
+        <CardTitle>Welcome to Prima</CardTitle>
+        <CardDescription>Sign in to your account to continue</CardDescription>
+        {errorMessage && (
+          <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+        )}
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              required
+              disabled={isLoading}
+              placeholder="Enter your username"
+              autoComplete="username"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              required
+              disabled={isLoading}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign in"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 } 
