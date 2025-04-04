@@ -18,7 +18,9 @@ export function LoginForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (isLoading) return; // Prevent double submission
     setIsLoading(true)
+    setErrorMessage(null)
 
     const formData = new FormData(e.currentTarget)
     const username = formData.get("username") as string
@@ -26,39 +28,33 @@ export function LoginForm() {
     const callbackUrl = searchParams.get("callbackUrl") || "/"
 
     try {
-      console.log('Attempting to sign in...')
       const result = await signIn("credentials", {
         username,
         password,
         redirect: false,
         callbackUrl,
       })
-      console.log('Sign in result:', result);
 
       if (result?.error) {
-        console.log('Sign in error:', result.error);
-        if (result.error) {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: result.error,
-          })
-        }
-      } else {
-        router.push(callbackUrl);
-        router.refresh();
-        setErrorMessage(null);
+        toast({
+          variant: "destructive",
+          title: "Authentication Error",
+          description: result.error,
+        })
+        setErrorMessage(result.error)
+      } else if (result?.ok) {
+        router.push(callbackUrl)
+        router.refresh()
       }
     } catch (error) {
-      console.log("Catch block executed:", error);
-      console.error("Login form error:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : typeof error === "string"
-          ? error
-          : "Something went wrong. Please try again.";
-      setErrorMessage(errorMessage);
+      console.error("Login form error:", error)
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred"
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: errorMessage,
+      })
+      setErrorMessage(errorMessage)
     } finally {
       setIsLoading(false)
     }

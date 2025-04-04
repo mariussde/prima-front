@@ -62,15 +62,11 @@ export const authConfig: NextAuthOptions = {
       return session
     },
     async redirect({ url, baseUrl }) {
-      // Handle the clean URL without query parameters, only when redirecting from the sign-in page
-      if (url.startsWith("/login") && url.includes('?callbackUrl=')) {
-        const cleanUrl = url.split('?')[0];
-        return cleanUrl;
-      }
-      
-      // Regular redirect logic
-      if (url.startsWith("/")) return `${baseUrl}${url}`
+      // Allow relative URLs
+      if (url.startsWith("/")) return url
+      // Allow URLs from the same origin
       if (new URL(url).origin === baseUrl) return url
+      // Default to home page
       return baseUrl
     },
   },

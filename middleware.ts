@@ -7,11 +7,14 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone()
   const token = await getToken({ req: request })
   
-  // If it's a login URL with a callbackUrl parameter, clean it
-  if (url.pathname === '/login' && url.searchParams.has('callbackUrl')) {
-    // Remove the callback parameter
-    url.searchParams.delete('callbackUrl')
-    return NextResponse.redirect(new URL('/login', request.url))
+  // Handle login page redirects
+  if (url.pathname === '/login') {
+    // If user is already authenticated and tries to access login page
+    if (token) {
+      const callbackUrl = url.searchParams.get('callbackUrl') || '/'
+      return NextResponse.redirect(new URL(callbackUrl, request.url))
+    }
+    return NextResponse.next()
   }
   
   // Redirect from auth/signin to login
@@ -27,7 +30,8 @@ export async function middleware(request: NextRequest) {
                      !url.pathname.startsWith('/public');
   
   if (isAuthRoute && !token) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    const callbackUrl = encodeURIComponent(url.pathname + url.search)
+    return NextResponse.redirect(new URL(`/login?callbackUrl=${callbackUrl}`, request.url))
   }
   
   return NextResponse.next()
@@ -36,11 +40,7 @@ export async function middleware(request: NextRequest) {
 // Augment the middleware with NextAuth's auth check for protected routes
 export const config = {
   matcher: [
-    // Routes that need URL cleaning
-    "/login",
-    "/auth/login",
-    
     // Routes that need authentication
-    "/((?!api/auth|_next/static|_next/image|favicon.ico|public|login).*)",
+    "/((?!api/auth|_next/static|_next/image|favicon.ico|public).*)",
   ],
 } 
