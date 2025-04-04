@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { CarrierTable, Carrier } from '@/components/carrier/carrier-table'
 
 export default function SalesReportsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const [carrierData, setCarrierData] = useState<any>(null)
+  const [carrierData, setCarrierData] = useState<Carrier[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -49,9 +50,9 @@ export default function SalesReportsPage() {
     }
   }
 
-  const formatJsonWithWordBreak = (obj: any) => {
-    if (!obj) return ''
-    return JSON.stringify(obj, null, 2)
+  const handleRowClick = (carrier: Carrier) => {
+    console.log('Clicked carrier:', carrier)
+    // Add your row click handling logic here
   }
 
   if (status === 'loading' || isLoading) {
@@ -94,9 +95,10 @@ export default function SalesReportsPage() {
             <CardTitle>Carrier Data</CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg text-gray-900 dark:text-gray-100 whitespace-pre-wrap break-all">
-              {formatJsonWithWordBreak(carrierData)}
-            </pre>
+            <CarrierTable
+              data={carrierData}
+              onRowClick={handleRowClick}
+            />
           </CardContent>
         </Card>
       </main>
