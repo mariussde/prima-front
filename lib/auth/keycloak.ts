@@ -25,14 +25,29 @@ export async function getKeycloakToken(username: string, password: string): Prom
       res.on('data', (chunk) => data += chunk)
       res.on('end', () => {
         try {
-          resolve(JSON.parse(data))
+          const response = JSON.parse(data)
+          if (res.statusCode !== 200) {
+            let errorMessage = 'Authentication failed';
+            if (response.error_description) {
+              errorMessage = response.error_description;
+            } else if (response.error) {
+              errorMessage = response.error;
+            } else if (res.statusCode === 400) {
+              errorMessage = 'Invalid request';
+            } else if (res.statusCode === 401) {
+              errorMessage = 'Invalid credentials';
+            }
+            reject(new Error(errorMessage));
+          } else {
+            resolve(response)
+          }
         } catch (error) {
-          reject(error)
+          reject(new Error('Failed to parse server response'))
         }
       })
     })
 
-    req.on('error', (error) => reject(error))
+    req.on('error', (error) => reject(new Error('Failed to connect to authentication server')))
     req.write(formData.toString())
     req.end()
   })

@@ -38,7 +38,7 @@ export const config = {
   matcher: [
     // Routes that need URL cleaning
     "/login",
-    "/auth/signin",
+    "/auth/login",
     
     // Routes that need authentication
     "/((?!api/auth|_next/static|_next/image|favicon.ico|public|login).*)",

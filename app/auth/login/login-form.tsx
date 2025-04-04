@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 
-export function SignInForm() {
+export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
@@ -33,11 +33,15 @@ export function SignInForm() {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Invalid username or password",
+          description: result.error || "Invalid username or password",
         })
-      } else {
-        router.push("/")
-        router.refresh()
+        setIsLoading(false)
+      } else if (result?.ok) {
+        // Instead of immediately redirecting, wait a moment to ensure
+        // the session is fully established in the browser
+        setTimeout(() => {
+          router.push("/")
+        }, 300)
       }
     } catch (error) {
       toast({
@@ -45,7 +49,6 @@ export function SignInForm() {
         title: "Error",
         description: "Something went wrong. Please try again.",
       })
-    } finally {
       setIsLoading(false)
     }
   }
@@ -54,7 +57,7 @@ export function SignInForm() {
     <Card className="w-[400px]">
       <CardHeader>
         <CardTitle>Welcome to Prima</CardTitle>
-        <CardDescription>Sign in to your account to continue</CardDescription>
+        <CardDescription>Log in to your account to continue</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -81,10 +84,10 @@ export function SignInForm() {
             />
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? "Logging in..." : "Log in"}
           </Button>
         </form>
       </CardContent>
     </Card>
   )
-} 
+}

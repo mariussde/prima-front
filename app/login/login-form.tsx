@@ -10,7 +10,8 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 
 export function LoginForm() {
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -25,29 +26,39 @@ export function LoginForm() {
     const callbackUrl = searchParams.get("callbackUrl") || "/"
 
     try {
+      console.log('Attempting to sign in...')
       const result = await signIn("credentials", {
         username,
         password,
         redirect: false,
         callbackUrl,
       })
+      console.log('Sign in result:', result);
 
       if (result?.error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Invalid username or password",
-        })
+        console.log('Sign in error:', result.error);
+        if (result.error) {
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: result.error,
+          })
+        }
       } else {
-        router.push(callbackUrl)
-        router.refresh()
+        router.push(callbackUrl);
+        router.refresh();
+        setErrorMessage(null);
       }
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-      })
+      console.log("Catch block executed:", error);
+      console.error("Login form error:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+          ? error
+          : "Something went wrong. Please try again.";
+      setErrorMessage(errorMessage);
     } finally {
       setIsLoading(false)
     }
@@ -58,6 +69,9 @@ export function LoginForm() {
       <CardHeader>
         <CardTitle>Welcome to Prima</CardTitle>
         <CardDescription>Sign in to your account to continue</CardDescription>
+        {errorMessage && (
+          <p className="text-red-500 text-sm">{errorMessage}</p>
+        )}
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
