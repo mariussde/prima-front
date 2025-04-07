@@ -95,6 +95,7 @@ export function AppSidebar() {
       isActive: pathname.startsWith("/reports"),
       submenu: [
         { title: "Sales Reports", href: "/reports/sales", icon: ChevronRight },
+        { title: "Carrier Reports", href: "/reports/carriers", icon: ChevronRight },
         { title: "User Reports", href: "/reports/users", icon: ChevronRight },
         { title: "Analytics", href: "/reports/analytics", icon: ChevronRight },
       ],

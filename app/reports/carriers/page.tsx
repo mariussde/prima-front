@@ -41,7 +41,7 @@ const CARRIER_COLUMNS = [
   "CHGDAT"
 ]
 
-export default function SalesReportsPage() {
+export default function CarriersReportsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [carrierData, setCarrierData] = useState<Carrier[]>([])
@@ -217,7 +217,7 @@ export default function SalesReportsPage() {
         <Card className="w-full">
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-4">
-              <CardTitle>Carrier Data</CardTitle>
+              <CardTitle>Carrier Reports</CardTitle>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline">Columns</Button>
