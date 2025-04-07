@@ -15,11 +15,18 @@ import {
 } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 
-interface GenericTableProps<TData> {
-  data: TData[]
+interface GenericTableProps<T> {
+  data: T[]
   columns: {
     accessorKey: string
     header: string
@@ -31,13 +38,15 @@ interface GenericTableProps<TData> {
     totalRecords: number
     onPageChange: (page: number) => void
   }
-  onRowClick?: (row: TData) => void
+  onRowClick?: (row: T) => void
   columnVisibility?: Record<string, boolean>
   lastRowRef?: (node: HTMLTableRowElement | null) => void
   isLoading?: boolean
+  onFilterChange?: (columnKey: string, value: string) => void
+  columnFilters?: Record<string, string>
 }
 
-export function GenericTable<TData>({
+export function GenericTable<T>({
   data,
   columns,
   pagination,
@@ -45,21 +54,9 @@ export function GenericTable<TData>({
   columnVisibility = {},
   lastRowRef,
   isLoading,
-}: GenericTableProps<TData>) {
-  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
-
-  const handleFilterChange = (columnKey: string, value: string) => {
-    setColumnFilters(prev => ({ ...prev, [columnKey]: value }))
-  }
-
-  const filteredData = data.filter(row => {
-    return Object.entries(columnFilters).every(([key, value]) => {
-      if (!value) return true
-      const cellValue = (row as any)[key]?.toString().toLowerCase() || ''
-      return cellValue.includes(value.toLowerCase())
-    })
-  })
-
+  onFilterChange,
+  columnFilters = {},
+}: GenericTableProps<T>) {
   return (
     <div className="space-y-4">
       <div className="rounded-md border">
@@ -75,7 +72,7 @@ export function GenericTable<TData>({
                       <Input
                         placeholder={`Filter ${column.header.toLowerCase()}...`}
                         value={columnFilters[column.accessorKey] || ''}
-                        onChange={(e) => handleFilterChange(column.accessorKey, e.target.value)}
+                        onChange={(e) => onFilterChange?.(column.accessorKey, e.target.value)}
                         className="h-8"
                       />
                     </div>
@@ -85,8 +82,8 @@ export function GenericTable<TData>({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.map((row, index) => {
-              const isLastRow = index === filteredData.length - 1
+            {data.map((row, index) => {
+              const isLastRow = index === data.length - 1
               return (
                 <TableRow
                   key={index}

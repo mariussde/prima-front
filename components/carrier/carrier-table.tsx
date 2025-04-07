@@ -14,6 +14,8 @@ interface CarrierTableProps {
   isLoading?: boolean
   hasMore?: boolean
   columnVisibility?: Record<string, boolean>
+  onFilterChange?: (columnKey: string, value: string) => void
+  columnFilters?: Record<string, string>
 }
 
 export function CarrierTable({
@@ -23,6 +25,8 @@ export function CarrierTable({
   isLoading = false,
   hasMore = false,
   columnVisibility,
+  onFilterChange,
+  columnFilters = {},
 }: CarrierTableProps) {
   const observer = useRef<IntersectionObserver | null>(null)
   const lastRowRef = useCallback((node: HTMLTableRowElement | null) => {
@@ -54,6 +58,8 @@ export function CarrierTable({
       columnVisibility={columnVisibility}
       lastRowRef={lastRowRef}
       isLoading={isLoading}
+      onFilterChange={onFilterChange}
+      columnFilters={columnFilters}
     />
   )
 } 

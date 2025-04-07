@@ -16,16 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface CarrierResponse {
-  data: Carrier[]
-  pagination: {
-    currentPage: number
-    pageSize: number
-    totalPages: number
-    totalRecords: number
-  }
-}
-
 const CARRIER_COLUMNS = [
   "CARID",
   "CARDSC",
@@ -48,6 +38,7 @@ export default function SalesReportsPage() {
   )
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -60,12 +51,30 @@ export default function SalesReportsPage() {
     }
   }, [status, router])
 
+  // Reset pagination and fetch new data when filters change
+  useEffect(() => {
+    setPage(1)
+    setCarrierData([])
+    setHasMore(true)
+    fetchCarrierData(1)
+  }, [globalFilter, columnFilters])
+
   const fetchCarrierData = async (pageNum: number = 1) => {
     try {
       setIsLoading(true)
       console.log('Fetching carrier data from our API...')
       
-      const response = await fetch(`/api/carrier?page=${pageNum}`)
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: pageNum.toString(),
+        ...(globalFilter && { search: globalFilter }),
+        ...Object.entries(columnFilters).reduce((acc, [key, value]) => {
+          if (value) acc[key] = value
+          return acc
+        }, {} as Record<string, string>)
+      })
+      
+      const response = await fetch(`/api/carrier?${params.toString()}`)
       console.log('Response Status:', response.status)
       console.log('Response Headers:', response.headers)
 
@@ -109,6 +118,10 @@ export default function SalesReportsPage() {
   const handleAddNew = () => {
     console.log('Add new carrier clicked')
     // Add your add new carrier logic here
+  }
+
+  const handleFilterChange = (columnKey: string, value: string) => {
+    setColumnFilters(prev => ({ ...prev, [columnKey]: value }))
   }
 
   if (status === 'loading') {
@@ -190,10 +203,12 @@ export default function SalesReportsPage() {
               isLoading={isLoading}
               hasMore={hasMore}
               columnVisibility={columnVisibility}
+              onFilterChange={handleFilterChange}
+              columnFilters={columnFilters}
             />
           </CardContent>
         </Card>
       </main>
     </div>
   )
-} 
+}
