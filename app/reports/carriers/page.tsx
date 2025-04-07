@@ -216,11 +216,11 @@ export default function CarriersReportsPage() {
       <main className="flex-1 p-8">
         <Card className="w-full">
           <CardHeader className="flex flex-row items-center justify-between">
-            <div className="flex items-center gap-4">
-              <CardTitle>Carrier Reports</CardTitle>
+            <CardTitle>Carrier Reports</CardTitle>
+            <div className="flex items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline">Columns</Button>
+                  <Button variant="outline" size="default">Columns</Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   {CARRIER_COLUMNS.map((column) => (
@@ -235,11 +235,11 @@ export default function CarriersReportsPage() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
+              <Button onClick={handleAddNew}>
+                <Plus className="mr-2 h-4 w-4" />
+                Add Carrier
+              </Button>
             </div>
-            <Button onClick={handleAddNew}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Carrier
-            </Button>
           </CardHeader>
           <CardContent>
             <CarrierTable
