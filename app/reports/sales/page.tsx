@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, Search } from 'lucide-react'
+import { Loader2, Plus } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { CarrierTable, Carrier } from '@/components/carrier/carrier-table'
 import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
-import { Input } from '@/components/ui/input'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -32,7 +30,6 @@ export default function SalesReportsPage() {
   const [carrierData, setCarrierData] = useState<Carrier[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [globalFilter, setGlobalFilter] = useState("")
   const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(
     CARRIER_COLUMNS.reduce((acc, column) => ({ ...acc, [column]: true }), {})
   )
@@ -57,7 +54,7 @@ export default function SalesReportsPage() {
     setCarrierData([])
     setHasMore(true)
     fetchCarrierData(1)
-  }, [globalFilter, columnFilters])
+  }, [columnFilters])
 
   const fetchCarrierData = async (pageNum: number = 1) => {
     try {
@@ -67,7 +64,6 @@ export default function SalesReportsPage() {
       // Build query parameters
       const params = new URLSearchParams({
         page: pageNum.toString(),
-        ...(globalFilter && { search: globalFilter }),
         ...Object.entries(columnFilters).reduce((acc, [key, value]) => {
           if (value) acc[key] = value
           return acc
@@ -163,15 +159,6 @@ export default function SalesReportsPage() {
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-4">
               <CardTitle>Carrier Data</CardTitle>
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search..."
-                  value={globalFilter}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="pl-8 w-[300px]"
-                />
-              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline">Columns</Button>
