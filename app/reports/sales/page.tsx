@@ -2,12 +2,19 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Search } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { CarrierTable, Carrier } from '@/components/carrier/carrier-table'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface CarrierResponse {
   data: Carrier[]
@@ -18,6 +25,16 @@ interface CarrierResponse {
     totalRecords: number
   }
 }
+
+const CARRIER_COLUMNS = [
+  "CARID",
+  "CARDSC",
+  "Phone",
+  "eMail",
+  "City",
+  "CHGUSR",
+  "CHGDAT"
+]
 
 export default function SalesReportsPage() {
   const { data: session, status } = useSession()
@@ -31,6 +48,10 @@ export default function SalesReportsPage() {
   })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [globalFilter, setGlobalFilter] = useState("")
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(
+    CARRIER_COLUMNS.reduce((acc, column) => ({ ...acc, [column]: true }), {})
+  )
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -120,7 +141,26 @@ export default function SalesReportsPage() {
       <main className="flex-1 p-8">
         <Card className="max-w-4xl mx-auto">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Carrier Data</CardTitle>
+            <div className="flex items-center gap-4">
+              <CardTitle>Carrier Data</CardTitle>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline">Columns</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {CARRIER_COLUMNS.map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column}
+                      className="capitalize"
+                      checked={columnVisibility[column]}
+                      onCheckedChange={(value) => setColumnVisibility(prev => ({ ...prev, [column]: value }))}
+                    >
+                      {column}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <Button onClick={handleAddNew}>
               <Plus className="mr-2 h-4 w-4" />
               Add Carrier
@@ -134,7 +174,7 @@ export default function SalesReportsPage() {
                 onPageChange: handlePageChange,
               }}
               onRowClick={handleRowClick}
-              onAddNew={handleAddNew}
+              columnVisibility={columnVisibility}
             />
           </CardContent>
         </Card>

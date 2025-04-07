@@ -13,16 +13,10 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, Plus } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 
 interface GenericTableProps<TData> {
   data: TData[]
@@ -35,10 +29,7 @@ interface GenericTableProps<TData> {
     onPageChange: (page: number) => void
   }
   onRowClick?: (row: TData) => void
-  onAddNew?: () => void
-  addNewLabel?: string
-  searchPlaceholder?: string
-  searchColumn?: string
+  columnVisibility?: Record<string, boolean>
 }
 
 export function GenericTable<TData>({
@@ -46,15 +37,10 @@ export function GenericTable<TData>({
   columns,
   pagination,
   onRowClick,
-  onAddNew,
-  addNewLabel = "Add New",
-  searchPlaceholder = "Search...",
-  searchColumn,
+  columnVisibility = {},
 }: GenericTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-  const [globalFilter, setGlobalFilter] = useState("")
 
   const table = useReactTable({
     data,
@@ -65,56 +51,15 @@ export function GenericTable<TData>({
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      globalFilter,
     },
   })
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Input
-            placeholder={searchPlaceholder}
-            value={globalFilter ?? ""}
-            onChange={(event) => setGlobalFilter(String(event.target.value))}
-            className="max-w-sm"
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">Columns</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  )
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        {onAddNew && (
-          <Button onClick={onAddNew}>
-            <Plus className="mr-2 h-4 w-4" />
-            {addNewLabel}
-          </Button>
-        )}
-      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -122,8 +67,18 @@ export function GenericTable<TData>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    <TableHead key={header.id} className="pb-4">
+                      {header.isPlaceholder ? null : (
+                        <div className="flex flex-col space-y-2">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          <Input
+                            placeholder={`Search ${header.column.id}...`}
+                            value={(header.column.getFilterValue() as string) ?? ""}
+                            onChange={(event) => header.column.setFilterValue(event.target.value)}
+                            className="h-8"
+                          />
+                        </div>
+                      )}
                     </TableHead>
                   )
                 })}

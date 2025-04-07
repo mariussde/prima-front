@@ -39,6 +39,7 @@ interface CarrierTableProps {
     onPageChange: (page: number) => void
   }
   onRowClick?: (carrier: Carrier) => void
+  columnVisibility?: Record<string, boolean>
 }
 
 const columns: ColumnDef<Carrier>[] = [
@@ -121,15 +122,14 @@ const columns: ColumnDef<Carrier>[] = [
   },
 ]
 
-export function CarrierTable({ data, pagination, onRowClick }: CarrierTableProps) {
+export function CarrierTable({ data, pagination, onRowClick, columnVisibility }: CarrierTableProps) {
   return (
     <GenericTable
       data={data}
       columns={columns}
       pagination={pagination}
       onRowClick={onRowClick}
-      searchPlaceholder="Search carriers..."
-      searchColumn="CARDSC"
+      columnVisibility={columnVisibility}
     />
   )
 } 
