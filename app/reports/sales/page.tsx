@@ -40,18 +40,14 @@ export default function SalesReportsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [carrierData, setCarrierData] = useState<Carrier[]>([])
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    pageSize: 100,
-    totalPages: 1,
-    totalRecords: 0,
-  })
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [globalFilter, setGlobalFilter] = useState("")
   const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(
     CARRIER_COLUMNS.reduce((acc, column) => ({ ...acc, [column]: true }), {})
   )
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -64,11 +60,12 @@ export default function SalesReportsPage() {
     }
   }, [status, router])
 
-  const fetchCarrierData = async (page: number = 1) => {
+  const fetchCarrierData = async (pageNum: number = 1) => {
     try {
+      setIsLoading(true)
       console.log('Fetching carrier data from our API...')
       
-      const response = await fetch(`/api/carrier?page=${page}`)
+      const response = await fetch(`/api/carrier?page=${pageNum}`)
       console.log('Response Status:', response.status)
       console.log('Response Headers:', response.headers)
 
@@ -78,10 +75,16 @@ export default function SalesReportsPage() {
         throw new Error(`Failed to fetch carrier data: ${errorText}`)
       }
 
-      const data: CarrierResponse = await response.json()
+      const data = await response.json()
       console.log('Carrier Data:', data)
-      setCarrierData(data.data)
-      setPagination(data.pagination)
+
+      if (pageNum === 1) {
+        setCarrierData(data.data)
+      } else {
+        setCarrierData(prev => [...prev, ...data.data])
+      }
+      
+      setHasMore(data.data.length === 100) // Assuming 100 is our page size
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to load carrier data')
       console.error('Error fetching carrier data:', error)
@@ -90,8 +93,12 @@ export default function SalesReportsPage() {
     }
   }
 
-  const handlePageChange = (page: number) => {
-    fetchCarrierData(page)
+  const handleLoadMore = () => {
+    if (!isLoading && hasMore) {
+      const nextPage = page + 1
+      setPage(nextPage)
+      fetchCarrierData(nextPage)
+    }
   }
 
   const handleRowClick = (carrier: Carrier) => {
@@ -104,12 +111,12 @@ export default function SalesReportsPage() {
     // Add your add new carrier logic here
   }
 
-  if (status === 'loading' || isLoading) {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center space-x-2">
           <Loader2 className="h-6 w-6 animate-spin" />
-          <span>Loading carrier data...</span>
+          <span>Loading...</span>
         </div>
       </div>
     )
@@ -139,10 +146,19 @@ export default function SalesReportsPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 p-8">
-        <Card className="max-w-4xl mx-auto">
+        <Card className="w-full">
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-4">
               <CardTitle>Carrier Data</CardTitle>
+              <div className="relative">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
+                  value={globalFilter}
+                  onChange={(e) => setGlobalFilter(e.target.value)}
+                  className="pl-8 w-[300px]"
+                />
+              </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline">Columns</Button>
@@ -169,11 +185,10 @@ export default function SalesReportsPage() {
           <CardContent>
             <CarrierTable
               data={carrierData}
-              pagination={{
-                ...pagination,
-                onPageChange: handlePageChange,
-              }}
               onRowClick={handleRowClick}
+              onLoadMore={handleLoadMore}
+              isLoading={isLoading}
+              hasMore={hasMore}
               columnVisibility={columnVisibility}
             />
           </CardContent>

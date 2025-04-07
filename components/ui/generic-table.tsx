@@ -20,7 +20,10 @@ import { Input } from "@/components/ui/input"
 
 interface GenericTableProps<TData> {
   data: TData[]
-  columns: ColumnDef<TData>[]
+  columns: {
+    accessorKey: string
+    header: string
+  }[]
   pagination?: {
     currentPage: number
     pageSize: number
@@ -30,6 +33,8 @@ interface GenericTableProps<TData> {
   }
   onRowClick?: (row: TData) => void
   columnVisibility?: Record<string, boolean>
+  lastRowRef?: (node: HTMLTableRowElement | null) => void
+  isLoading?: boolean
 }
 
 export function GenericTable<TData>({
@@ -38,24 +43,21 @@ export function GenericTable<TData>({
   pagination,
   onRowClick,
   columnVisibility = {},
+  lastRowRef,
+  isLoading,
 }: GenericTableProps<TData>) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
 
-  const table = useReactTable({
-    data,
-    columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-    },
+  const handleFilterChange = (columnKey: string, value: string) => {
+    setColumnFilters(prev => ({ ...prev, [columnKey]: value }))
+  }
+
+  const filteredData = data.filter(row => {
+    return Object.entries(columnFilters).every(([key, value]) => {
+      if (!value) return true
+      const cellValue = (row as any)[key]?.toString().toLowerCase() || ''
+      return cellValue.includes(value.toLowerCase())
+    })
   })
 
   return (
@@ -63,48 +65,50 @@ export function GenericTable<TData>({
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} className="pb-4">
-                      {header.isPlaceholder ? null : (
-                        <div className="flex flex-col space-y-2">
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          <Input
-                            placeholder={`Search ${header.column.id}...`}
-                            value={(header.column.getFilterValue() as string) ?? ""}
-                            onChange={(event) => header.column.setFilterValue(event.target.value)}
-                            className="h-8"
-                          />
-                        </div>
-                      )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
+            <TableRow>
+              {columns.map((column) => {
+                if (columnVisibility && !columnVisibility[column.accessorKey]) return null
+                return (
+                  <TableHead key={column.accessorKey}>
+                    <div className="flex flex-col gap-2">
+                      <span>{column.header}</span>
+                      <Input
+                        placeholder={`Filter ${column.header.toLowerCase()}...`}
+                        value={columnFilters[column.accessorKey] || ''}
+                        onChange={(e) => handleFilterChange(column.accessorKey, e.target.value)}
+                        className="h-8"
+                      />
+                    </div>
+                  </TableHead>
+                )
+              })}
+            </TableRow>
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow 
-                  key={row.id} 
-                  data-state={row.getIsSelected() && "selected"}
-                  onClick={() => onRowClick?.(row.original)}
-                  className={onRowClick ? "cursor-pointer hover:bg-muted/50" : ""}
+            {filteredData.map((row, index) => {
+              const isLastRow = index === filteredData.length - 1
+              return (
+                <TableRow
+                  key={index}
+                  ref={isLastRow ? lastRowRef : undefined}
+                  className={onRowClick ? 'cursor-pointer hover:bg-muted' : ''}
+                  onClick={() => onRowClick?.(row)}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                  {columns.map((column) => {
+                    if (columnVisibility && !columnVisibility[column.accessorKey]) return null
+                    return (
+                      <TableCell key={column.accessorKey}>
+                        {(row as any)[column.accessorKey]}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
-              ))
-            ) : (
+              )
+            })}
+            {isLoading && (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                <TableCell colSpan={columns.length} className="text-center">
+                  Loading more data...
                 </TableCell>
               </TableRow>
             )}
