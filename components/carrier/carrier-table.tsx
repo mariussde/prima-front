@@ -66,15 +66,36 @@ const columns: ColumnDef<Carrier>[] = [
   },
   {
     accessorKey: "Phone",
-    header: "Phone",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Phone
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "eMail",
-    header: "Email",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          Email
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "City",
-    header: "City",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+          City
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "CHGUSR",
@@ -107,6 +128,8 @@ export function CarrierTable({ data, pagination, onRowClick }: CarrierTableProps
       columns={columns}
       pagination={pagination}
       onRowClick={onRowClick}
+      searchPlaceholder="Search carriers..."
+      searchColumn="CARDSC"
     />
   )
 } 

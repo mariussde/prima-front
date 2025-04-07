@@ -6,6 +6,8 @@ import { Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { CarrierTable, Carrier } from '@/components/carrier/carrier-table'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
 
 interface CarrierResponse {
   data: Carrier[]
@@ -76,6 +78,11 @@ export default function SalesReportsPage() {
     // Add your row click handling logic here
   }
 
+  const handleAddNew = () => {
+    console.log('Add new carrier clicked')
+    // Add your add new carrier logic here
+  }
+
   if (status === 'loading' || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -112,8 +119,12 @@ export default function SalesReportsPage() {
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 p-8">
         <Card className="max-w-4xl mx-auto">
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Carrier Data</CardTitle>
+            <Button onClick={handleAddNew}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Carrier
+            </Button>
           </CardHeader>
           <CardContent>
             <CarrierTable
@@ -123,6 +134,7 @@ export default function SalesReportsPage() {
                 onPageChange: handlePageChange,
               }}
               onRowClick={handleRowClick}
+              onAddNew={handleAddNew}
             />
           </CardContent>
         </Card>
