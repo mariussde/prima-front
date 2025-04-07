@@ -244,57 +244,53 @@ export default function CarriersReportsPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 p-4 md:p-8 w-full overflow-hidden">
-        <div className="w-full overflow-hidden">
-          <Card className="w-full">
-            <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
-              <CardTitle>Carrier Reports</CardTitle>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="default" className="w-full sm:w-auto max-w-[200px]">Columns</Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
-                    {CARRIER_COLUMNS.map((column) => (
-                      <DropdownMenuCheckboxItem
-                        key={column}
-                        className="capitalize"
-                        checked={columnVisibility[column]}
-                        onCheckedChange={(value) => setColumnVisibility(prev => ({ ...prev, [column]: value }))}
-                      >
-                        {column}
-                      </DropdownMenuCheckboxItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button onClick={handleAddNew} className="w-full sm:w-auto max-w-[200px]">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Carrier
-                </Button>
+      <main className="flex-1 p-4 md:p-8 w-full">
+        <Card className="w-full">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+            <CardTitle>Carrier Reports</CardTitle>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="default" className="w-[120px] sm:w-[120px]">Columns</Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
+                  {CARRIER_COLUMNS.map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column}
+                      className="capitalize"
+                      checked={columnVisibility[column]}
+                      onCheckedChange={(value) => setColumnVisibility(prev => ({ ...prev, [column]: value }))}
+                    >
+                      {column}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button onClick={handleAddNew} className="w-[120px] sm:w-[120px]">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Carrier
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent className="px-2 sm:px-6">
+            <CarrierTable
+              data={carrierData}
+              onRowClick={handleRowClick}
+              onLoadMore={handleLoadMore}
+              isLoading={isLoading}
+              hasMore={hasMore}
+              columnVisibility={columnVisibility}
+              onFilterChange={handleFilterChange}
+              columnFilters={columnFilters}
+              onSortChange={handleSortChange}
+            />
+            {isLoading && page === 1 && (
+              <div className="w-full flex justify-center py-4">
+                <Loader2 className="h-6 w-6 animate-spin" />
               </div>
-            </CardHeader>
-            <CardContent className="px-2 sm:px-6 overflow-hidden">
-              <div className="w-full overflow-hidden">
-                <CarrierTable
-                  data={carrierData}
-                  onRowClick={handleRowClick}
-                  onLoadMore={handleLoadMore}
-                  isLoading={isLoading}
-                  hasMore={hasMore}
-                  columnVisibility={columnVisibility}
-                  onFilterChange={handleFilterChange}
-                  columnFilters={columnFilters}
-                  onSortChange={handleSortChange}
-                />
-                {isLoading && page === 1 && (
-                  <div className="w-full flex justify-center py-4">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </main>
     </div>
   )

@@ -128,8 +128,8 @@ export function GenericTable<T>({
   ).length;
 
   return (
-    <div className="space-y-4 w-full overflow-auto">
-      <div className="rounded-md border w-full overflow-x-auto">
+    <div className="space-y-4 w-full">
+      <div className="rounded-md border w-full">
         <div className="min-w-full inline-block align-middle">
           <Table>
             <TableHeader>
@@ -176,7 +176,7 @@ export function GenericTable<T>({
                     {columns.map((column) => {
                       if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
                       return (
-                        <TableCell key={column.accessorKey} className="whitespace-normal break-words">
+                        <TableCell key={column.accessorKey} className="whitespace-normal break-words min-w-[120px]">
                           {(row as any)[column.accessorKey]}
                         </TableCell>
                       )

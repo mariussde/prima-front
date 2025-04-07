@@ -62,15 +62,15 @@ export function TopBar() {
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6">
-      <div className="flex items-center gap-2">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background px-4 md:px-6 overflow-x-auto">
+      <div className="flex items-center gap-2 shrink-0">
         <SidebarTrigger />
         {state === "collapsed" && <Logo />}
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-4 justify-end min-w-0">
         <Select defaultValue="spain">
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] shrink-0">
             <SelectValue placeholder="Select country" />
           </SelectTrigger>
           <SelectContent>
@@ -85,18 +85,20 @@ export function TopBar() {
           </SelectContent>
         </Select>
 
-        <Button variant="ghost" size="icon" asChild>
+        <Button variant="ghost" size="icon" asChild className="shrink-0">
           <Link href="/help">
             <HelpCircle className="h-5 w-5" />
             <span className="sr-only">Help</span>
           </Link>
         </Button>
 
-        <ThemeToggle />
+        <div className="shrink-0">
+          <ThemeToggle />
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="shrink-0">
               <Settings className="h-5 w-5" />
               <span className="sr-only">Settings</span>
             </Button>
@@ -124,4 +126,3 @@ export function TopBar() {
     </header>
   )
 }
-
