@@ -66,9 +66,11 @@ export function GenericTable<T>({
               {columns.map((column) => {
                 if (columnVisibility && !columnVisibility[column.accessorKey]) return null
                 return (
-                  <TableHead key={column.accessorKey}>
-                    <div className="flex flex-col gap-2">
-                      <span>{column.header}</span>
+                  <TableHead key={column.accessorKey} className="min-w-[120px] h-[80px] relative">
+                    <div className="absolute top-3 left-0 right-0 px-2">
+                      <span className="font-semibold text-sm line-clamp-2 leading-tight block">{column.header}</span>
+                    </div>
+                    <div className="absolute bottom-2 left-0 right-0 px-2">
                       <Input
                         placeholder={`Filter ${column.header.toLowerCase()}...`}
                         value={columnFilters[column.accessorKey] || ''}
