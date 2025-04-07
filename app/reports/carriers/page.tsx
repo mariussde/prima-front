@@ -252,7 +252,7 @@ export default function CarriersReportsPage() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="default" className="w-full sm:w-auto">Columns</Button>
+                    <Button variant="outline" size="default" className="w-full sm:w-auto max-w-[200px]">Columns</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
                     {CARRIER_COLUMNS.map((column) => (
@@ -267,7 +267,7 @@ export default function CarriersReportsPage() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <Button onClick={handleAddNew} className="w-full sm:w-auto">
+                <Button onClick={handleAddNew} className="w-full sm:w-auto max-w-[200px]">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Carrier
                 </Button>
