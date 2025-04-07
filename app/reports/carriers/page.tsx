@@ -53,11 +53,19 @@ export default function CarriersReportsPage() {
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
+  const [sortConfig, setSortConfig] = useState<{column: string | null, direction: 'asc' | 'desc' | null}>({
+    column: null,
+    direction: null
+  })
   const debouncedFilters = useDebounce(columnFilters, 300)
   const initialFetchDone = useRef(false)
   const abortControllerRef = useRef<AbortController | null>(null)
 
-  const fetchCarrierData = useCallback(async (pageNum: number = 1, currentFilters = columnFilters) => {
+  const fetchCarrierData = useCallback(async (
+    pageNum: number = 1, 
+    currentFilters = columnFilters,
+    sort = sortConfig
+  ) => {
     // Cancel any ongoing request
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
@@ -72,9 +80,17 @@ export default function CarriersReportsPage() {
       
       // Build query parameters more safely
       const params = new URLSearchParams({ page: pageNum.toString() })
+      
+      // Add filters
       Object.entries(currentFilters).forEach(([key, value]) => {
         if (value) params.append(key, value)
       })
+      
+      // Add sorting if available
+      if (sort.column && sort.direction) {
+        params.append('sortColumn', sort.column)
+        params.append('sortDirection', sort.direction)
+      }
       
       console.log(`Fetching: /api/carrier?${params.toString()}`);
       
@@ -111,7 +127,7 @@ export default function CarriersReportsPage() {
     } finally {
       setIsLoading(false)
     }
-  }, []) // Removed columnFilters from dependencies
+  }, []) // Removed dependencies from callback for clarity
 
   // Handle authentication and initial load
   useEffect(() => {
@@ -122,7 +138,7 @@ export default function CarriersReportsPage() {
     
     if (status === 'authenticated' && !initialFetchDone.current) {
       initialFetchDone.current = true
-      fetchCarrierData(1)
+      fetchCarrierData(1, columnFilters, sortConfig)
     }
   }, [status, router, fetchCarrierData])
 
@@ -132,9 +148,19 @@ export default function CarriersReportsPage() {
       setPage(1)
       setCarrierData([])
       setHasMore(true)
-      fetchCarrierData(1, debouncedFilters)
+      fetchCarrierData(1, debouncedFilters, sortConfig)
     }
-  }, [debouncedFilters, fetchCarrierData])
+  }, [debouncedFilters, fetchCarrierData, sortConfig])
+
+  // Handle sort changes
+  useEffect(() => {
+    if (initialFetchDone.current) {
+      setPage(1)
+      setCarrierData([])
+      setHasMore(true)
+      fetchCarrierData(1, debouncedFilters, sortConfig)
+    }
+  }, [sortConfig, fetchCarrierData, debouncedFilters])
 
   // Cleanup effect for aborting any pending requests on unmount
   useEffect(() => {
@@ -158,13 +184,18 @@ export default function CarriersReportsPage() {
     })
   }, [])
 
+  // Handle sort change
+  const handleSortChange = useCallback((column: string, direction: 'asc' | 'desc' | null) => {
+    setSortConfig({ column, direction })
+  }, [])
+
   const handleLoadMore = useCallback(() => {
     if (!isLoading && hasMore) {
       const nextPage = page + 1
       setPage(nextPage)
-      fetchCarrierData(nextPage, columnFilters)
+      fetchCarrierData(nextPage, columnFilters, sortConfig)
     }
-  }, [isLoading, hasMore, page, fetchCarrierData, columnFilters])
+  }, [isLoading, hasMore, page, fetchCarrierData, columnFilters, sortConfig])
 
   const handleRowClick = (carrier: Carrier) => {
     console.log('Clicked carrier:', carrier)
@@ -190,7 +221,7 @@ export default function CarriersReportsPage() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Card className="w-[600px]">
+        <Card className="w-full max-w-[600px] mx-4">
           <CardHeader>
             <CardTitle className="text-red-600">Error</CardTitle>
           </CardHeader>
@@ -199,7 +230,7 @@ export default function CarriersReportsPage() {
             <button
               onClick={() => {
                 setError(null)
-                fetchCarrierData(1, columnFilters)
+                fetchCarrierData(1, columnFilters, sortConfig)
               }}
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
@@ -213,52 +244,57 @@ export default function CarriersReportsPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-1 p-8">
-        <Card className="w-full">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Carrier Reports</CardTitle>
-            <div className="flex items-center gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="default">Columns</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {CARRIER_COLUMNS.map((column) => (
-                    <DropdownMenuCheckboxItem
-                      key={column}
-                      className="capitalize"
-                      checked={columnVisibility[column]}
-                      onCheckedChange={(value) => setColumnVisibility(prev => ({ ...prev, [column]: value }))}
-                    >
-                      {column}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button onClick={handleAddNew}>
-                <Plus className="mr-2 h-4 w-4" />
-                Add Carrier
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <CarrierTable
-              data={carrierData}
-              onRowClick={handleRowClick}
-              onLoadMore={handleLoadMore}
-              isLoading={isLoading}
-              hasMore={hasMore}
-              columnVisibility={columnVisibility}
-              onFilterChange={handleFilterChange}
-              columnFilters={columnFilters}
-            />
-            {isLoading && page === 1 && (
-              <div className="w-full flex justify-center py-4">
-                <Loader2 className="h-6 w-6 animate-spin" />
+      <main className="flex-1 p-4 md:p-8 w-full overflow-hidden">
+        <div className="w-full overflow-hidden">
+          <Card className="w-full">
+            <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+              <CardTitle>Carrier Reports</CardTitle>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="default" className="w-full sm:w-auto">Columns</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
+                    {CARRIER_COLUMNS.map((column) => (
+                      <DropdownMenuCheckboxItem
+                        key={column}
+                        className="capitalize"
+                        checked={columnVisibility[column]}
+                        onCheckedChange={(value) => setColumnVisibility(prev => ({ ...prev, [column]: value }))}
+                      >
+                        {column}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Button onClick={handleAddNew} className="w-full sm:w-auto">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Carrier
+                </Button>
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent className="px-2 sm:px-6 overflow-hidden">
+              <div className="w-full overflow-hidden">
+                <CarrierTable
+                  data={carrierData}
+                  onRowClick={handleRowClick}
+                  onLoadMore={handleLoadMore}
+                  isLoading={isLoading}
+                  hasMore={hasMore}
+                  columnVisibility={columnVisibility}
+                  onFilterChange={handleFilterChange}
+                  columnFilters={columnFilters}
+                  onSortChange={handleSortChange}
+                />
+                {isLoading && page === 1 && (
+                  <div className="w-full flex justify-center py-4">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </main>
     </div>
   )
