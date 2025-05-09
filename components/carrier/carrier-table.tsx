@@ -73,22 +73,38 @@ export function CarrierTable({
   onLoadMore,
   isLoading = false,
   hasMore = false,
-  columnVisibility = defaultVisibleColumns, // Use defaultVisibleColumns as default
+  columnVisibility,
   onFilterChange,
   columnFilters = {},
   onSortChange,
 }: CarrierTableProps) {
   const observer = useRef<IntersectionObserver | null>(null)
+  
   const lastRowRef = useCallback((node: HTMLTableRowElement | null) => {
     if (isLoading) return
     if (observer.current) observer.current.disconnect()
+    
     observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
+      if (entries[0].isIntersecting && hasMore && !isLoading) {
         onLoadMore?.()
       }
+    }, {
+      root: null,
+      rootMargin: '100px',
+      threshold: 0.1
     })
+    
     if (node) observer.current.observe(node)
   }, [isLoading, hasMore, onLoadMore])
+
+  // Cleanup observer on unmount
+  useEffect(() => {
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect()
+      }
+    }
+  }, [])
 
   // Debug logs
   // console.log('Carrier Data:', data)
@@ -106,6 +122,7 @@ export function CarrierTable({
       onFilterChange={onFilterChange}
       columnFilters={columnFilters}
       onSortChange={onSortChange}
+      hasMore={hasMore}
     />
   )
 }

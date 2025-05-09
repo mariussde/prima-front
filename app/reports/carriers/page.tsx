@@ -90,10 +90,12 @@ export default function CarriersReportsPage() {
 
     try {
       setIsLoading(true)
-      console.log('Fetching carrier data from our API...')
       
       // Build query parameters more safely
-      const params = new URLSearchParams({ page: pageNum.toString() })
+      const params = new URLSearchParams({ 
+        page: pageNum.toString(),
+        pageSize: '100' // Fixed page size for infinite scroll
+      })
       
       // Add filters
       Object.entries(currentFilters).forEach(([key, value]) => {
@@ -106,23 +108,16 @@ export default function CarriersReportsPage() {
         params.append('sortDirection', sort.direction)
       }
       
-      console.log(`Fetching: /api/carrier?${params.toString()}`);
-      
       const response = await fetch(`/api/carrier?${params.toString()}`, {
         signal: abortControllerRef.current.signal
       })
       
-      console.log('Response Status:', response.status)
-      console.log('Response Headers:', response.headers)
-      
       if (!response.ok) {
         const errorText = await response.text()
-        console.error('Error Response:', errorText)
         throw new Error(`Failed to fetch carrier data: ${errorText}`)
       }
       
       const data = await response.json()
-      console.log('Carrier Data:', data)
       
       if (pageNum === 1) {
         setCarrierData(data.data)
@@ -130,7 +125,8 @@ export default function CarriersReportsPage() {
         setCarrierData(prev => [...prev, ...data.data])
       }
       
-      setHasMore(data.data.length === 100) // Assuming 100 is our page size
+      // Check if we have more data to load
+      setHasMore(data.data.length === 100)
     } catch (error) {
       // Don't set error state if this was an abort
       if (error instanceof DOMException && error.name === 'AbortError') {

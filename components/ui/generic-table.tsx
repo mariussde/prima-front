@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, ChevronUp } from "lucide-react"
+import { ArrowUpDown, ChevronDown, ChevronUp, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -45,6 +45,7 @@ interface GenericTableProps<T> {
   onFilterChange?: (columnKey: string, value: string) => void
   columnFilters?: Record<string, string>
   onSortChange?: (column: string, direction: 'asc' | 'desc' | null) => void
+  hasMore?: boolean
 }
 
 export function GenericTable<T>({
@@ -58,6 +59,7 @@ export function GenericTable<T>({
   onFilterChange,
   columnFilters = {},
   onSortChange,
+  hasMore = false,
 }: GenericTableProps<T>) {
   // Track sorting state - column and direction
   const [sortConfig, setSortConfig] = useState<{
@@ -186,8 +188,11 @@ export function GenericTable<T>({
               })}
               {isLoading && (
                 <TableRow>
-                  <TableCell colSpan={visibleColumnsCount} className="text-center">
-                    Loading more data...
+                  <TableCell colSpan={visibleColumnsCount} className="text-center py-4">
+                    <div className="flex items-center justify-center space-x-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Loading more data...</span>
+                    </div>
                   </TableCell>
                 </TableRow>
               )}
