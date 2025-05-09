@@ -31,6 +31,9 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
+// Import the default visible columns from the CarrierTable component
+import { defaultVisibleColumns } from '@/components/carrier/carrier-table'
+
 const CARRIER_COLUMNS = [
   "COMPID",
   "CARID",
@@ -60,9 +63,7 @@ export default function CarriersReportsPage() {
   const [carrierData, setCarrierData] = useState<Carrier[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(
-    CARRIER_COLUMNS.reduce((acc, column) => ({ ...acc, [column]: true }), {})
-  )
+  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(defaultVisibleColumns)
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
