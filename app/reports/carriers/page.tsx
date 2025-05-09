@@ -93,8 +93,8 @@ export default function CarriersReportsPage() {
       
       // Build query parameters more safely
       const params = new URLSearchParams({ 
-        page: pageNum.toString(),
-        pageSize: '100' // Fixed page size for infinite scroll
+        pageNumber: pageNum.toString(),
+        pageSize: '100'
       })
       
       // Add filters
@@ -119,21 +119,21 @@ export default function CarriersReportsPage() {
       
       const data = await response.json()
       
+      // Update data based on page number
       if (pageNum === 1) {
         setCarrierData(data.data)
       } else {
         setCarrierData(prev => [...prev, ...data.data])
       }
       
-      // Check if we have more data to load
-      setHasMore(data.data.length === 100)
+      // Check if we have more data to load based on totalPages
+      setHasMore(pageNum < data.totalPages)
     } catch (error) {
       // Don't set error state if this was an abort
       if (error instanceof DOMException && error.name === 'AbortError') {
         return
       }
       setError(error instanceof Error ? error.message : 'Failed to load carrier data')
-      console.error('Error fetching carrier data:', error)
     } finally {
       setIsLoading(false)
     }
@@ -208,12 +208,10 @@ export default function CarriersReportsPage() {
   }, [isLoading, hasMore, page, fetchCarrierData, columnFilters, sortConfig])
 
   const handleRowClick = (carrier: Carrier) => {
-    console.log('Clicked carrier:', carrier)
     // Add your row click handling logic here
   }
 
   const handleAddNew = () => {
-    console.log('Add new carrier clicked')
     // Add your add new carrier logic here
   }
 
