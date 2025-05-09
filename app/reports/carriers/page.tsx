@@ -32,13 +32,26 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 const CARRIER_COLUMNS = [
+  "COMPID",
   "CARID",
   "CARDSC",
-  "Phone",
-  "eMail",
+  "ADDRL1",
+  "ADDRL2",
   "City",
+  "ZIPCODE",
+  "Phone",
+  "Fax",
+  "eMail",
+  "WebSite",
+  "CONNME",
+  "CNTYCOD",
+  "STAID",
+  "CRTUSR",
+  "CRTDAT",
+  "CRTTIM",
   "CHGUSR",
-  "CHGDAT"
+  "CHGDAT",
+  "CHGTIM"
 ]
 
 export default function CarriersReportsPage() {

@@ -1,0 +1,508 @@
+{
+	"info": {
+		"_postman_id": "bf0426fe-59b2-4dc5-90a7-7d7ce52d5ac9",
+		"name": "AWS API Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6603316"
+	},
+	"item": [
+		{
+			"name": "API Server Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://us.prima.pacorini.com/api/v1.0/Prima/CarrierTest?token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRazhObGRRT2pwRE1jQkJKazUzV2wwanFuemNmWTNickJTUi1hMXJXNXRBIn0.eyJqdGkiOiI0YzM5N2Y1NS00ZTVkLTRlYjItYTVmOS05NGQ0Mjg1NTM0NTciLCJleHAiOjE3NDM2MDg3MzIsIm5iZiI6MCwiaWF0IjoxNzQzNjA4NDMyLCJpc3MiOiJodHRwczovL2F1dGgucGFjb3JpbmkuY29tL2F1dGgvcmVhbG1zL1BhY29yaW5pIiwiYXVkIjoicGFjb3JpbmktYXBpIiwic3ViIjoiOGE1ZDZkOWQtMWU4YS00YmRjLTlmNjAtMjYxYjBlMTIzOTZhIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicGFjb3JpbmktYXBpIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNWJjMTkwN2YtMWNkOC00MjlmLWFmYmQtODZjZDRlOTU4MDY4IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuYXZpZ2F0b3IifQ.WMLZS1d2606QedxtpzGOYvFCKJJUykIIcnNE7TcS5aHYQUv3wv59-qcegeVGKsim0T9mzA1covwKZ3s5bohmRv1cn5IBThxt3qf8d1T5OfCzl9W3g9M4z75SiTgSn5g0Gpmuk658VMhru0ohpIi8MgpmiCc7a3BpakWhbrcPh4RI43VlhEDJS3mvYkOt6eU7Y6-LhvIbLlYUnjGq0jDEd5V8nSLtFQTdHrBg7FQrW3MPNQOoU7dmC1xcDYtBTFNjgtsD5sX53Lf-GrNpfvkya826tQC6uDBI9HsCrCQatwtfgbDpfTJ0D_jf9cy_5pJ7-q5nCUSnPr_qzBL2l_QVWg",
+					"protocol": "https",
+					"host": [
+						"us",
+						"prima",
+						"pacorini",
+						"com"
+					],
+					"path": [
+						"api",
+						"v1.0",
+						"Prima",
+						"CarrierTest"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRazhObGRRT2pwRE1jQkJKazUzV2wwanFuemNmWTNickJTUi1hMXJXNXRBIn0.eyJqdGkiOiI0YzM5N2Y1NS00ZTVkLTRlYjItYTVmOS05NGQ0Mjg1NTM0NTciLCJleHAiOjE3NDM2MDg3MzIsIm5iZiI6MCwiaWF0IjoxNzQzNjA4NDMyLCJpc3MiOiJodHRwczovL2F1dGgucGFjb3JpbmkuY29tL2F1dGgvcmVhbG1zL1BhY29yaW5pIiwiYXVkIjoicGFjb3JpbmktYXBpIiwic3ViIjoiOGE1ZDZkOWQtMWU4YS00YmRjLTlmNjAtMjYxYjBlMTIzOTZhIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicGFjb3JpbmktYXBpIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNWJjMTkwN2YtMWNkOC00MjlmLWFmYmQtODZjZDRlOTU4MDY4IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuYXZpZ2F0b3IifQ.WMLZS1d2606QedxtpzGOYvFCKJJUykIIcnNE7TcS5aHYQUv3wv59-qcegeVGKsim0T9mzA1covwKZ3s5bohmRv1cn5IBThxt3qf8d1T5OfCzl9W3g9M4z75SiTgSn5g0Gpmuk658VMhru0ohpIi8MgpmiCc7a3BpakWhbrcPh4RI43VlhEDJS3mvYkOt6eU7Y6-LhvIbLlYUnjGq0jDEd5V8nSLtFQTdHrBg7FQrW3MPNQOoU7dmC1xcDYtBTFNjgtsD5sX53Lf-GrNpfvkya826tQC6uDBI9HsCrCQatwtfgbDpfTJ0D_jf9cy_5pJ7-q5nCUSnPr_qzBL2l_QVWg"
+						},
+						{
+							"key": "page",
+							"value": "null",
+							"disabled": true
+						},
+						{
+							"key": "pageSize",
+							"value": "null",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Generated from cURL: curl --location 'https://us.prima.pacorini.com/api/v1.0/Prima/CarrierTest?token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRazhObGRRT2pwRE1jQkJKazUzV2wwanFuemNmWTNickJTUi1hMXJXNXRBIn0.eyJqdGkiOiIyMTllM2RmZC03ZDk4LTQ0MTAtYWE3Mi04YzYyNTZiZGE5YTgiLCJleHAiOjE3NDM0NTcwMTUsIm5iZiI6MCwiaWF0IjoxNzQzNDU2NzE1LCJpc3MiOiJodHRwczovL2F1dGgucGFjb3JpbmkuY29tL2F1dGgvcmVhbG1zL1BhY29yaW5pIiwiYXVkIjoicGFjb3JpbmktYXBpIiwic3ViIjoiOGE1ZDZkOWQtMWU4YS00YmRjLTlmNjAtMjYxYjBlMTIzOTZhIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicGFjb3JpbmktYXBpIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiZmFiMzk1MzctZWRlYS00M2EwLWEwNjAtYmI3YTY3YjI3NWI0IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuYXZpZ2F0b3IifQ.HlG_PcCJ6gFtXg-6wDHM4ShmWWPGe2A0i-2EZ-U_xUWjpcq7oSYnBWTaLCXNPDxNRhGTqPwIRzlPNCooZaPkLI0k2Ixba-9k5Tg9hg-z9CLs-sFIsaxFJjeMyvRBjNFGKY-_sUowixmSRarna-Jz7I6kZD179vR4yuKL5G0S-UwXUwOSZ0e8HpKK1If_957t6XbBFM1MN0SE20xAubclHa13rV24CPg8GXowcwCg0ZMRWq_C85f3HIaDFzIDgl7DR3befN1_qU0DzfQIcoTm9_r5ekPKCtnx1HU7qwZmlHg-JJ7Sse-w1LB3WPGF_mrLdUGhEej0hd_xa6tF9_Ue9w&page=null&pageSize=null'"
+			},
+			"response": []
+		},
+		{
+			"name": "CA Warehouse Location",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJraWQiOiIzT1RTMU1jS2FyMDdlcmdYSXpTRnVsTUgraElrR1wvNFNvUDdPMlRnZGF5ND0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI3YzlkZDVkOC1iMGMxLTcwYjUtY2JjOC04YzhlZmYxOTFhNTMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuY2EtY2VudHJhbC0xLmFtYXpvbmF3cy5jb21cL2NhLWNlbnRyYWwtMV9OVjEyNm1wdWwiLCJjbGllbnRfaWQiOiI2YW40c25xMWprZzZwcW5mMWQ3azdlYjl1YSIsIm9yaWdpbl9qdGkiOiI4ZTZhOTRkNC1iOWZlLTRmMGYtYTYwMy0xNDNjODdlMTYzNzAiLCJldmVudF9pZCI6IjQwODU0ZWIzLWRhMzYtNDJmMC1hZmI0LTFjNTA0YTAzOTBjNCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDM1NDUxNDksImV4cCI6MTc0MzU0ODc0OSwiaWF0IjoxNzQzNTQ1MTQ5LCJqdGkiOiJjNTI1MzA0Zi1kMmQwLTRjN2UtOTBkMy1iNmViNzhjNjNhYTciLCJ1c2VybmFtZSI6ImNhcHJpbWFhcGkifQ.frzbZXjHjz_3A4mLPnBjoX944GlVCszf7O4TS7meMK5RiY5djlHrEDB1twI1I6tT0rrAGU5HJg0LY6Mgl31Oo2QtvMLbiHnrAkfedV9wKFKw3D43hkOq7vEAHR-CfCeYGyJ-ajZgnr6Ej2rcGGI8OllCmHhdgccYVWUA6CnKMaCAJIxRk01PHa8bFCa387AHsMwmRkE8JbUH_RPHefwmVkHQl0xwdUAIrSQilxBZpl2IFXVuPpl3P-GKk7cv8yKuH0rJeY7VE1FiBuSKPLMfieYbupA21CnNOgxNbC4fFGoktvW-cVbssIKAJCWFuDQvhorevXhkzAYfIc4uA7DP0w",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://95degrqi3f.execute-api.ca-central-1.amazonaws.com/dev/inventory_loc_plt_qty?CompanyID=PAC-CANADA&WarehouseID=BRAN001",
+					"protocol": "https",
+					"host": [
+						"95degrqi3f",
+						"execute-api",
+						"ca-central-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"inventory_loc_plt_qty"
+					],
+					"query": [
+						{
+							"key": "CompanyID",
+							"value": "PAC-CANADA"
+						},
+						{
+							"key": "WarehouseID",
+							"value": "BRAN001"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prima Data List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{AWS US authToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://nfeij1whc8.execute-api.us-east-1.amazonaws.com/dev/primaapi/v1/data/country?COMPID=PLL&pageNumber=1&pageSize=300&CNTYCOD=&Filter_CNTYCOD=&Filter_CNTYDSC=",
+					"protocol": "https",
+					"host": [
+						"nfeij1whc8",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"primaapi",
+						"v1",
+						"data",
+						"country"
+					],
+					"query": [
+						{
+							"key": "COMPID",
+							"value": "PLL"
+						},
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "300"
+						},
+						{
+							"key": "CNTYCOD",
+							"value": ""
+						},
+						{
+							"key": "Filter_CNTYCOD",
+							"value": ""
+						},
+						{
+							"key": "Filter_CNTYDSC",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prima Data Update",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the schema of the response data\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"\r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.COMPID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CARID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CARDSC).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.ADDRL1).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.City).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.ZIPCODE).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.Phone).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.Fax).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.eMail).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.WebSite).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CONNME).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CNTYCOD).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.STAID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTUSR).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTDAT).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTTIM).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGUSR).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGDAT).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGTIM).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.RowNum).to.exist.and.to.be.a('number');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Total count field is present in the response\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.have.property('totalCount');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{AWS US authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"COMPID\": \"PLL\",\r\n  \"CARID\": \"5 SHOT\",\r\n  \"CARDSC\": \"Carrier A\",\r\n  \"ADDRL1\": \"123 Main St\",\r\n  \"ADDRL2\": \"\",\r\n  \"City\": \"New York\",\r\n  \"ZIPCODE\": \"10001\",\r\n  \"Phone\": \"555-123-4567\",\r\n  \"Fax\": \"555-765-4321\",\r\n  \"eMail\": \"carrier@example.com\",\r\n  \"WebSite\": \"http://carrier.com\",\r\n  \"CONNME\": \"John Doe\",\r\n  \"CNTYCOD\": \"US\",\r\n  \"STAID\": \"LA\",\r\n  \"CHGUSR\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://nfeij1whc8.execute-api.us-east-1.amazonaws.com/dev/primaapi/v1/data/carrier",
+					"protocol": "https",
+					"host": [
+						"nfeij1whc8",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"primaapi",
+						"v1",
+						"data",
+						"carrier"
+					],
+					"query": [
+						{
+							"key": "useProxy",
+							"value": "false",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prima Data Create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the schema of the response data\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"\r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.COMPID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CARID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CARDSC).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.ADDRL1).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.City).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.ZIPCODE).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.Phone).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.Fax).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.eMail).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.WebSite).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CONNME).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CNTYCOD).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.STAID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTUSR).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTDAT).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTTIM).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGUSR).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGDAT).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGTIM).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.RowNum).to.exist.and.to.be.a('number');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Total count field is present in the response\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.have.property('totalCount');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{AWS US authToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"COMPID\": \"PLL\",\r\n  \"CARID\": \"6 SHOT\",\r\n  \"CARDSC\": \"Carrier A\",\r\n  \"ADDRL1\": \"123 Main St\",\r\n  \"ADDRL2\": \"\",\r\n  \"City\": \"New York\",\r\n  \"ZIPCODE\": \"10001\",\r\n  \"Phone\": \"555-123-4567\",\r\n  \"Fax\": \"555-765-4321\",\r\n  \"eMail\": \"carrier@example.com\",\r\n  \"WebSite\": \"http://carrier.com\",\r\n  \"CONNME\": \"John Doe\",\r\n  \"CNTYCOD\": \"US\",\r\n  \"STAID\": \"NY\",\r\n  \"CHGUSR\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://nfeij1whc8.execute-api.us-east-1.amazonaws.com/dev/primaapi/v1/data/carrier",
+					"protocol": "https",
+					"host": [
+						"nfeij1whc8",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"primaapi",
+						"v1",
+						"data",
+						"carrier"
+					],
+					"query": [
+						{
+							"key": "useProxy",
+							"value": "false",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Prima Data Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.equal(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response Content-Type header is application/json\", function () {\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate the schema of the response data\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"\r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.COMPID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CARID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CARDSC).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.ADDRL1).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.City).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.ZIPCODE).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.Phone).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.Fax).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.eMail).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.WebSite).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CONNME).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CNTYCOD).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.STAID).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTUSR).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTDAT).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CRTTIM).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGUSR).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGDAT).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.CHGTIM).to.exist.and.to.be.a('string');\r",
+							"  pm.expect(responseData.RowNum).to.exist.and.to.be.a('number');\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Total count field is present in the response\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.have.property('totalCount');\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJraWQiOiJkamNHZXhsb29uTHBGVnczR1ZrUTRXM2F1RGpOYUxmTGFtc0hUY1JYaHNFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJkNGQ4MjRiOC03MDQxLTcwM2MtZDAzMi1lNzExN2Y3ODdmZTgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9LWU1ib21kYWIiLCJjbGllbnRfaWQiOiI3dGx2cXJzNDdnZ2cwcDRycTNycWs0cHEycyIsIm9yaWdpbl9qdGkiOiI5M2Q1MTcwOC0wZWViLTRmYzEtODIwYS1lYjQ3YzZjYzM2MTEiLCJldmVudF9pZCI6ImM3YjVjMTNkLTZhZWYtNGQxZi05NmJkLTFjNWJmMzdhYTliOSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDQwNjA2OTgsImV4cCI6MTc0NDA2NDI5OCwiaWF0IjoxNzQ0MDYwNjk4LCJqdGkiOiJlNjUyYzUwYi0zNTdiLTQzNzYtYTcwNy02YWI2MTgwNDM0YWQiLCJ1c2VybmFtZSI6Im1pa2ViIn0.I1G9QJB-rTMld-SroK18mL4Gt45oVV-tjFoLMyasnHBS0yrKutEa9_UfHlgG201NmXJEtIXd6D1bVqKWO3WrWOjMGm6185c5nsiW-9m8VsVlNrb5JACK5EpzuwLLxBQvfI0VsnFSivWhrMufb5ct39up9MTNvOdAC5NyO2AaZC7bfs6HsTLhXY-ACDIF56xwjMQJrgThJPD5NCJ1q1iwOcXthR_69h4oBKPzW-yQ2QiwTUvoALLaFK6qEpujYlFcO5dvHorlIljqRbAV2-HUZYo4lNkXWqmL7XFOVc9mbkYWQX8tvnrsz44yjpsbx8wRjxlLc5PhfzxZDpnxNr3ozQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://nfeij1whc8.execute-api.us-east-1.amazonaws.com/dev/primaapi/v1/data/carrier?compid=PLL&CARID=5 SHOT",
+					"protocol": "https",
+					"host": [
+						"nfeij1whc8",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"primaapi",
+						"v1",
+						"data",
+						"carrier"
+					],
+					"query": [
+						{
+							"key": "compid",
+							"value": "PLL"
+						},
+						{
+							"key": "CARID",
+							"value": "5 SHOT"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,57 +1,202 @@
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import https from 'https'
 import fetch from 'node-fetch'
+import settingsConfig from '@/lib/settings_config.json'
 
-export async function GET() {
+const API_BASE_URL = 'https://nfeij1whc8.execute-api.us-east-1.amazonaws.com/dev/primaapi/v1/data'
+const TEMP_TOKEN = 'eyJraWQiOiJkamNHZXhsb29uTHBGVnczR1ZrUTRXM2F1RGpOYUxmTGFtc0hUY1JYaHNFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJkNGQ4MjRiOC03MDQxLTcwM2MtZDAzMi1lNzExN2Y3ODdmZTgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9LWU1ib21kYWIiLCJjbGllbnRfaWQiOiI3dGx2cXJzNDdnZ2cwcDRycTNycWs0cHEycyIsIm9yaWdpbl9qdGkiOiIwNGFmZTVhNC0zZjU4LTRiOTUtOWJjMC05Y2JhOWRhZWFmYjYiLCJldmVudF9pZCI6IjljOWRmYmFlLWViZGItNDNlYy1hN2M5LTE3OWY4MzExY2RmOSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDY3OTEyMDcsImV4cCI6MTc0Njc5NDgwNywiaWF0IjoxNzQ2NzkxMjA3LCJqdGkiOiI0YWMyNzE5YS1jMWQwLTRjNzctODg1ZS1jYjc0YWQyNGE3YWYiLCJ1c2VybmFtZSI6Im1pa2ViIn0.yDUmVrbenMMY79j5HK63s-CraB2mXtzHzHE4gNwwrthG_Xezwp1hBoVADf5EZBNAAKihXL0kI2hMMN1PvRjZJyPOrda79dLaLO4pAw_0SRr2jpcg-RTbennc4RL0C1yKwhMGBkGxt8nBKyIACRnE0V5DpypsXCirneX7YeHCk8aITr29tKXOEPphWSlANFp9HbgQh81dsx0LCWUBMgb_FL655imdqXwyrxTAfWeoV4L1gIakeW_SzYsGhceQsUFU69YBTMYkbmY9_SjvMSZ8TUSsCWKZWZcnXtCR5buhcpM4HcP3m1zpxxXY5siHMw2J0M3SRtfSmqvIQNIgoMoREg'
+
+// Helper function to create HTTPS agent
+const createHttpsAgent = () => new https.Agent({
+  rejectUnauthorized: false
+})
+
+// Helper function to add CORS headers
+const addCorsHeaders = (response: NextResponse) => {
+  response.headers.set('Access-Control-Allow-Origin', '*')
+  response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  return response
+}
+
+// Helper function to handle API errors
+const handleApiError = (error: any) => {
+  console.error('API Error:', error)
+  return NextResponse.json(
+    { error: 'Internal server error' },
+    { status: 500 }
+  )
+}
+
+export async function GET(request: Request) {
   try {
-    const session = await getServerSession(authOptions)
+    const { searchParams } = new URL(request.url)
+    const compid = searchParams.get('COMPID') || 'PLL'
+    const pageNumber = searchParams.get('pageNumber') || '1'
+    const pageSize = searchParams.get('pageSize') || '300'
+    const carid = searchParams.get('CARID') || ''
+    const filterId = searchParams.get('FilterId') || ''
+    const filterName = searchParams.get('FilterName') || ''
+
+    // Build URL exactly like Postman
+    const url = `${API_BASE_URL}/carrier?COMPID=${compid}&pageNumber=${pageNumber}&pageSize=${pageSize}&CARID=${carid}&FilterId=${filterId}&FilterName=${filterName}`
     
-    if (!session?.accessToken) {
+    console.log('Making request to:', url)
+    console.log('With headers:', { token: TEMP_TOKEN })
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'token': TEMP_TOKEN
+      },
+      agent: createHttpsAgent()
+    })
+
+    console.log('Response status:', response.status)
+    console.log('Response headers:', response.headers)
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('Error Response:', errorText)
       return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
+        { error: 'Failed to fetch carrier data', details: errorText },
+        { status: response.status }
       )
     }
 
-    const carrierUrl = 'https://us.prima.pacorini.com/api/v1.0/BackendTest/Flask_Carrier?page_number=1&page_size=100&carID&carDsc'
-    
-    // Create an HTTPS agent that ignores SSL verification
-    const agent = new https.Agent({
-      rejectUnauthorized: false
-    })
+    const data = await response.json()
+    console.log('Response data:', data)
 
-    const response = await fetch(carrierUrl, {
+    return addCorsHeaders(NextResponse.json(data))
+  } catch (error) {
+    console.error('Detailed error:', error)
+    return handleApiError(error)
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    const requiredParams = settingsConfig.carrier.create.params
+    const missingParams = requiredParams.filter(param => !body[param])
+
+    if (missingParams.length > 0) {
+      return NextResponse.json(
+        { error: `Missing required parameters: ${missingParams.join(', ')}` },
+        { status: 400 }
+      )
+    }
+
+    const url = `${API_BASE_URL}/carrier`
+    
+    const response = await fetch(url, {
+      method: 'POST',
       headers: {
-        token: session.accessToken,
+        'Content-Type': 'application/json',
+        token: TEMP_TOKEN,
       },
-      agent
+      body: JSON.stringify(body),
+      agent: createHttpsAgent()
     })
 
     if (!response.ok) {
       const errorText = await response.text()
       console.error('Error Response:', errorText)
       return NextResponse.json(
-        { error: 'Failed to fetch carrier data' },
+        { error: 'Failed to create carrier' },
         { status: response.status }
       )
     }
 
     const data = await response.json()
-
-    // Create a new response with CORS headers
-    const corsResponse = NextResponse.json(data)
-    corsResponse.headers.set('Access-Control-Allow-Origin', '*')
-    corsResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    corsResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-
-    return corsResponse
+    return addCorsHeaders(NextResponse.json(data))
   } catch (error) {
-    console.error('Error in carrier API:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return handleApiError(error)
   }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json()
+    const requiredParams = settingsConfig.carrier.update.params
+    const missingParams = requiredParams.filter(param => !body[param])
+
+    if (missingParams.length > 0) {
+      return NextResponse.json(
+        { error: `Missing required parameters: ${missingParams.join(', ')}` },
+        { status: 400 }
+      )
+    }
+
+    const url = `${API_BASE_URL}/carrier`
+    
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        token: TEMP_TOKEN,
+      },
+      body: JSON.stringify(body),
+      agent: createHttpsAgent()
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('Error Response:', errorText)
+      return NextResponse.json(
+        { error: 'Failed to update carrier' },
+        { status: response.status }
+      )
+    }
+
+    const data = await response.json()
+    return addCorsHeaders(NextResponse.json(data))
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const compid = searchParams.get('COMPID')
+    const carid = searchParams.get('CARID')
+
+    if (!compid || !carid) {
+      return NextResponse.json(
+        { error: 'Missing required parameters: COMPID and CARID' },
+        { status: 400 }
+      )
+    }
+
+    const url = `${API_BASE_URL}/carrier?COMPID=${compid}&CARID=${carid}`
+    
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        token: TEMP_TOKEN,
+      },
+      agent: createHttpsAgent()
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('Error Response:', errorText)
+      return NextResponse.json(
+        { error: 'Failed to delete carrier' },
+        { status: response.status }
+      )
+    }
+
+    const data = await response.json()
+    return addCorsHeaders(NextResponse.json(data))
+  } catch (error) {
+    return handleApiError(error)
+  }
+}
+
+// Handle OPTIONS request for CORS preflight
+export async function OPTIONS() {
+  return addCorsHeaders(new NextResponse(null, { status: 204 }))
 } 
