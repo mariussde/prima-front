@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import settingsConfig from '@/lib/settings_config.json'
 
 const API_BASE_URL = 'https://nfeij1whc8.execute-api.us-east-1.amazonaws.com/dev/primaapi/v1/data'
-const TEMP_TOKEN = 'eyJraWQiOiJkamNHZXhsb29uTHBGVnczR1ZrUTRXM2F1RGpOYUxmTGFtc0hUY1JYaHNFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJkNGQ4MjRiOC03MDQxLTcwM2MtZDAzMi1lNzExN2Y3ODdmZTgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9LWU1ib21kYWIiLCJjbGllbnRfaWQiOiI3dGx2cXJzNDdnZ2cwcDRycTNycWs0cHEycyIsIm9yaWdpbl9qdGkiOiIzMzE1NTg2My1kYzZhLTRjMzQtODc5YS01ZTI0ZDU4YjEzOTIiLCJldmVudF9pZCI6IjJlMTQyMjc1LTEyNDgtNDRhYi1iZGFmLWNlNjZhNjA4NzA5ZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDcwNDA1NTEsImV4cCI6MTc0NzA0NDE1MSwiaWF0IjoxNzQ3MDQwNTUxLCJqdGkiOiJlZDA4ZjVhYS00YTA0LTRkNTEtYWI2OC04NGYzY2ViYzQ5MmIiLCJ1c2VybmFtZSI6Im1pa2ViIn0.cO08RWf1EhAdPKVXktYUXTXF5aKgxBHYgOIy2gNFA78BDUp_w7w8CdJlcTbulihiuoJDKXIbqtJtuuL2QRY-oW0JWxmbM2B7heoUCRnFYhfM0atfMJe_QhiVYGCQXtU4x7LnDaosEp_jomoLv68kVeED8wz9_4Ay_14t2mmwvvvrctHDB03RnhUSQvH1RoQKOx3e6i5NM7xMrbLoXwX3a3cEkf-BVxxaulC2vFlSTiSTsaBIW8jn4TOx6ngHQAsiNMapjeOSz3a9hr9dU4N7Ine24wVy6N3iyLmmHKgHxSM3UGC-Y3hc95ajOidQaYZ_sIg6fBbXTETc26CdT3VCiA'
+const TEMP_TOKEN = 'eyJraWQiOiJkamNHZXhsb29uTHBGVnczR1ZrUTRXM2F1RGpOYUxmTGFtc0hUY1JYaHNFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJkNGQ4MjRiOC03MDQxLTcwM2MtZDAzMi1lNzExN2Y3ODdmZTgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9LWU1ib21kYWIiLCJjbGllbnRfaWQiOiI3dGx2cXJzNDdnZ2cwcDRycTNycWs0cHEycyIsIm9yaWdpbl9qdGkiOiIyMWNlNDRjNC0zMWM4LTRjODItYjVhYy0yNGE0NzQzYzY0OWYiLCJldmVudF9pZCI6ImIyNjVjMzdkLTFiZTEtNGFhZC1hZmIwLTZlMWZiMzU5YzNmZiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDcwNDMxMjYsImV4cCI6MTc0NzA0NjcyNiwiaWF0IjoxNzQ3MDQzMTI2LCJqdGkiOiJkZmM1NTRjNC00NWY3LTQ4MmYtYjhhYy05NjJlODMyMzM2ZmIiLCJ1c2VybmFtZSI6Im1pa2ViIn0.bo8wteSvMWSY6hPMfIGzKC-maAx1qY7BJXIy5i3KWTk_cMQxy9E_Yy9-wut4VuXl1pqaiLHk8whHUj3fFdGBaY_cwEaI_dHBFUtNO0z5Q8stzWQDBrpxwkanwWLziI-aA9-BF1EvWsG7Ru6f15x0PMFJ-Ailgk8H6nq4gXz9gYwFhvLjcMnDwv2nMURqPCwjcsWGXrV8FbmokZcTdMkQNnUSmRwvo0F6JhV_AwAvAD9tRVLhsNAYn_YVydqA1lMovRKBoj226ITW2HE4mBcnMekfy-SyBRQoaUAd65UV7otdsckwuxcfBvaibSLgi75TeX6pBwCFOAngpgJoHTj6Fg'
 
 // Helper function to create HTTPS agent
 const createHttpsAgent = () => new https.Agent({
@@ -74,12 +74,12 @@ export async function POST(request: Request) {
     const requiredParams = settingsConfig.carrier.create.params
     const missingParams = requiredParams.filter(param => !body[param])
 
-    if (missingParams.length > 0) {
-      return NextResponse.json(
-        { error: `Missing required parameters: ${missingParams.join(', ')}` },
-        { status: 400 }
-      )
-    }
+    // if (missingParams.length > 0) {
+    //   return NextResponse.json(
+    //     { error: `Missing required parameters: ${missingParams.join(', ')}` },
+    //     { status: 400 }
+    //   )
+    // }
 
     const url = `${API_BASE_URL}/carrier`
     
@@ -131,12 +131,12 @@ export async function PUT(request: Request) {
     const requiredParams = settingsConfig.carrier.update.params
     const missingParams = requiredParams.filter(param => !body[param])
 
-    if (missingParams.length > 0) {
-      return NextResponse.json(
-        { error: `Missing required parameters: ${missingParams.join(', ')}` },
-        { status: 400 }
-      )
-    }
+    // if (missingParams.length > 0) {
+    //   return NextResponse.json(
+    //     { error: `Missing required parameters: ${missingParams.join(', ')}` },
+    //     { status: 400 }
+    //   )
+    // }
 
     const url = `${API_BASE_URL}/carrier`
     
@@ -146,7 +146,10 @@ export async function PUT(request: Request) {
         'Content-Type': 'application/json',
         token: TEMP_TOKEN,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        ...body,
+        CHGUSR: "admin  "
+      }),
       agent: createHttpsAgent()
     })
 
