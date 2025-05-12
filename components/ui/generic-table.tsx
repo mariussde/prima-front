@@ -148,132 +148,127 @@ export function GenericTable<T>({
     : columns;
 
   return (
-    <div className="space-y-4 w-full">
-      <div className="rounded-md border w-full">
-        <div className="min-w-full inline-block align-middle">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                {tableColumns.map((column) => {
-                  if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
-                  return (
-                    <TableHead 
-                      key={column.accessorKey} 
-                      className={cn(
-                        "h-[100px] relative align-top",
-                        column.accessorKey === 'actions' ? 'w-[80px] min-w-[80px]' : 'min-w-[120px]'
-                      )}
-                    >
-                      {column.accessorKey === 'actions' ? (
-                        <div className="pt-3 px-2 pb-10">
-                          <span className="font-semibold text-sm leading-normal">Actions</span>
-                        </div>
-                      ) : (
-                        <>
-                          <div className="pt-3 px-2 pb-10">
-                            <button 
-                              onClick={() => handleSort(column.accessorKey)}
-                              className="flex items-center font-semibold text-sm leading-normal hover:text-primary transition-colors w-full text-left"
-                            >
-                              <span className="break-words whitespace-normal">{column.header}</span>
-                              {getSortIcon(column.accessorKey)}
-                            </button>
-                          </div>
-                          <div className="absolute bottom-2 left-0 right-0 px-2">
-                            <Input
-                              placeholder={`Filter...`}
-                              value={columnFilters[column.accessorKey] || ''}
-                              onChange={(e) => onFilterChange?.(column.accessorKey, e.target.value)}
-                              className="h-8"
-                            />
-                          </div>
-                        </>
-                      )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {(onSortChange ? data : sortedData).map((row, index) => {
-                const isLastRow = index === data.length - 1;
+    <div className="w-full">
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {tableColumns.map((column) => {
+                if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
                 return (
-                  <TableRow
-                    key={index}
-                    ref={isLastRow ? lastRowRef : undefined}
-                    className={onRowClick ? 'cursor-pointer hover:bg-muted' : ''}
-                    onClick={() => onRowClick?.(row)}
+                  <TableHead 
+                    key={column.accessorKey} 
+                    className="h-[100px] relative align-top min-w-[120px]"
                   >
-                    {tableColumns.map((column) => {
-                      if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
-                      
-                      if (column.accessorKey === 'actions') {
-                        return (
-                          <TableCell key={column.accessorKey} className="w-[80px] min-w-[80px] text-center">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-8 w-8 p-0 mx-auto">
-                                  <span className="sr-only">Open menu</span>
-                                  <MoreHorizontal className="h-4 w-4 rotate-90" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                {onEdit && (
-                                  <DropdownMenuItem onClick={(e) => {
-                                    e.stopPropagation();
-                                    onEdit(row);
-                                  }}>
-                                    <Pencil className="mr-2 h-4 w-4" />
-                                    Edit
-                                  </DropdownMenuItem>
-                                )}
-                                {onDelete && (
-                                  <DropdownMenuItem 
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      onDelete(row);
-                                    }}
-                                    className="text-red-600"
-                                  >
-                                    <Trash className="mr-2 h-4 w-4" />
-                                    Delete
-                                  </DropdownMenuItem>
-                                )}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </TableCell>
-                        );
-                      }
-
-                      return (
-                        <TableCell key={column.accessorKey} className="whitespace-normal break-words min-w-[120px]">
-                          {(row as any)[column.accessorKey]}
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
+                    {column.accessorKey === 'actions' ? (
+                      <div className="pt-3 px-2 pb-10">
+                        <span className="font-semibold text-sm leading-normal">Actions</span>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="pt-3 px-2 pb-10">
+                          <button 
+                            onClick={() => handleSort(column.accessorKey)}
+                            className="flex items-center font-semibold text-sm leading-normal hover:text-primary transition-colors w-full text-left"
+                          >
+                            <span className="break-words whitespace-normal">{column.header}</span>
+                            {getSortIcon(column.accessorKey)}
+                          </button>
+                        </div>
+                        <div className="absolute bottom-2 left-0 right-0 px-2">
+                          <Input
+                            placeholder={`Filter...`}
+                            value={columnFilters[column.accessorKey] || ''}
+                            onChange={(e) => onFilterChange?.(column.accessorKey, e.target.value)}
+                            className="h-8"
+                          />
+                        </div>
+                      </>
+                    )}
+                  </TableHead>
                 )
               })}
-              {isLoading && (
-                <TableRow>
-                  <TableCell colSpan={visibleColumnsCount} className="text-center py-4">
-                    <div className="flex items-center justify-center space-x-2">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Loading more data...</span>
-                    </div>
-                  </TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {(onSortChange ? data : sortedData).map((row, index) => {
+              const isLastRow = index === data.length - 1;
+              return (
+                <TableRow
+                  key={index}
+                  ref={isLastRow ? lastRowRef : undefined}
+                  className={onRowClick ? 'cursor-pointer hover:bg-muted' : ''}
+                  onClick={() => onRowClick?.(row)}
+                >
+                  {tableColumns.map((column) => {
+                    if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
+                    
+                    if (column.accessorKey === 'actions') {
+                      return (
+                        <TableCell key={column.accessorKey} className="min-w-[120px]">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4 rotate-90" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              {onEdit && (
+                                <DropdownMenuItem onClick={(e) => {
+                                  e.stopPropagation();
+                                  onEdit(row);
+                                }}>
+                                  <Pencil className="mr-2 h-4 w-4" />
+                                  Edit
+                                </DropdownMenuItem>
+                              )}
+                              {onDelete && (
+                                <DropdownMenuItem 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onDelete(row);
+                                  }}
+                                  className="text-red-600"
+                                >
+                                  <Trash className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      );
+                    }
+
+                    return (
+                      <TableCell key={column.accessorKey} className="whitespace-normal break-words min-w-[120px]">
+                        {(row as any)[column.accessorKey]}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
-              )}
-              {!isLoading && data.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={visibleColumnsCount} className="text-center py-8">
-                    No data available
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+              )
+            })}
+            {isLoading && (
+              <TableRow>
+                <TableCell colSpan={visibleColumnsCount} className="text-center py-4">
+                  <div className="flex items-center justify-center space-x-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Loading more data...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+            {!isLoading && data.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={visibleColumnsCount} className="text-center py-8">
+                  No data available
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
       {pagination && (
         <div className="flex items-center justify-between">
