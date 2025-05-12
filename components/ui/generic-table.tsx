@@ -158,10 +158,13 @@ export function GenericTable<T>({
                 return (
                   <TableHead 
                     key={column.accessorKey} 
-                    className="h-[100px] relative align-top min-w-[120px]"
+                    className={cn(
+                      "h-[100px] relative align-top",
+                      column.accessorKey === 'actions' ? 'w-[50px]' : 'min-w-[120px]'
+                    )}
                   >
                     {column.accessorKey === 'actions' ? (
-                      <div className="pt-3 px-2 pb-10">
+                      <div className="pt-3 px-2 pb-10 text-center">
                         <span className="font-semibold text-sm leading-normal">Actions</span>
                       </div>
                     ) : (
@@ -205,10 +208,10 @@ export function GenericTable<T>({
                     
                     if (column.accessorKey === 'actions') {
                       return (
-                        <TableCell key={column.accessorKey} className="min-w-[120px]">
+                        <TableCell key={column.accessorKey} className="w-[50px] text-center">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="h-8 w-8 p-0">
+                              <Button variant="ghost" className="h-8 w-8 p-0 mx-auto">
                                 <span className="sr-only">Open menu</span>
                                 <MoreHorizontal className="h-4 w-4 rotate-90" />
                               </Button>

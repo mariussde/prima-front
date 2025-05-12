@@ -26,11 +26,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="px-6 py-4">
               <Breadcrumbs />
             </div>
-            <div className="flex-1 relative">
-              <div className="absolute inset-0 overflow-x-auto">
-                <div className="min-w-[800px] h-full">
-                  {children}
-                </div>
+            <div className="flex-1 overflow-x-auto">
+              <div className="min-w-[800px] h-full">
+                {children}
               </div>
             </div>
           </div>

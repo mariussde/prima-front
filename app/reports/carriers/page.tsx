@@ -347,23 +347,21 @@ export default function CarriersReportsPage() {
             </div>
           </CardHeader>
           <CardContent className="px-2 sm:px-6">
-            <div className="w-full overflow-x-auto">
-              <div className="min-w-[800px]">
-                <CarrierTable
-                  data={carrierData}
-                  onRowClick={handleRowClick}
-                  onLoadMore={handleLoadMore}
-                  isLoading={isLoading}
-                  hasMore={hasMore}
-                  columnVisibility={columnVisibility}
-                  onFilterChange={handleFilterChange}
-                  columnFilters={columnFilters}
-                  onSortChange={handleSortChange}
-                  showActions={true}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
-              </div>
+            <div className="min-w-[800px]">
+              <CarrierTable
+                data={carrierData}
+                onRowClick={handleRowClick}
+                onLoadMore={handleLoadMore}
+                isLoading={isLoading}
+                hasMore={hasMore}
+                columnVisibility={columnVisibility}
+                onFilterChange={handleFilterChange}
+                columnFilters={columnFilters}
+                onSortChange={handleSortChange}
+                showActions={true}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
             </div>
             {isLoading && page === 1 && (
               <div className="w-full flex justify-center py-4">
