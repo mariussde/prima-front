@@ -70,7 +70,7 @@ export function TopBar() {
 
       <div className="flex items-center gap-1 sm:gap-2 md:gap-4 ml-auto sticky right-0">
         <Select defaultValue="spain">
-          <SelectTrigger className="w-[140px] sm:w-[180px]">
+          <SelectTrigger className="w-[60px] min-[340px]:w-[140px] sm:w-[180px]">
             <SelectValue placeholder="Select country" />
           </SelectTrigger>
           <SelectContent>
@@ -78,7 +78,7 @@ export function TopBar() {
               <SelectItem key={country.value} value={country.value}>
                 <div className="flex items-center gap-2">
                   <span className={`fi fi-${country.code} rounded-sm`}></span>
-                  <span>{country.label}</span>
+                  <span className="hidden min-[340px]:inline">{country.label}</span>
                 </div>
               </SelectItem>
             ))}

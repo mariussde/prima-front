@@ -322,10 +322,10 @@ export default function CarriersReportsPage() {
         <Card className="w-full">
           <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
             <CardTitle>Carrier Reports</CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col min-[320px]:flex-row items-start min-[320px]:items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="default" className="w-[120px]">Columns</Button>
+                  <Button variant="outline" size="default" className="w-full min-[320px]:w-[120px]">Columns</Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
                   {CARRIER_COLUMNS.map((column) => (
@@ -340,7 +340,7 @@ export default function CarriersReportsPage() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button onClick={handleAddNew} className="w-[120px]">
+              <Button onClick={handleAddNew} className="w-full min-[320px]:w-[120px]">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Carrier
               </Button>
