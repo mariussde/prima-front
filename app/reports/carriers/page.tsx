@@ -15,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/components/ui/use-toast"
+import { defaultVisibleColumns } from '@/components/carrier/carrier-table'
 
 // Custom hook for debounce
 function useDebounce<T>(value: T, delay: number): T {
@@ -33,8 +34,6 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-// Import the default visible columns from the CarrierTable component
-import { defaultVisibleColumns } from '@/components/carrier/carrier-table'
 
 const CARRIER_COLUMNS = [
   "COMPID",
@@ -75,9 +74,14 @@ export default function CarriersReportsPage() {
     column: null,
     direction: null
   })
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [selectedCarrier, setSelectedCarrier] = useState<Carrier | undefined>(undefined)
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    mode: 'add' | 'edit';
+    carrier?: Carrier;
+  }>({
+    isOpen: false,
+    mode: 'add'
+  })
   const debouncedFilters = useDebounce(columnFilters, 300)
   const initialFetchDone = useRef(false)
   const abortControllerRef = useRef<AbortController | null>(null)
@@ -144,7 +148,7 @@ export default function CarriersReportsPage() {
     } finally {
       setIsLoading(false)
     }
-  }, []) // Removed dependencies from callback for clarity
+  }, [])
 
   // Handle authentication and initial load
   useEffect(() => {
@@ -159,7 +163,7 @@ export default function CarriersReportsPage() {
     }
   }, [status, router, fetchCarrierData])
 
-  // Handle filter changes via debounce - single source of truth for filter-based fetches
+  // Handle filter and sort changes
   useEffect(() => {
     if (initialFetchDone.current) {
       setPage(1)
@@ -167,17 +171,7 @@ export default function CarriersReportsPage() {
       setHasMore(true)
       fetchCarrierData(1, debouncedFilters, sortConfig)
     }
-  }, [debouncedFilters, fetchCarrierData, sortConfig])
-
-  // Handle sort changes
-  useEffect(() => {
-    if (initialFetchDone.current) {
-      setPage(1)
-      setCarrierData([])
-      setHasMore(true)
-      fetchCarrierData(1, debouncedFilters, sortConfig)
-    }
-  }, [sortConfig, fetchCarrierData, debouncedFilters])
+  }, [debouncedFilters, sortConfig, fetchCarrierData])
 
   // Cleanup effect for aborting any pending requests on unmount
   useEffect(() => {
@@ -219,51 +213,45 @@ export default function CarriersReportsPage() {
   }
 
   const handleAddNew = () => {
-    setIsAddModalOpen(true)
-  }
-
-  const handleAddCarrier = async (data: any) => {
-    try {
-      const response = await fetch('/api/carrier', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          COMPID: data.COMPID,
-          CARID: data.CARID,
-          CARDSC: data.CARDSC,
-          ADDRL1: data.ADDRL1 || "",
-          ADDRL2: data.ADDRL2 || "",
-          City: data.City || "",
-          ZIPCODE: data.ZIPCODE || "",
-          Phone: data.Phone || "",
-          Fax: data.Fax || "",
-          eMail: data.eMail || "",
-          WebSite: data.WebSite || "",
-          CONNME: data.CONNME || "",
-          CNTYCOD: data.CNTYCOD || "",
-          STAID: data.STAID || "",
-          CRTUSR: data.CRTUSR || "admin",
-        }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to create carrier')
-      }
-
-      // Refresh the carrier data
-      await fetchCarrierData(1, columnFilters, sortConfig)
-      return Promise.resolve()
-    } catch (error) {
-      return Promise.reject(error)
-    }
+    setModalState({ isOpen: true, mode: 'add' })
   }
 
   const handleEdit = (carrier: Carrier) => {
-    setSelectedCarrier(carrier)
-    setIsEditModalOpen(true)
+    setModalState({ isOpen: true, mode: 'edit', carrier })
+  }
+
+  const handleModalClose = () => {
+    setModalState({ isOpen: false, mode: 'add' })
+  }
+
+  const handleCarrierSubmit = async (data: any) => {
+    try {
+      const response = await fetch('/api/carrier', {
+        method: modalState.mode === 'add' ? 'POST' : 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to ${modalState.mode} carrier`)
+      }
+
+      toast({
+        title: "Success",
+        description: `Carrier has been successfully ${modalState.mode === 'add' ? 'created' : 'updated'}.`,
+      })
+
+      await fetchCarrierData(1, columnFilters, sortConfig)
+      handleModalClose()
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      })
+    }
   }
 
   const handleDelete = async (carrier: Carrier) => {
@@ -290,36 +278,6 @@ export default function CarriersReportsPage() {
         description: error instanceof Error ? error.message : "Failed to delete carrier",
         variant: "destructive",
       })
-    }
-  }
-
-  const handleUpdateCarrier = async (data: any) => {
-    try {
-      const response = await fetch('/api/carrier', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to update carrier')
-      }
-
-      toast({
-        title: "Success",
-        description: "Carrier has been successfully updated.",
-      })
-
-      // Refresh the carrier data
-      await fetchCarrierData(1, columnFilters, sortConfig)
-      setIsEditModalOpen(false)
-      setSelectedCarrier(undefined)
-      return Promise.resolve()
-    } catch (error) {
-      return Promise.reject(error)
     }
   }
 
@@ -413,16 +371,10 @@ export default function CarriersReportsPage() {
       </main>
 
       <CarrierFormModal
-        open={isAddModalOpen}
-        onOpenChange={setIsAddModalOpen}
-        onSubmit={handleAddCarrier}
-      />
-
-      <CarrierFormModal
-        open={isEditModalOpen}
-        onOpenChange={setIsEditModalOpen}
-        carrier={selectedCarrier}
-        onSubmit={handleUpdateCarrier}
+        open={modalState.isOpen}
+        onOpenChange={(open) => !open && handleModalClose()}
+        carrier={modalState.carrier}
+        onSubmit={handleCarrierSubmit}
       />
     </div>
   )

@@ -10,12 +10,19 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
+    user?: {
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      username?: string;
+    }
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
     accessToken?: string;
+    username?: string;
   }
 }
 
@@ -113,9 +120,10 @@ export const authOptions = {
 
           return {
             id: idTokenPayload.sub,
-            name: idTokenPayload.name || idTokenPayload["cognito:username"],
+            name: idTokenPayload["cognito:username"],
             email: idTokenPayload.email,
             accessToken: data.AuthenticationResult.AccessToken,
+            username: idTokenPayload["cognito:username"]
           };
         } catch (error) {
           console.error("Authentication error:", error);
@@ -129,11 +137,16 @@ export const authOptions = {
     async jwt({ token, user }: { token: JWT; user: any }) {
       if (user) {
         token.accessToken = user.accessToken;
+        token.username = user.username;
       }
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
       session.accessToken = token.accessToken;
+      session.user = {
+        ...session.user,
+        username: token.username
+      };
       return session;
     },
   },
