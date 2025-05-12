@@ -40,12 +40,18 @@ export function LoginForm() {
       }
 
       if (result.error) {
-        // Handle specific Keycloak error messages
+        // Handle specific Cognito error messages
         let errorMessage = result.error;
         if (result.error.includes("Invalid credentials")) {
           errorMessage = "Invalid username or password";
+        } else if (result.error.includes("User is not confirmed")) {
+          errorMessage = "Please verify your email address before signing in";
+        } else if (result.error.includes("User is disabled")) {
+          errorMessage = "Your account has been disabled. Please contact support";
+        } else if (result.error.includes("Password attempts exceeded")) {
+          errorMessage = "Too many failed login attempts. Please try again later";
         } else if (result.error.includes("Failed to connect")) {
-          errorMessage = "Unable to connect to authentication server. Please try again later.";
+          errorMessage = "Unable to connect to authentication server. Please try again later";
         }
 
         toast({
@@ -58,7 +64,6 @@ export function LoginForm() {
       }
 
       if (result.ok) {
-        // Ensure we have a valid session before redirecting
         await router.push(callbackUrl);
         router.refresh();
       }

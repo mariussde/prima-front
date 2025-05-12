@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server'
 import https from 'https'
 import fetch from 'node-fetch'
 import settingsConfig from '@/lib/settings_config.json'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 const API_BASE_URL = 'https://nfeij1whc8.execute-api.us-east-1.amazonaws.com/dev/primaapi/v1/data'
-const TEMP_TOKEN = 'eyJraWQiOiJkamNHZXhsb29uTHBGVnczR1ZrUTRXM2F1RGpOYUxmTGFtc0hUY1JYaHNFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJkNGQ4MjRiOC03MDQxLTcwM2MtZDAzMi1lNzExN2Y3ODdmZTgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9LWU1ib21kYWIiLCJjbGllbnRfaWQiOiI3dGx2cXJzNDdnZ2cwcDRycTNycWs0cHEycyIsIm9yaWdpbl9qdGkiOiIyMWNlNDRjNC0zMWM4LTRjODItYjVhYy0yNGE0NzQzYzY0OWYiLCJldmVudF9pZCI6ImIyNjVjMzdkLTFiZTEtNGFhZC1hZmIwLTZlMWZiMzU5YzNmZiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDcwNDMxMjYsImV4cCI6MTc0NzA0NjcyNiwiaWF0IjoxNzQ3MDQzMTI2LCJqdGkiOiJkZmM1NTRjNC00NWY3LTQ4MmYtYjhhYy05NjJlODMyMzM2ZmIiLCJ1c2VybmFtZSI6Im1pa2ViIn0.bo8wteSvMWSY6hPMfIGzKC-maAx1qY7BJXIy5i3KWTk_cMQxy9E_Yy9-wut4VuXl1pqaiLHk8whHUj3fFdGBaY_cwEaI_dHBFUtNO0z5Q8stzWQDBrpxwkanwWLziI-aA9-BF1EvWsG7Ru6f15x0PMFJ-Ailgk8H6nq4gXz9gYwFhvLjcMnDwv2nMURqPCwjcsWGXrV8FbmokZcTdMkQNnUSmRwvo0F6JhV_AwAvAD9tRVLhsNAYn_YVydqA1lMovRKBoj226ITW2HE4mBcnMekfy-SyBRQoaUAd65UV7otdsckwuxcfBvaibSLgi75TeX6pBwCFOAngpgJoHTj6Fg'
 
 // Helper function to create HTTPS agent
 const createHttpsAgent = () => new https.Agent({
@@ -28,8 +29,26 @@ const handleApiError = (error: any) => {
   )
 }
 
+// Helper function to validate required parameters
+const validateRequiredParams = (params: any, requiredParams: string[]) => {
+  const missingParams = requiredParams.filter(param => !params[param])
+  if (missingParams.length > 0) {
+    throw new Error(`Missing required parameters: ${missingParams.join(', ')}`)
+  }
+}
+
+// Helper function to get authenticated user token
+const getAuthToken = async () => {
+  const session = await getServerSession(authOptions)
+  if (!session?.accessToken) {
+    throw new Error('Unauthorized')
+  }
+  return session.accessToken
+}
+
 export async function GET(request: Request) {
   try {
+    const token = await getAuthToken()
     const { searchParams } = new URL(request.url)
     const compid = searchParams.get('COMPID') || 'PLL'
     const pageNumber = searchParams.get('pageNumber') || '1'
@@ -38,14 +57,13 @@ export async function GET(request: Request) {
     const filterId = searchParams.get('FilterId') || ''
     const filterName = searchParams.get('FilterName') || ''
 
-    // Build URL exactly like Postman
     const url = `${API_BASE_URL}/carrier?COMPID=${compid}&pageNumber=${pageNumber}&pageSize=${pageSize}&CARID=${carid}&FilterId=${filterId}&FilterName=${filterName}`
     
     const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'token': TEMP_TOKEN
+        'token': token
       },
       agent: createHttpsAgent()
     })
@@ -60,26 +78,23 @@ export async function GET(request: Request) {
     }
 
     const data = await response.json()
-
     return addCorsHeaders(NextResponse.json(data))
-  } catch (error) {
-    console.error('Detailed error:', error)
+  } catch (error: any) {
+    if (error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     return handleApiError(error)
   }
 }
 
 export async function POST(request: Request) {
   try {
+    const token = await getAuthToken()
     const body = await request.json()
-    const requiredParams = settingsConfig.carrier.create.params
-    const missingParams = requiredParams.filter(param => !body[param])
+    const session = await getServerSession(authOptions)
+    const username = session?.user?.name || ''
 
-    // if (missingParams.length > 0) {
-    //   return NextResponse.json(
-    //     { error: `Missing required parameters: ${missingParams.join(', ')}` },
-    //     { status: 400 }
-    //   )
-    // }
+    //validateRequiredParams(body, settingsConfig.carrier.create.params)
 
     const url = `${API_BASE_URL}/carrier`
     
@@ -87,24 +102,11 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        token: TEMP_TOKEN,
+        token: token,
       },
       body: JSON.stringify({
-        COMPID: body.COMPID,
-        CARID: body.CARID,
-        CARDSC: body.CARDSC,
-        ADDRL1: body.ADDRL1 || "",
-        ADDRL2: body.ADDRL2 || "",
-        City: body.City || "",
-        ZIPCODE: body.ZIPCODE || "",
-        Phone: body.Phone || "",
-        Fax: body.Fax || "",
-        eMail: body.eMail || "",
-        WebSite: body.WebSite || "",
-        CONNME: body.CONNME || "",
-        CNTYCOD: body.CNTYCOD || "",
-        STAID: body.STAID || "",
-        CRTUSR: body.CRTUSR || "admin",
+        ...body,
+        CRTUSR: username // Set the creator user to the logged-in user
       }),
       agent: createHttpsAgent()
     })
@@ -120,23 +122,25 @@ export async function POST(request: Request) {
 
     const data = await response.json()
     return addCorsHeaders(NextResponse.json(data))
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (error.message.startsWith('Missing required parameters')) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
     return handleApiError(error)
   }
 }
 
 export async function PUT(request: Request) {
   try {
+    const token = await getAuthToken()
     const body = await request.json()
-    const requiredParams = settingsConfig.carrier.update.params
-    const missingParams = requiredParams.filter(param => !body[param])
+    const session = await getServerSession(authOptions)
+    const username = session?.user?.name || ''
 
-    // if (missingParams.length > 0) {
-    //   return NextResponse.json(
-    //     { error: `Missing required parameters: ${missingParams.join(', ')}` },
-    //     { status: 400 }
-    //   )
-    // }
+    //validateRequiredParams(body, settingsConfig.carrier.update.params)
 
     const url = `${API_BASE_URL}/carrier`
     
@@ -144,11 +148,11 @@ export async function PUT(request: Request) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        token: TEMP_TOKEN,
+        token: token,
       },
       body: JSON.stringify({
         ...body,
-        CHGUSR: "admin  "
+        CHGUSR: username // Set the change user to the logged-in user
       }),
       agent: createHttpsAgent()
     })
@@ -164,30 +168,32 @@ export async function PUT(request: Request) {
 
     const data = await response.json()
     return addCorsHeaders(NextResponse.json(data))
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (error.message.startsWith('Missing required parameters')) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
     return handleApiError(error)
   }
 }
 
 export async function DELETE(request: Request) {
   try {
+    const token = await getAuthToken()
     const { searchParams } = new URL(request.url)
     const compid = searchParams.get('COMPID')
     const carid = searchParams.get('CARID')
 
-    if (!compid || !carid) {
-      return NextResponse.json(
-        { error: 'Missing required parameters: COMPID and CARID' },
-        { status: 400 }
-      )
-    }
+    //validateRequiredParams({ COMPID: compid, CARID: carid }, settingsConfig.carrier.delete.params)
 
     const url = `${API_BASE_URL}/carrier?COMPID=${compid}&CARID=${carid}`
     
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
-        token: TEMP_TOKEN,
+        token: token,
       },
       agent: createHttpsAgent()
     })
@@ -203,7 +209,13 @@ export async function DELETE(request: Request) {
 
     const data = await response.json()
     return addCorsHeaders(NextResponse.json(data))
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'Unauthorized') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (error.message.startsWith('Missing required parameters')) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
     return handleApiError(error)
   }
 }

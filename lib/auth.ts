@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
-import https from "https";
+import crypto from "crypto";
 
 // Disable SSL verification completely
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -19,10 +19,20 @@ declare module "next-auth/jwt" {
   }
 }
 
+// Function to calculate the secret hash for Cognito
+const calculateSecretHash = (username: string) => {
+  const message = username + process.env.AWS_COGNITO_CLIENT_ID!;
+  const key = process.env.AWS_COGNITO_CLIENT_SECRET!;
+  return crypto
+    .createHmac("SHA256", key)
+    .update(message)
+    .digest("base64");
+};
+
 export const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "Keycloak",
+      name: "AWS Cognito",
       credentials: {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
@@ -33,50 +43,79 @@ export const authOptions = {
         }
 
         try {
-          const tokenUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/token`;
-          const tokenParams = new URLSearchParams({
-            grant_type: "password",
-            client_id: process.env.KEYCLOAK_ID!,
-            client_secret: process.env.KEYCLOAK_SECRET!,
-            username: credentials.username,
-            password: credentials.password,
-          });
-
-          const tokenResponse = await fetch(tokenUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: tokenParams,
-          });
-
-          if (!tokenResponse.ok) {
-            const error = await tokenResponse.text();
-            console.error("Keycloak error:", error);
-            throw new Error("Invalid credentials");
-          }
-
-          const tokenData = await tokenResponse.json();
+          const secretHash = calculateSecretHash(credentials.username);
           
-          // Fetch user info
-          const userInfoUrl = `${process.env.KEYCLOAK_ISSUER}/protocol/openid-connect/userinfo`;
-          const userResponse = await fetch(userInfoUrl, {
-            headers: {
-              Authorization: `Bearer ${tokenData.access_token}`,
-            },
-          });
+          // Ensure password is properly escaped
+          const escapedPassword = credentials.password.replace(/"/g, '\\"');
+          
+          const response = await fetch(
+            `https://cognito-idp.${process.env.AWS_REGION}.amazonaws.com/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-amz-json-1.1",
+                "X-Amz-Target": "AWSCognitoIdentityProviderService.InitiateAuth",
+              },
+              body: JSON.stringify({
+                AuthParameters: {
+                  USERNAME: credentials.username,
+                  PASSWORD: escapedPassword,
+                  SECRET_HASH: secretHash,
+                },
+                AuthFlow: "USER_PASSWORD_AUTH",
+                ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+              }),
+            }
+          );
 
-          if (!userResponse.ok) {
-            throw new Error("Failed to fetch user info");
+          const data = await response.json();
+
+          if (!response.ok) {
+            console.error("Cognito error:", data);
+            // Log the full request details for debugging
+            console.log("Request details:", {
+              url: `https://cognito-idp.${process.env.AWS_REGION}.amazonaws.com/`,
+              headers: {
+                "Content-Type": "application/x-amz-json-1.1",
+                "X-Amz-Target": "AWSCognitoIdentityProviderService.InitiateAuth",
+              },
+              body: {
+                AuthParameters: {
+                  USERNAME: credentials.username,
+                  PASSWORD: credentials.password,
+                  SECRET_HASH: secretHash,
+                },
+                AuthFlow: "USER_PASSWORD_AUTH",
+                ClientId: process.env.AWS_COGNITO_CLIENT_ID,
+              },
+            });
+            
+            // Handle specific Cognito error messages
+            if (data.__type === "NotAuthorizedException") {
+              if (data.message === "Password attempts exceeded") {
+                throw new Error("Account temporarily locked due to too many failed login attempts. Please try again later or reset your password.");
+              } else {
+                throw new Error("Invalid username or password");
+              }
+            } else if (data.__type === "UserNotConfirmedException") {
+              throw new Error("User is not confirmed");
+            } else if (data.__type === "UserNotFoundException") {
+              throw new Error("User not found");
+            } else {
+              throw new Error(data.message || "Authentication failed");
+            }
           }
 
-          const userInfo = await userResponse.json();
+          // Get user info from the ID token
+          const idTokenPayload = JSON.parse(
+            Buffer.from(data.AuthenticationResult.IdToken.split(".")[1], "base64").toString()
+          );
 
           return {
-            id: userInfo.sub,
-            name: userInfo.name || userInfo.preferred_username,
-            email: userInfo.email,
-            accessToken: tokenData.access_token,
+            id: idTokenPayload.sub,
+            name: idTokenPayload.name || idTokenPayload["cognito:username"],
+            email: idTokenPayload.email,
+            accessToken: data.AuthenticationResult.AccessToken,
           };
         } catch (error) {
           console.error("Authentication error:", error);
@@ -85,7 +124,7 @@ export const authOptions = {
       },
     }),
   ],
-  debug: process.env.NODE_ENV === "development",
+  debug: true, // Enable debug mode to see more detailed logs
   callbacks: {
     async jwt({ token, user }: { token: JWT; user: any }) {
       if (user) {
@@ -106,4 +145,4 @@ export const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST }; 
+export { handler as GET, handler as POST };
