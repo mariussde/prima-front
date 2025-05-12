@@ -18,18 +18,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full">
+      <div className="flex h-screen w-full overflow-hidden">
         <AppSidebar />
-        <SidebarInset className="flex-1">
-          <div className="flex h-full w-full flex-col">
-            <TopBar />
+        <SidebarInset className="flex-1 w-full overflow-hidden">
+          <div className="flex h-full w-full flex-col overflow-hidden">
+            <div className="w-full">
+              <TopBar />
+            </div>
             <div className="px-6 py-4">
               <Breadcrumbs />
             </div>
-            <div className="flex-1 overflow-x-auto">
-              <div className="min-w-[800px] h-full">
-                {children}
-              </div>
+            <div className="flex-1 w-full overflow-hidden">
+              {children}
             </div>
           </div>
         </SidebarInset>

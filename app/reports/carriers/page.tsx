@@ -320,12 +320,12 @@ export default function CarriersReportsPage() {
     <div className="min-h-screen flex flex-col">
       <main className="flex-1 p-4 md:p-8 w-full">
         <Card className="w-full">
-          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
             <CardTitle>Carrier Reports</CardTitle>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+            <div className="flex items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="default" className="w-[120px] sm:w-[120px]">Columns</Button>
+                  <Button variant="outline" size="default" className="w-[120px]">Columns</Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
                   {CARRIER_COLUMNS.map((column) => (
@@ -340,28 +340,30 @@ export default function CarriersReportsPage() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <Button onClick={handleAddNew} className="w-[120px] sm:w-[120px]">
+              <Button onClick={handleAddNew} className="w-[120px]">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Carrier
               </Button>
             </div>
           </CardHeader>
           <CardContent className="px-2 sm:px-6">
-            <div className="min-w-[800px]">
-              <CarrierTable
-                data={carrierData}
-                onRowClick={handleRowClick}
-                onLoadMore={handleLoadMore}
-                isLoading={isLoading}
-                hasMore={hasMore}
-                columnVisibility={columnVisibility}
-                onFilterChange={handleFilterChange}
-                columnFilters={columnFilters}
-                onSortChange={handleSortChange}
-                showActions={true}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-[800px] max-w-full">
+                <CarrierTable
+                  data={carrierData}
+                  onRowClick={handleRowClick}
+                  onLoadMore={handleLoadMore}
+                  isLoading={isLoading}
+                  hasMore={hasMore}
+                  columnVisibility={columnVisibility}
+                  onFilterChange={handleFilterChange}
+                  columnFilters={columnFilters}
+                  onSortChange={handleSortChange}
+                  showActions={true}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+              </div>
             </div>
             {isLoading && page === 1 && (
               <div className="w-full flex justify-center py-4">
