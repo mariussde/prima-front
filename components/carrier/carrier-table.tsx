@@ -53,6 +53,7 @@ export const defaultVisibleColumns = {
   'CHGTIM': false, // hidden by default
   'CHGUSR': true,
   'CHGDAT': true,
+  'actions': true
 }
 
 interface CarrierTableProps {
