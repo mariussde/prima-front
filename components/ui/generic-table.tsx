@@ -30,6 +30,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { cn } from "@/lib/utils"
 
 interface GenericTableProps<T> {
   data: T[]
@@ -158,7 +159,10 @@ export function GenericTable<T>({
                   return (
                     <TableHead 
                       key={column.accessorKey} 
-                      className="min-w-[120px] h-[100px] relative align-top"
+                      className={cn(
+                        "h-[100px] relative align-top",
+                        column.accessorKey === 'actions' ? 'w-[80px] min-w-[80px]' : 'min-w-[120px]'
+                      )}
                     >
                       {column.accessorKey === 'actions' ? (
                         <div className="pt-3 px-2 pb-10">
@@ -205,7 +209,7 @@ export function GenericTable<T>({
                       
                       if (column.accessorKey === 'actions') {
                         return (
-                          <TableCell key={column.accessorKey} className="whitespace-normal break-words w-[50px] min-w-[50px] text-center">
+                          <TableCell key={column.accessorKey} className="w-[80px] min-w-[80px] text-center">
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" className="h-8 w-8 p-0 mx-auto">

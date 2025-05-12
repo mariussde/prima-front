@@ -6,86 +6,8 @@
 		"_exporter_id": "6603316"
 	},
 	"item": [
-		{
-			"name": "API Server Test",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "https://us.prima.pacorini.com/api/v1.0/Prima/CarrierTest?token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRazhObGRRT2pwRE1jQkJKazUzV2wwanFuemNmWTNickJTUi1hMXJXNXRBIn0.eyJqdGkiOiI0YzM5N2Y1NS00ZTVkLTRlYjItYTVmOS05NGQ0Mjg1NTM0NTciLCJleHAiOjE3NDM2MDg3MzIsIm5iZiI6MCwiaWF0IjoxNzQzNjA4NDMyLCJpc3MiOiJodHRwczovL2F1dGgucGFjb3JpbmkuY29tL2F1dGgvcmVhbG1zL1BhY29yaW5pIiwiYXVkIjoicGFjb3JpbmktYXBpIiwic3ViIjoiOGE1ZDZkOWQtMWU4YS00YmRjLTlmNjAtMjYxYjBlMTIzOTZhIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicGFjb3JpbmktYXBpIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNWJjMTkwN2YtMWNkOC00MjlmLWFmYmQtODZjZDRlOTU4MDY4IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuYXZpZ2F0b3IifQ.WMLZS1d2606QedxtpzGOYvFCKJJUykIIcnNE7TcS5aHYQUv3wv59-qcegeVGKsim0T9mzA1covwKZ3s5bohmRv1cn5IBThxt3qf8d1T5OfCzl9W3g9M4z75SiTgSn5g0Gpmuk658VMhru0ohpIi8MgpmiCc7a3BpakWhbrcPh4RI43VlhEDJS3mvYkOt6eU7Y6-LhvIbLlYUnjGq0jDEd5V8nSLtFQTdHrBg7FQrW3MPNQOoU7dmC1xcDYtBTFNjgtsD5sX53Lf-GrNpfvkya826tQC6uDBI9HsCrCQatwtfgbDpfTJ0D_jf9cy_5pJ7-q5nCUSnPr_qzBL2l_QVWg",
-					"protocol": "https",
-					"host": [
-						"us",
-						"prima",
-						"pacorini",
-						"com"
-					],
-					"path": [
-						"api",
-						"v1.0",
-						"Prima",
-						"CarrierTest"
-					],
-					"query": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRazhObGRRT2pwRE1jQkJKazUzV2wwanFuemNmWTNickJTUi1hMXJXNXRBIn0.eyJqdGkiOiI0YzM5N2Y1NS00ZTVkLTRlYjItYTVmOS05NGQ0Mjg1NTM0NTciLCJleHAiOjE3NDM2MDg3MzIsIm5iZiI6MCwiaWF0IjoxNzQzNjA4NDMyLCJpc3MiOiJodHRwczovL2F1dGgucGFjb3JpbmkuY29tL2F1dGgvcmVhbG1zL1BhY29yaW5pIiwiYXVkIjoicGFjb3JpbmktYXBpIiwic3ViIjoiOGE1ZDZkOWQtMWU4YS00YmRjLTlmNjAtMjYxYjBlMTIzOTZhIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicGFjb3JpbmktYXBpIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNWJjMTkwN2YtMWNkOC00MjlmLWFmYmQtODZjZDRlOTU4MDY4IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuYXZpZ2F0b3IifQ.WMLZS1d2606QedxtpzGOYvFCKJJUykIIcnNE7TcS5aHYQUv3wv59-qcegeVGKsim0T9mzA1covwKZ3s5bohmRv1cn5IBThxt3qf8d1T5OfCzl9W3g9M4z75SiTgSn5g0Gpmuk658VMhru0ohpIi8MgpmiCc7a3BpakWhbrcPh4RI43VlhEDJS3mvYkOt6eU7Y6-LhvIbLlYUnjGq0jDEd5V8nSLtFQTdHrBg7FQrW3MPNQOoU7dmC1xcDYtBTFNjgtsD5sX53Lf-GrNpfvkya826tQC6uDBI9HsCrCQatwtfgbDpfTJ0D_jf9cy_5pJ7-q5nCUSnPr_qzBL2l_QVWg"
-						},
-						{
-							"key": "page",
-							"value": "null",
-							"disabled": true
-						},
-						{
-							"key": "pageSize",
-							"value": "null",
-							"disabled": true
-						}
-					]
-				},
-				"description": "Generated from cURL: curl --location 'https://us.prima.pacorini.com/api/v1.0/Prima/CarrierTest?token=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJRazhObGRRT2pwRE1jQkJKazUzV2wwanFuemNmWTNickJTUi1hMXJXNXRBIn0.eyJqdGkiOiIyMTllM2RmZC03ZDk4LTQ0MTAtYWE3Mi04YzYyNTZiZGE5YTgiLCJleHAiOjE3NDM0NTcwMTUsIm5iZiI6MCwiaWF0IjoxNzQzNDU2NzE1LCJpc3MiOiJodHRwczovL2F1dGgucGFjb3JpbmkuY29tL2F1dGgvcmVhbG1zL1BhY29yaW5pIiwiYXVkIjoicGFjb3JpbmktYXBpIiwic3ViIjoiOGE1ZDZkOWQtMWU4YS00YmRjLTlmNjAtMjYxYjBlMTIzOTZhIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoicGFjb3JpbmktYXBpIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiZmFiMzk1MzctZWRlYS00M2EwLWEwNjAtYmI3YTY3YjI3NWI0IiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIqIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJlbWFpbCBwcm9maWxlIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJuYXZpZ2F0b3IifQ.HlG_PcCJ6gFtXg-6wDHM4ShmWWPGe2A0i-2EZ-U_xUWjpcq7oSYnBWTaLCXNPDxNRhGTqPwIRzlPNCooZaPkLI0k2Ixba-9k5Tg9hg-z9CLs-sFIsaxFJjeMyvRBjNFGKY-_sUowixmSRarna-Jz7I6kZD179vR4yuKL5G0S-UwXUwOSZ0e8HpKK1If_957t6XbBFM1MN0SE20xAubclHa13rV24CPg8GXowcwCg0ZMRWq_C85f3HIaDFzIDgl7DR3befN1_qU0DzfQIcoTm9_r5ekPKCtnx1HU7qwZmlHg-JJ7Sse-w1LB3WPGF_mrLdUGhEej0hd_xa6tF9_Ue9w&page=null&pageSize=null'"
-			},
-			"response": []
-		},
-		{
-			"name": "CA Warehouse Location",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "token",
-						"value": "eyJraWQiOiIzT1RTMU1jS2FyMDdlcmdYSXpTRnVsTUgraElrR1wvNFNvUDdPMlRnZGF5ND0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI3YzlkZDVkOC1iMGMxLTcwYjUtY2JjOC04YzhlZmYxOTFhNTMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuY2EtY2VudHJhbC0xLmFtYXpvbmF3cy5jb21cL2NhLWNlbnRyYWwtMV9OVjEyNm1wdWwiLCJjbGllbnRfaWQiOiI2YW40c25xMWprZzZwcW5mMWQ3azdlYjl1YSIsIm9yaWdpbl9qdGkiOiI4ZTZhOTRkNC1iOWZlLTRmMGYtYTYwMy0xNDNjODdlMTYzNzAiLCJldmVudF9pZCI6IjQwODU0ZWIzLWRhMzYtNDJmMC1hZmI0LTFjNTA0YTAzOTBjNCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDM1NDUxNDksImV4cCI6MTc0MzU0ODc0OSwiaWF0IjoxNzQzNTQ1MTQ5LCJqdGkiOiJjNTI1MzA0Zi1kMmQwLTRjN2UtOTBkMy1iNmViNzhjNjNhYTciLCJ1c2VybmFtZSI6ImNhcHJpbWFhcGkifQ.frzbZXjHjz_3A4mLPnBjoX944GlVCszf7O4TS7meMK5RiY5djlHrEDB1twI1I6tT0rrAGU5HJg0LY6Mgl31Oo2QtvMLbiHnrAkfedV9wKFKw3D43hkOq7vEAHR-CfCeYGyJ-ajZgnr6Ej2rcGGI8OllCmHhdgccYVWUA6CnKMaCAJIxRk01PHa8bFCa387AHsMwmRkE8JbUH_RPHefwmVkHQl0xwdUAIrSQilxBZpl2IFXVuPpl3P-GKk7cv8yKuH0rJeY7VE1FiBuSKPLMfieYbupA21CnNOgxNbC4fFGoktvW-cVbssIKAJCWFuDQvhorevXhkzAYfIc4uA7DP0w",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "https://95degrqi3f.execute-api.ca-central-1.amazonaws.com/dev/inventory_loc_plt_qty?CompanyID=PAC-CANADA&WarehouseID=BRAN001",
-					"protocol": "https",
-					"host": [
-						"95degrqi3f",
-						"execute-api",
-						"ca-central-1",
-						"amazonaws",
-						"com"
-					],
-					"path": [
-						"dev",
-						"inventory_loc_plt_qty"
-					],
-					"query": [
-						{
-							"key": "CompanyID",
-							"value": "PAC-CANADA"
-						},
-						{
-							"key": "WarehouseID",
-							"value": "BRAN001"
-						}
-					]
-				}
-			},
-			"response": []
-		},
+		
+		
 		{
 			"name": "Prima Data List",
 			"event": [
