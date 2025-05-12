@@ -78,18 +78,7 @@ export function AppSidebar() {
       isActive: pathname === "/",
     },
     {
-      title: "Users",
-      href: "/users",
-      icon: Users,
-      isActive: pathname.startsWith("/users"),
-      submenu: [
-        { title: "All Users", href: "/users", icon: ChevronRight },
-        { title: "Add User", href: "/users/add", icon: ChevronRight },
-        { title: "User Groups", href: "/users/groups", icon: ChevronRight },
-      ],
-    },
-    {
-      title: "Reports",
+      title: "General Settings",
       href: "/reports",
       icon: FileText,
       isActive: pathname.startsWith("/reports"),
@@ -100,47 +89,7 @@ export function AppSidebar() {
         { title: "Analytics", href: "/reports/analytics", icon: ChevronRight },
       ],
     },
-    {
-      title: "Database",
-      href: "/database",
-      icon: Database,
-      isActive: pathname.startsWith("/database"),
-    },
-    {
-      title: "Analytics",
-      href: "/analytics",
-      icon: BarChart3,
-      isActive: pathname.startsWith("/analytics"),
-    },
-    {
-      title: "Calendar",
-      href: "/calendar",
-      icon: Calendar,
-      isActive: pathname.startsWith("/calendar"),
-    },
-    {
-      title: "Messages",
-      href: "/messages",
-      icon: Mail,
-      isActive: pathname.startsWith("/messages"),
-    },
-    {
-      title: "Products",
-      href: "/products",
-      icon: ShoppingCart,
-      isActive: pathname.startsWith("/products"),
-      submenu: [
-        { title: "All Products", href: "/products", icon: ChevronRight },
-        { title: "Add Product", href: "/products/add", icon: ChevronRight },
-        { title: "Categories", href: "/products/categories", icon: ChevronRight },
-      ],
-    },
-    {
-      title: "Projects",
-      href: "/projects",
-      icon: Layers,
-      isActive: pathname.startsWith("/projects"),
-    },
+   
   ]
 
   const handleNavigation = (href: string) => {

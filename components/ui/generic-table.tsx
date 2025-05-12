@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, ChevronUp, Loader2 } from "lucide-react"
+import { ArrowUpDown, ChevronDown, ChevronUp, Loader2, MoreHorizontal, Pencil, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -24,6 +24,12 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface GenericTableProps<T> {
   data: T[]
@@ -46,6 +52,9 @@ interface GenericTableProps<T> {
   columnFilters?: Record<string, string>
   onSortChange?: (column: string, direction: 'asc' | 'desc' | null) => void
   hasMore?: boolean
+  showActions?: boolean
+  onEdit?: (row: T) => void
+  onDelete?: (row: T) => void
 }
 
 export function GenericTable<T>({
@@ -60,6 +69,9 @@ export function GenericTable<T>({
   columnFilters = {},
   onSortChange,
   hasMore = false,
+  showActions = false,
+  onEdit,
+  onDelete,
 }: GenericTableProps<T>) {
   // Track sorting state - column and direction
   const [sortConfig, setSortConfig] = useState<{
@@ -129,6 +141,11 @@ export function GenericTable<T>({
     column => !columnVisibility || columnVisibility[column.accessorKey]
   ).length;
 
+  // Add actions column to columns if showActions is true
+  const tableColumns = showActions 
+    ? [...columns, { accessorKey: 'actions', header: 'Actions' }]
+    : columns;
+
   return (
     <div className="space-y-4 w-full">
       <div className="rounded-md border w-full">
@@ -136,30 +153,38 @@ export function GenericTable<T>({
           <Table>
             <TableHeader>
               <TableRow>
-                {columns.map((column) => {
+                {tableColumns.map((column) => {
                   if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
                   return (
                     <TableHead 
                       key={column.accessorKey} 
                       className="min-w-[120px] h-[100px] relative align-top"
                     >
-                      <div className="pt-3 px-2 pb-10">
-                        <button 
-                          onClick={() => handleSort(column.accessorKey)}
-                          className="flex items-center font-semibold text-sm leading-normal hover:text-primary transition-colors w-full text-left"
-                        >
-                          <span className="break-words whitespace-normal">{column.header}</span>
-                          {getSortIcon(column.accessorKey)}
-                        </button>
-                      </div>
-                      <div className="absolute bottom-2 left-0 right-0 px-2">
-                        <Input
-                          placeholder={`Filter...`}
-                          value={columnFilters[column.accessorKey] || ''}
-                          onChange={(e) => onFilterChange?.(column.accessorKey, e.target.value)}
-                          className="h-8"
-                        />
-                      </div>
+                      {column.accessorKey === 'actions' ? (
+                        <div className="pt-3 px-2 pb-10">
+                          <span className="font-semibold text-sm leading-normal">Actions</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="pt-3 px-2 pb-10">
+                            <button 
+                              onClick={() => handleSort(column.accessorKey)}
+                              className="flex items-center font-semibold text-sm leading-normal hover:text-primary transition-colors w-full text-left"
+                            >
+                              <span className="break-words whitespace-normal">{column.header}</span>
+                              {getSortIcon(column.accessorKey)}
+                            </button>
+                          </div>
+                          <div className="absolute bottom-2 left-0 right-0 px-2">
+                            <Input
+                              placeholder={`Filter...`}
+                              value={columnFilters[column.accessorKey] || ''}
+                              onChange={(e) => onFilterChange?.(column.accessorKey, e.target.value)}
+                              className="h-8"
+                            />
+                          </div>
+                        </>
+                      )}
                     </TableHead>
                   )
                 })}
@@ -175,8 +200,47 @@ export function GenericTable<T>({
                     className={onRowClick ? 'cursor-pointer hover:bg-muted' : ''}
                     onClick={() => onRowClick?.(row)}
                   >
-                    {columns.map((column) => {
+                    {tableColumns.map((column) => {
                       if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
+                      
+                      if (column.accessorKey === 'actions') {
+                        return (
+                          <TableCell key={column.accessorKey} className="whitespace-normal break-words w-[50px] min-w-[50px] text-center">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="h-8 w-8 p-0 mx-auto">
+                                  <span className="sr-only">Open menu</span>
+                                  <MoreHorizontal className="h-4 w-4 rotate-90" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                {onEdit && (
+                                  <DropdownMenuItem onClick={(e) => {
+                                    e.stopPropagation();
+                                    onEdit(row);
+                                  }}>
+                                    <Pencil className="mr-2 h-4 w-4" />
+                                    Edit
+                                  </DropdownMenuItem>
+                                )}
+                                {onDelete && (
+                                  <DropdownMenuItem 
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onDelete(row);
+                                    }}
+                                    className="text-red-600"
+                                  >
+                                    <Trash className="mr-2 h-4 w-4" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        );
+                      }
+
                       return (
                         <TableCell key={column.accessorKey} className="whitespace-normal break-words min-w-[120px]">
                           {(row as any)[column.accessorKey]}

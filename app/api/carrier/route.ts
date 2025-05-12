@@ -4,7 +4,7 @@ import fetch from 'node-fetch'
 import settingsConfig from '@/lib/settings_config.json'
 
 const API_BASE_URL = 'https://nfeij1whc8.execute-api.us-east-1.amazonaws.com/dev/primaapi/v1/data'
-const TEMP_TOKEN = 'eyJraWQiOiJkamNHZXhsb29uTHBGVnczR1ZrUTRXM2F1RGpOYUxmTGFtc0hUY1JYaHNFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJkNGQ4MjRiOC03MDQxLTcwM2MtZDAzMi1lNzExN2Y3ODdmZTgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9LWU1ib21kYWIiLCJjbGllbnRfaWQiOiI3dGx2cXJzNDdnZ2cwcDRycTNycWs0cHEycyIsIm9yaWdpbl9qdGkiOiJlOWIxZGYzOS04M2M3LTQyMDQtOTAzYS03MGE5NWI1MWI1MDAiLCJldmVudF9pZCI6IjM4M2RiMjJkLTc2NDgtNDQ4Ni05Y2EzLTdhNzVhNGU2MmNhOSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDY4MDEyNTYsImV4cCI6MTc0NjgwNDg1NiwiaWF0IjoxNzQ2ODAxMjU2LCJqdGkiOiIyOGVlZWY3NS1kN2NiLTQzMjUtYjZiZC0zOTVmMDgwMGRmMjIiLCJ1c2VybmFtZSI6Im1pa2ViIn0.Zptyq1fN9UPGS8lC-P1g3R9GKizouPv8D0jFWsIfoFsnv5BWzXoMQ_otT4n0LEvpeVfM7RylioAd8iSz2JBvPCoabuv5X5UpYGCgMcpxm3Zk-pTVYJVtisLSjyxWfvb4gMu3wUfA0OtansBV-lW-wzftCQyifG2gV_Yw1xaw9N1icILV3pU4DAP9iTqyBCBKaJIZ4sswAxGaTRIzpKBZUgFq-WEBo6nHmbz2MWM5JPp-FeCkqGpyj_wyJrBJrQ4IOfqub8iF8E1Rosv1HIXkDTuoz3ABKeN6KSiYauLnYuOKb5Zxwp3zy3DnsgaPqXOevTzdd6WcNoXoBTd8m1Tvvw'
+const TEMP_TOKEN = 'eyJraWQiOiJkamNHZXhsb29uTHBGVnczR1ZrUTRXM2F1RGpOYUxmTGFtc0hUY1JYaHNFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJkNGQ4MjRiOC03MDQxLTcwM2MtZDAzMi1lNzExN2Y3ODdmZTgiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV9LWU1ib21kYWIiLCJjbGllbnRfaWQiOiI3dGx2cXJzNDdnZ2cwcDRycTNycWs0cHEycyIsIm9yaWdpbl9qdGkiOiIzMzE1NTg2My1kYzZhLTRjMzQtODc5YS01ZTI0ZDU4YjEzOTIiLCJldmVudF9pZCI6IjJlMTQyMjc1LTEyNDgtNDRhYi1iZGFmLWNlNjZhNjA4NzA5ZSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDcwNDA1NTEsImV4cCI6MTc0NzA0NDE1MSwiaWF0IjoxNzQ3MDQwNTUxLCJqdGkiOiJlZDA4ZjVhYS00YTA0LTRkNTEtYWI2OC04NGYzY2ViYzQ5MmIiLCJ1c2VybmFtZSI6Im1pa2ViIn0.cO08RWf1EhAdPKVXktYUXTXF5aKgxBHYgOIy2gNFA78BDUp_w7w8CdJlcTbulihiuoJDKXIbqtJtuuL2QRY-oW0JWxmbM2B7heoUCRnFYhfM0atfMJe_QhiVYGCQXtU4x7LnDaosEp_jomoLv68kVeED8wz9_4Ay_14t2mmwvvvrctHDB03RnhUSQvH1RoQKOx3e6i5NM7xMrbLoXwX3a3cEkf-BVxxaulC2vFlSTiSTsaBIW8jn4TOx6ngHQAsiNMapjeOSz3a9hr9dU4N7Ine24wVy6N3iyLmmHKgHxSM3UGC-Y3hc95ajOidQaYZ_sIg6fBbXTETc26CdT3VCiA'
 
 // Helper function to create HTTPS agent
 const createHttpsAgent = () => new https.Agent({
@@ -41,9 +41,6 @@ export async function GET(request: Request) {
     // Build URL exactly like Postman
     const url = `${API_BASE_URL}/carrier?COMPID=${compid}&pageNumber=${pageNumber}&pageSize=${pageSize}&CARID=${carid}&FilterId=${filterId}&FilterName=${filterName}`
     
-    console.log('Making request to:', url)
-    console.log('With headers:', { token: TEMP_TOKEN })
-
     const response = await fetch(url, {
       method: 'GET',
       headers: {
@@ -52,9 +49,6 @@ export async function GET(request: Request) {
       },
       agent: createHttpsAgent()
     })
-
-    console.log('Response status:', response.status)
-    console.log('Response headers:', response.headers)
 
     if (!response.ok) {
       const errorText = await response.text()
@@ -66,7 +60,6 @@ export async function GET(request: Request) {
     }
 
     const data = await response.json()
-    console.log('Response data:', data)
 
     return addCorsHeaders(NextResponse.json(data))
   } catch (error) {
@@ -96,7 +89,23 @@ export async function POST(request: Request) {
         'Content-Type': 'application/json',
         token: TEMP_TOKEN,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        COMPID: body.COMPID,
+        CARID: body.CARID,
+        CARDSC: body.CARDSC,
+        ADDRL1: body.ADDRL1 || "",
+        ADDRL2: body.ADDRL2 || "",
+        City: body.City || "",
+        ZIPCODE: body.ZIPCODE || "",
+        Phone: body.Phone || "",
+        Fax: body.Fax || "",
+        eMail: body.eMail || "",
+        WebSite: body.WebSite || "",
+        CONNME: body.CONNME || "",
+        CNTYCOD: body.CNTYCOD || "",
+        STAID: body.STAID || "",
+        CRTUSR: body.CRTUSR || "admin",
+      }),
       agent: createHttpsAgent()
     })
 
@@ -104,7 +113,7 @@ export async function POST(request: Request) {
       const errorText = await response.text()
       console.error('Error Response:', errorText)
       return NextResponse.json(
-        { error: 'Failed to create carrier' },
+        { error: 'Failed to create carrier', details: errorText },
         { status: response.status }
       )
     }

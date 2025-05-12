@@ -5,6 +5,7 @@ import { Loader2, Plus } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { CarrierTable } from '@/components/carrier/carrier-table'
+import { CarrierFormModal } from '@/components/carrier/carrier-form-modal'
 import { Carrier } from '@/types/carrier'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,6 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useToast } from "@/components/ui/use-toast"
 
 // Custom hook for debounce
 function useDebounce<T>(value: T, delay: number): T {
@@ -54,12 +56,14 @@ const CARRIER_COLUMNS = [
   "CRTTIM",
   "CHGUSR",
   "CHGDAT",
-  "CHGTIM"
+  "CHGTIM",
+  "actions"
 ]
 
 export default function CarriersReportsPage() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const { toast } = useToast()
   const [carrierData, setCarrierData] = useState<Carrier[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -71,6 +75,9 @@ export default function CarriersReportsPage() {
     column: null,
     direction: null
   })
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [selectedCarrier, setSelectedCarrier] = useState<Carrier | undefined>(undefined)
   const debouncedFilters = useDebounce(columnFilters, 300)
   const initialFetchDone = useRef(false)
   const abortControllerRef = useRef<AbortController | null>(null)
@@ -212,7 +219,108 @@ export default function CarriersReportsPage() {
   }
 
   const handleAddNew = () => {
-    // Add your add new carrier logic here
+    setIsAddModalOpen(true)
+  }
+
+  const handleAddCarrier = async (data: any) => {
+    try {
+      const response = await fetch('/api/carrier', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          COMPID: data.COMPID,
+          CARID: data.CARID,
+          CARDSC: data.CARDSC,
+          ADDRL1: data.ADDRL1 || "",
+          ADDRL2: data.ADDRL2 || "",
+          City: data.City || "",
+          ZIPCODE: data.ZIPCODE || "",
+          Phone: data.Phone || "",
+          Fax: data.Fax || "",
+          eMail: data.eMail || "",
+          WebSite: data.WebSite || "",
+          CONNME: data.CONNME || "",
+          CNTYCOD: data.CNTYCOD || "",
+          STAID: data.STAID || "",
+          CRTUSR: data.CRTUSR || "admin",
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create carrier')
+      }
+
+      // Refresh the carrier data
+      await fetchCarrierData(1, columnFilters, sortConfig)
+      return Promise.resolve()
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+
+  const handleEdit = (carrier: Carrier) => {
+    setSelectedCarrier(carrier)
+    setIsEditModalOpen(true)
+  }
+
+  const handleDelete = async (carrier: Carrier) => {
+    try {
+      const response = await fetch(`/api/carrier?COMPID=${carrier.COMPID}&CARID=${carrier.CARID}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to delete carrier')
+      }
+
+      toast({
+        title: "Success",
+        description: "Carrier has been successfully deleted.",
+      })
+
+      // Refresh the carrier data
+      await fetchCarrierData(1, columnFilters, sortConfig)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete carrier",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleUpdateCarrier = async (data: any) => {
+    try {
+      const response = await fetch('/api/carrier', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to update carrier')
+      }
+
+      toast({
+        title: "Success",
+        description: "Carrier has been successfully updated.",
+      })
+
+      // Refresh the carrier data
+      await fetchCarrierData(1, columnFilters, sortConfig)
+      setIsEditModalOpen(false)
+      setSelectedCarrier(undefined)
+      return Promise.resolve()
+    } catch (error) {
+      return Promise.reject(error)
+    }
   }
 
   if (status === 'loading') {
@@ -291,6 +399,9 @@ export default function CarriersReportsPage() {
               onFilterChange={handleFilterChange}
               columnFilters={columnFilters}
               onSortChange={handleSortChange}
+              showActions={true}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
             {isLoading && page === 1 && (
               <div className="w-full flex justify-center py-4">
@@ -300,6 +411,19 @@ export default function CarriersReportsPage() {
           </CardContent>
         </Card>
       </main>
+
+      <CarrierFormModal
+        open={isAddModalOpen}
+        onOpenChange={setIsAddModalOpen}
+        onSubmit={handleAddCarrier}
+      />
+
+      <CarrierFormModal
+        open={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        carrier={selectedCarrier}
+        onSubmit={handleUpdateCarrier}
+      />
     </div>
   )
 }

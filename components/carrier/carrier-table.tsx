@@ -65,6 +65,9 @@ interface CarrierTableProps {
   onFilterChange?: (columnKey: string, value: string) => void
   columnFilters?: Record<string, string>
   onSortChange?: (column: string, direction: 'asc' | 'desc' | null) => void
+  showActions?: boolean
+  onEdit?: (carrier: Carrier) => void
+  onDelete?: (carrier: Carrier) => void
 }
 
 export function CarrierTable({
@@ -77,6 +80,9 @@ export function CarrierTable({
   onFilterChange,
   columnFilters = {},
   onSortChange,
+  showActions = false,
+  onEdit,
+  onDelete,
 }: CarrierTableProps) {
   const observer = useRef<IntersectionObserver | null>(null)
   
@@ -123,6 +129,9 @@ export function CarrierTable({
       columnFilters={columnFilters}
       onSortChange={onSortChange}
       hasMore={hasMore}
+      showActions={showActions}
+      onEdit={onEdit}
+      onDelete={onDelete}
     />
   )
 }
