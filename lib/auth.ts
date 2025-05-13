@@ -4,8 +4,6 @@ import { JWT } from "next-auth/jwt";
 import { Session } from "next-auth";
 import crypto from "crypto";
 
-// Disable SSL verification completely
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 declare module "next-auth" {
   interface Session {
