@@ -1,18 +1,5 @@
 "use client"
 
-import { useState } from "react"
-import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  type SortingState,
-  type VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, ChevronUp, Loader2, MoreHorizontal, Pencil, Trash } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -31,32 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
-
-interface GenericTableProps<T> {
-  data: T[]
-  columns: {
-    accessorKey: string
-    header: string
-  }[]
-  pagination?: {
-    currentPage: number
-    pageSize: number
-    totalPages: number
-    totalRecords: number
-    onPageChange: (page: number) => void
-  }
-  onRowClick?: (row: T) => void
-  columnVisibility?: Record<string, boolean>
-  lastRowRef?: (node: HTMLTableRowElement | null) => void
-  isLoading?: boolean
-  onFilterChange?: (columnKey: string, value: string) => void
-  columnFilters?: Record<string, string>
-  onSortChange?: (column: string, direction: 'asc' | 'desc' | null) => void
-  hasMore?: boolean
-  showActions?: boolean
-  onEdit?: (row: T) => void
-  onDelete?: (row: T) => void
-}
+import { TableProps } from "@/types/table"
+import { useTableSort } from "@/hooks/use-table-sort"
 
 export function GenericTable<T>({
   data,
@@ -73,79 +36,38 @@ export function GenericTable<T>({
   showActions = false,
   onEdit,
   onDelete,
-}: GenericTableProps<T>) {
-  // Track sorting state - column and direction
-  const [sortConfig, setSortConfig] = useState<{
-    column: string | null,
-    direction: 'asc' | 'desc' | null
-  }>({
-    column: null,
-    direction: null
-  });
-
-  // Handle sort click
-  const handleSort = (columnKey: string) => {
-    let direction: 'asc' | 'desc' | null = 'asc';
-    
-    if (sortConfig.column === columnKey) {
-      if (sortConfig.direction === 'asc') {
-        direction = 'desc';
-      } else if (sortConfig.direction === 'desc') {
-        direction = null;
-      }
-    }
-    
-    setSortConfig({
-      column: direction ? columnKey : null,
-      direction: direction
-    });
-    
-    // Notify parent component for server-side sorting if provided
-    if (onSortChange) {
-      onSortChange(columnKey, direction);
-    }
-  };
+}: TableProps<T>) {
+  const { sortConfig, handleSort, sortData } = useTableSort<T>(onSortChange)
 
   // Get sort icon based on current sort state
   const getSortIcon = (columnKey: string) => {
     if (sortConfig.column !== columnKey) {
-      return <ArrowUpDown className="ml-2 h-4 w-4 text-gray-400" />;
+      return <ArrowUpDown className="ml-2 h-4 w-4 text-gray-400" />
     }
     
     if (sortConfig.direction === 'asc') {
-      return <ChevronUp className="ml-2 h-4 w-4" />;
+      return <ChevronUp className="ml-2 h-4 w-4" />
     }
     
     if (sortConfig.direction === 'desc') {
-      return <ChevronDown className="ml-2 h-4 w-4" />;
+      return <ChevronDown className="ml-2 h-4 w-4" />
     }
     
-    return <ArrowUpDown className="ml-2 h-4 w-4 text-gray-400" />;
-  };
-
-  // Sort the data if onSortChange is not provided (client-side sorting)
-  const sortedData = [...data];
-  if (!onSortChange && sortConfig.column && sortConfig.direction) {
-    sortedData.sort((a, b) => {
-      const aValue = (a as any)[sortConfig.column as string];
-      const bValue = (b as any)[sortConfig.column as string];
-      
-      if (aValue === bValue) return 0;
-      
-      const comparison = aValue < bValue ? -1 : 1;
-      return sortConfig.direction === 'asc' ? comparison : -comparison;
-    });
+    return <ArrowUpDown className="ml-2 h-4 w-4 text-gray-400" />
   }
 
   // Calculate visible columns count for colSpan
   const visibleColumnsCount = columns.filter(
-    column => !columnVisibility || columnVisibility[column.accessorKey]
-  ).length;
+    column => !columnVisibility || columnVisibility[column.accessorKey as string]
+  ).length
 
   // Add actions column to columns if showActions is true
   const tableColumns = showActions 
-    ? [...columns, { accessorKey: 'actions', header: 'Actions' }]
-    : columns;
+    ? [...columns, { accessorKey: 'actions' as keyof T, header: 'Actions' }]
+    : columns
+
+  // Sort data if not using server-side sorting
+  const displayData = onSortChange ? data : sortData(data)
 
   return (
     <div className="w-full">
@@ -154,10 +76,10 @@ export function GenericTable<T>({
           <TableHeader>
             <TableRow>
               {tableColumns.map((column) => {
-                if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
+                if (columnVisibility && !columnVisibility[column.accessorKey as string]) return null
                 return (
                   <TableHead 
-                    key={column.accessorKey} 
+                    key={column.accessorKey as string} 
                     className={cn(
                       "h-[100px] relative align-top",
                       column.accessorKey === 'actions' ? 'w-[50px]' : 'min-w-[120px]'
@@ -171,18 +93,18 @@ export function GenericTable<T>({
                       <>
                         <div className="pt-3 px-2 pb-10">
                           <button 
-                            onClick={() => handleSort(column.accessorKey)}
+                            onClick={() => handleSort(column.accessorKey as string)}
                             className="flex items-center font-semibold text-sm leading-normal hover:text-primary transition-colors w-full text-left"
                           >
                             <span className="break-words whitespace-normal">{column.header}</span>
-                            {getSortIcon(column.accessorKey)}
+                            {getSortIcon(column.accessorKey as string)}
                           </button>
                         </div>
                         <div className="absolute bottom-2 left-0 right-0 px-2">
                           <Input
                             placeholder={`Filter...`}
-                            value={columnFilters[column.accessorKey] || ''}
-                            onChange={(e) => onFilterChange?.(column.accessorKey, e.target.value)}
+                            value={columnFilters[column.accessorKey as string] || ''}
+                            onChange={(e) => onFilterChange?.(column.accessorKey as string, e.target.value)}
                             className="h-8"
                           />
                         </div>
@@ -194,8 +116,8 @@ export function GenericTable<T>({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {(onSortChange ? data : sortedData).map((row, index) => {
-              const isLastRow = index === data.length - 1;
+            {displayData.map((row, index) => {
+              const isLastRow = index === data.length - 1
               return (
                 <TableRow
                   key={index}
@@ -204,11 +126,11 @@ export function GenericTable<T>({
                   onClick={() => onRowClick?.(row)}
                 >
                   {tableColumns.map((column) => {
-                    if (columnVisibility && !columnVisibility[column.accessorKey]) return null;
+                    if (columnVisibility && !columnVisibility[column.accessorKey as string]) return null
                     
                     if (column.accessorKey === 'actions') {
                       return (
-                        <TableCell key={column.accessorKey} className="w-[50px] text-center">
+                        <TableCell key={column.accessorKey as string} className="w-[50px] text-center">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" className="h-8 w-8 p-0 mx-auto">
@@ -219,8 +141,8 @@ export function GenericTable<T>({
                             <DropdownMenuContent align="end">
                               {onEdit && (
                                 <DropdownMenuItem onClick={(e) => {
-                                  e.stopPropagation();
-                                  onEdit(row);
+                                  e.stopPropagation()
+                                  onEdit(row)
                                 }}>
                                   <Pencil className="mr-2 h-4 w-4" />
                                   Edit
@@ -229,8 +151,8 @@ export function GenericTable<T>({
                               {onDelete && (
                                 <DropdownMenuItem 
                                   onClick={(e) => {
-                                    e.stopPropagation();
-                                    onDelete(row);
+                                    e.stopPropagation()
+                                    onDelete(row)
                                   }}
                                   className="text-red-600"
                                 >
@@ -241,11 +163,11 @@ export function GenericTable<T>({
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
-                      );
+                      )
                     }
 
                     return (
-                      <TableCell key={column.accessorKey} className="whitespace-normal break-words min-w-[120px]">
+                      <TableCell key={column.accessorKey as string} className="whitespace-normal break-words min-w-[120px]">
                         {(row as any)[column.accessorKey]}
                       </TableCell>
                     )

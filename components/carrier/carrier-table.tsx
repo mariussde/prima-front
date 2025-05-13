@@ -1,14 +1,12 @@
 "use client"
 
-import { type ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useCallback, useEffect, useRef } from 'react'
 import { GenericTable } from "@/components/ui/generic-table"
 import { Carrier } from '@/types/carrier'
-import { useCallback, useEffect, useRef } from 'react'
+import { TableColumn } from '@/types/table'
 
 // Define columns with exact translations
-const columns = [
+const columns: TableColumn<Carrier>[] = [
   { accessorKey: 'COMPID', header: 'Company ID' },
   { accessorKey: 'CARID', header: 'ID' },
   { accessorKey: 'CARDSC', header: 'Description' },
