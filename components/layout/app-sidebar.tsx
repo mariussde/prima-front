@@ -79,17 +79,22 @@ export function AppSidebar() {
     },
     {
       title: "General Settings",
-      href: "/reports",
-      icon: FileText,
-      isActive: pathname.startsWith("/reports"),
+      href: "/settings",
+      icon: Layers,
+      isActive: pathname.startsWith("/settings"),
       submenu: [
-        { title: "Sales Reports", href: "/reports/sales", icon: ChevronRight },
-        { title: "Carrier Reports", href: "/reports/carriers", icon: ChevronRight },
-        { title: "User Reports", href: "/reports/users", icon: ChevronRight },
-        { title: "Analytics", href: "/reports/analytics", icon: ChevronRight },
+        { title: "Carrier", href: "/settings/carrier", icon: ChevronRight },
+        { title: "Agent", href: "/settings/agent", icon: ChevronRight },
+        { title: "Client", href: "/settings/client", icon: ChevronRight },
+        
       ],
     },
-   
+    {
+      title: "User Settings",
+      href: "/user-settings",
+      icon: Users,
+      isActive: pathname.startsWith("/user-settings"),
+    },
   ]
 
   const handleNavigation = (href: string) => {
