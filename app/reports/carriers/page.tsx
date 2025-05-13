@@ -245,12 +245,6 @@ export default function CarriersReportsPage() {
           try {
             const details = JSON.parse(responseData.details)
             if (details.error) {
-              // Format specific error messages to be more user-friendly
-              // if (details.error.includes("Violation of PRIMARY KEY constraint")) {
-              //   errorMessage = "A carrier with this ID already exists. Please use a different Carrier ID."
-              // } else {
-              //   errorMessage = details.error
-              // }
               errorMessage = details.error
             }
           } catch (e) {
@@ -262,12 +256,7 @@ export default function CarriersReportsPage() {
         return { error: errorMessage }
       }
 
-      // Success case
-      toast({
-        title: "Success",
-        description: `Carrier has been successfully ${modalState.mode === 'add' ? 'created' : 'updated'}.`,
-      })
-
+      // Success case - just refresh data and close modal
       await fetchCarrierData(1, columnFilters, sortConfig)
       handleModalClose()
       return { success: true }

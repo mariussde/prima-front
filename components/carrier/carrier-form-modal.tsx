@@ -137,7 +137,7 @@ export function CarrierFormModal({
             ? "The carrier has been successfully updated."
             : "The new carrier has been successfully created.",
           variant: "default",
-          duration: 5000,
+          duration: 3000,
           className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/50 dark:border-green-800 dark:text-green-100",
         })
         onOpenChange(false)
@@ -163,7 +163,7 @@ export function CarrierFormModal({
         title: "Error",
         description: errorMessage,
         variant: "destructive",
-        duration: 5000,
+        duration: 8000,
         className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-100",
       })
     }
