@@ -79,21 +79,21 @@ export function AppSidebar() {
     },
     {
       title: "General Settings",
-      href: "/settings",
+      href: "/general-settings",
       icon: Layers,
-      isActive: pathname.startsWith("/settings"),
+      isActive: pathname.startsWith("/general-settings"),
       submenu: [
-        { title: "Carrier", href: "/settings/carrier", icon: ChevronRight },
-        { title: "Agent", href: "/settings/agent", icon: ChevronRight },
-        { title: "Client", href: "/settings/client", icon: ChevronRight },
+        { title: "Carrier", href: "/general-settings/carrier", icon: ChevronRight },
+        { title: "Agent", href: "/general-settings/agent", icon: ChevronRight },
+        { title: "Client", href: "/general-settings/client", icon: ChevronRight },
         
       ],
     },
     {
-      title: "User Settings",
-      href: "/user-settings",
+      title: "Users",
+      href: "/users",
       icon: Users,
-      isActive: pathname.startsWith("/user-settings"),
+      isActive: pathname.startsWith("/users"),
     },
   ]
 
