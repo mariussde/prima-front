@@ -1,0 +1,35 @@
+export interface Client {
+  COMPID: string
+  CLNTID: string
+  CLNTDSC: string
+  ADDRL1: string
+  ADDRL2: string
+  City: string
+  ZIPCODE: string
+  Phone: string
+  Fax: string
+  eMail: string
+  WebSite: string
+  FEDTXID: string
+  STETXID: string
+  CLBILL: string
+  CLEC1: string
+  CLEC2: string
+  CLEC3: string
+  CLEC4: string
+  CLEC5: string
+  CLEN1: string
+  CLEN2: string
+  CLEN3: string
+  CLEN4: string
+  CLEN5: string
+  CNTYCOD: string
+  STAID: string
+  CRTUSR: string
+  CRTDAT: string
+  CRTTIM: string
+  CHGUSR: string
+  CHGDAT: string
+  CHGTIM: string
+  RowNum: number
+} 
