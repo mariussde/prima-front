@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
-    "build": "next build",
-    "start": "next start",
+    "dev": "set NODE_OPTIONS=--no-deprecation && next dev --turbo",
+    "build": "set NODE_OPTIONS=--no-deprecation && next build",
+    "start": "set NODE_OPTIONS=--no-deprecation && next start",
     "lint": "next lint"
   },
   "dependencies": {
