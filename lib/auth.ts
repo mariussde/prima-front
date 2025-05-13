@@ -5,6 +5,7 @@ import { Session } from "next-auth";
 import crypto from "crypto";
 
 
+
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
@@ -130,7 +131,7 @@ export const authOptions = {
       },
     }),
   ],
-  debug: true, // Enable debug mode to see more detailed logs
+  debug: process.env.NODE_ENV !== "production", // Enable debug mode to see more detailed logs just in development
   callbacks: {
     async jwt({ token, user }: { token: JWT; user: any }) {
       if (user) {
