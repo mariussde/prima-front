@@ -1,54 +1,58 @@
-# Prima - Modern Next.js Dashboard
+# Prima Frontend
 
-A modern, responsive dashboard application built with Next.js, TypeScript, TailwindCSS, and Shadcn UI components. Prima features a beautiful and intuitive interface with a collapsible sidebar, dark mode support, and a comprehensive navigation system.
+A modern, comprehensive dashboard application built with Next.js, TypeScript, and TailwindCSS for managing business entities like carriers, clients, and agents.
 
 ## Features
 
+- 🔐 **Authentication & Authorization**
+  - Secure login system
+  - Role-based access control
+  - Protected routes
+
+- 📊 **Data Management**
+  - Complete CRUD operations
+  - Real-time data filtering
+  - Advanced sorting capabilities
+  - Infinite scrolling with pagination
+
 - 🎨 **Modern UI/UX**
-  - Clean and intuitive interface
-  - Responsive design that works on all devices
+  - Responsive design
   - Dark/Light mode support
-  - Beautiful animations and transitions
+  - Toast notifications
+  - Loading states
+  - Form validation
 
-- 📱 **Responsive Layout**
-  - Collapsible sidebar with mobile support
-  - Adaptive grid layouts
-  - Mobile-first approach
-
-- 🔍 **Smart Navigation**
-  - Recently used items tracking
-  - Search functionality
-  - Collapsible menu items
-  - Breadcrumb navigation
-
-- 🎯 **User Experience**
-  - Keyboard shortcuts
-  - Tooltips for better accessibility
-  - Smooth transitions
-  - Intuitive navigation
+- 🛠 **Developer Experience**
+  - TypeScript for type safety
+  - ESLint & Prettier for code quality
+  - Comprehensive documentation
+  - Modular architecture
 
 ## Tech Stack
 
-- **Framework**: Next.js 15
-- **Language**: TypeScript
-- **Styling**: TailwindCSS
-- **UI Components**: Shadcn UI
-- **Icons**: Lucide Icons
-- **Fonts**: Geist (Sans & Mono)
+- **Framework:** [Next.js 13+](https://nextjs.org/)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Styling:** [TailwindCSS](https://tailwindcss.com/)
+- **UI Components:** [Shadcn UI](https://ui.shadcn.com/)
+- **Form Handling:** [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+- **Icons:** [Lucide Icons](https://lucide.dev/)
+- **Notifications:** [React Hot Toast](https://react-hot-toast.com/)
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18.17 or later
+- Node.js 18+ 
 - npm or yarn
+- Git
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/next-js-shadcn-ui.git
-cd next-js-shadcn-ui
+git clone https://github.com/your-username/prima-front.git
+cd prima-front
 ```
 
 2. Install dependencies:
@@ -58,53 +62,47 @@ npm install
 yarn install
 ```
 
-3. Run the development server:
+3. Create a `.env.local` file in the root directory:
+```env
+NEXT_PUBLIC_API_URL=your_api_url
+NEXT_PUBLIC_AUTH_URL=your_auth_url
+```
+
+4. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Structure
 
 ```
+prima-front/
 ├── app/                    # Next.js app directory
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Home page
-├── components/            # React components
-│   ├── layout/           # Layout components
+│   ├── api/               # API routes
+│   ├── general-settings/  # Feature pages
+│   └── layout.tsx         # Root layout
+├── components/            # Reusable components
 │   ├── ui/               # UI components
-│   └── dashboard/        # Dashboard components
-├── lib/                   # Utility functions
-├── hooks/                 # Custom React hooks
-└── public/               # Static assets
+│   └── layout/           # Layout components
+├── lib/                  # Utility functions
+├── types/                # TypeScript definitions
+├── hooks/                # Custom React hooks
+├── styles/               # Global styles
+└── public/              # Static assets
 ```
 
-## Features in Detail
+## Available Scripts
 
-### Sidebar Navigation
-
-- Collapsible sidebar with mobile support
-- Recently used items tracking (limited to 5 items)
-- Search functionality for navigation items
-- Submenu support with collapsible sections
-- Keyboard shortcuts for navigation
-
-### Theme Support
-
-- System theme detection
-- Manual theme switching
-- Smooth theme transitions
-- Persistent theme preference
-
-### Layout Components
-
-- Responsive top bar
-- Breadcrumb navigation
-- Flexible content area
-- Footer with version information
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run format` - Run Prettier
+- `npm run type-check` - Run TypeScript compiler
 
 ## Contributing
 
@@ -114,14 +112,24 @@ yarn dev
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+## Documentation
+
+For detailed documentation, please refer to:
+- [Project Documentation](docs/PROJECT.md)
+- [API Documentation](docs/API.md)
+- [Component Documentation](docs/COMPONENTS.md)
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## Support
 
-- [Next.js](https://nextjs.org/)
-- [TailwindCSS](https://tailwindcss.com/)
-- [Shadcn UI](https://ui.shadcn.com/)
-- [Lucide Icons](https://lucide.dev/)
-- [Geist Font](https://vercel.com/font) 
+For support, please:
+- Open an issue in the GitHub repository
+- Contact the development team
+- Check the documentation
+
+---
+
+Built with ❤️ by the Prima Team 
