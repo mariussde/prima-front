@@ -24,23 +24,34 @@ import Image from "next/image"
 import "flag-icons/css/flag-icons.min.css"
 
 const countries = [
-  { value: "spain", label: "Spain Metals", code: "es" },
-  { value: "spain-softs", label: "Spain Softs", code: "es" },
-  { value: "netherlands", label: "Netherlands", code: "nl" },
-  { value: "italy", label: "Italy", code: "it" },
-  { value: "antwerp-softs", label: "Antwerp Softs", code: "be" },
-  { value: "antwerp-metal", label: "Antwerp Metals", code: "be" },
-  { value: "united-states", label: "United States", code: "us" },
-  { value: "canada", label: "Canada", code: "ca" },
-  { value: "south-africa", label: "South Africa", code: "za" },
-  { value: "china", label: "China", code: "cn" },
-  { value: "singapore", label: "Singapore", code: "sg" },
+  { value: "spain", label: "Spain Metals", code: "es", languages: ["es", "en"] },
+  { value: "spain-softs", label: "Spain Softs", code: "es", languages: ["es", "en"] },
+  { value: "netherlands", label: "Netherlands", code: "nl", languages: ["nl", "en"] },
+  { value: "italy", label: "Italy", code: "it", languages: ["it", "en"] },
+  { value: "antwerp-softs", label: "Antwerp Softs", code: "be", languages: ["nl", "en"] },
+  { value: "antwerp-metal", label: "Antwerp Metals", code: "be", languages: ["nl", "en"] },
+  { value: "united-states", label: "United States", code: "us", languages: ["en"] },
+  { value: "canada", label: "Canada", code: "ca", languages: ["en", "fr"] },
+  { value: "south-africa", label: "South Africa", code: "za", languages: ["en"] },
+  { value: "china", label: "China", code: "cn", languages: ["zh", "en"] },
+  { value: "singapore", label: "Singapore", code: "sg", languages: ["en"] },
 ]
+
+const languageLabels = {
+  en: "English",
+  es: "Español",
+  nl: "Nederlands",
+  it: "Italiano",
+  fr: "Français",
+  zh: "中文",
+}
 
 export function TopBar() {
   const router = useRouter()
   const { toast } = useToast()
   const { state } = useSidebar()
+  const [selectedCountry, setSelectedCountry] = useState("spain")
+  const [selectedLanguage, setSelectedLanguage] = useState("en")
 
   const handleLogout = async () => {
     try {
@@ -61,6 +72,22 @@ export function TopBar() {
     }
   }
 
+  const handleCountryChange = (value: string) => {
+    setSelectedCountry(value)
+    const country = countries.find(c => c.value === value)
+    if (country && !country.languages.includes(selectedLanguage)) {
+      setSelectedLanguage(country.languages[0])
+    }
+  }
+
+  const handleLanguageChange = (lang: string) => {
+    setSelectedLanguage(lang)
+    toast({
+      title: "Language changed",
+      description: `Application language changed to ${languageLabels[lang as keyof typeof languageLabels]}`,
+    })
+  }
+
   return (
     <header className="top-0 z-30 flex h-16 items-center border-b bg-background px-4 md:px-6 w-full">
       <div className="flex items-center gap-2 min-w-0">
@@ -69,7 +96,7 @@ export function TopBar() {
       </div>
 
       <div className="flex items-center gap-1 sm:gap-2 md:gap-4 ml-auto sticky right-0">
-        <Select defaultValue="spain">
+        <Select defaultValue={selectedCountry} onValueChange={handleCountryChange}>
           <SelectTrigger className="w-[60px] min-[340px]:w-[140px] sm:w-[180px]">
             <SelectValue placeholder="Select country" />
           </SelectTrigger>
@@ -116,6 +143,20 @@ export function TopBar() {
                 <span>Help Center</span>
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Language</DropdownMenuLabel>
+            {countries.find(c => c.value === selectedCountry)?.languages.map((lang) => (
+              <DropdownMenuItem
+                key={lang}
+                onClick={() => handleLanguageChange(lang)}
+                className={selectedLanguage === lang ? "bg-accent" : ""}
+              >
+                <div className="flex items-center">
+                  <span className={`fi fi-${lang === 'en' ? 'gb' : lang} mr-2`}></span>
+                  <span>{languageLabels[lang as keyof typeof languageLabels]}</span>
+                </div>
+              </DropdownMenuItem>
+            ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem 
               className="text-red-600 dark:text-red-500 focus:text-red-600 dark:focus:text-red-500 font-semibold hover:font-semibold focus:font-semibold data-[highlighted]:font-semibold"
