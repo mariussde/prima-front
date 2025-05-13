@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from 'react'
 import { GenericTable } from "@/components/ui/generic-table"
-import { Carrier } from '@/types/carrier'
+import { Carrier } from '@/types/carriers'
 import { TableColumn } from '@/types/table'
 
 // Define columns with exact translations

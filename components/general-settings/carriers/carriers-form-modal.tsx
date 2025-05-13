@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Carrier } from "@/types/carrier"
+import { Carrier } from "@/types/carriers"
 
 // Define the form schema based on the required parameters from settings_config.json
 const carrierFormSchema = z.object({

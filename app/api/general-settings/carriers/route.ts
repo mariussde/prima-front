@@ -15,7 +15,7 @@ export async function GET(request: Request) {
 
     return makeApiRequest('carrier', 'GET', {
       params,
-      errorMessage: 'Failed to fetch carrier data'
+      errorMessage: 'Failed to fetch carriers data'
     })
   } catch (error: any) {
     if (error.message === 'Unauthorized') {

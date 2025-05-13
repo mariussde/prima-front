@@ -83,9 +83,9 @@ export function AppSidebar() {
       icon: Layers,
       isActive: pathname.startsWith("/general-settings"),
       submenu: [
-        { title: "Carrier", href: "/general-settings/carrier", icon: ChevronRight },
-        { title: "Agent", href: "/general-settings/agent", icon: ChevronRight },
-        { title: "Client", href: "/general-settings/client", icon: ChevronRight },
+        { title: "Carriers", href: "/general-settings/carriers", icon: ChevronRight },
+        { title: "Agents", href: "/general-settings/agents", icon: ChevronRight },
+        { title: "Clients", href: "/general-settings/clients", icon: ChevronRight },
         
       ],
     },

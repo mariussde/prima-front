@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, Plus } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { CarrierTable } from '@/components/carrier/carrier-table'
-import { CarrierFormModal } from '@/components/carrier/carrier-form-modal'
-import { Carrier } from '@/types/carrier'
+import { CarrierTable } from '@/components/general-settings/carriers/carriers-table'
+import { CarrierFormModal } from '@/components/general-settings/carriers/carriers-form-modal'
+import { Carrier } from '@/types/carriers'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/hooks/use-toast"
-import { defaultVisibleColumns } from '@/components/carrier/carrier-table'
+import { defaultVisibleColumns } from '@/components/general-settings/carriers/carriers-table'
 
 // Custom hook for debounce
 function useDebounce<T>(value: T, delay: number): T {
@@ -119,7 +119,7 @@ export default function CarriersReportsPage() {
         params.append('sortDirection', sort.direction)
       }
       
-      const response = await fetch(`/api/carrier?${params.toString()}`, {
+      const response = await fetch(`/api/general-settings/carriers?${params.toString()}`, {
         signal: abortControllerRef.current.signal
       })
       
@@ -226,7 +226,7 @@ export default function CarriersReportsPage() {
 
   const handleCarrierSubmit = async (data: any) => {
     try {
-      const response = await fetch('/api/carrier', {
+      const response = await fetch('/api/general-settings/carriers', {
         method: modalState.mode === 'add' ? 'POST' : 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -297,7 +297,7 @@ export default function CarriersReportsPage() {
 
   const handleDelete = async (carrier: Carrier) => {
     try {
-      const response = await fetch(`/api/carrier?COMPID=${carrier.COMPID}&CARID=${carrier.CARID}`, {
+      const response = await fetch(`/api/general-settings/carriers?COMPID=${carrier.COMPID}&CARID=${carrier.CARID}`, {
         method: 'DELETE',
       })
 
@@ -362,7 +362,7 @@ export default function CarriersReportsPage() {
       <main className="flex-1 p-4 md:p-8 w-full">
         <Card className="w-full h-full">
           <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
-            <CardTitle>Carrier Reports</CardTitle>
+            <CardTitle>Carriers</CardTitle>
             <div className="flex flex-col min-[320px]:flex-row items-start min-[320px]:items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
