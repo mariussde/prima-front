@@ -234,10 +234,35 @@ export default function CarriersReportsPage() {
         body: JSON.stringify(data),
       })
 
+      const responseData = await response.json()
+
       if (!response.ok) {
-        throw new Error(`Failed to ${modalState.mode} carrier`)
+        // Extract the actual error message from the response
+        let errorMessage = responseData.error || `Failed to ${modalState.mode} carrier`
+        
+        // If we have details, try to parse them for a more specific error message
+        if (responseData.details) {
+          try {
+            const details = JSON.parse(responseData.details)
+            if (details.error) {
+              // Format specific error messages to be more user-friendly
+              // if (details.error.includes("Violation of PRIMARY KEY constraint")) {
+              //   errorMessage = "A carrier with this ID already exists. Please use a different Carrier ID."
+              // } else {
+              //   errorMessage = details.error
+              // }
+              errorMessage = details.error
+            }
+          } catch (e) {
+            // If parsing fails, use the original error message
+            console.error('Failed to parse error details:', e)
+          }
+        }
+
+        return { error: errorMessage }
       }
 
+      // Success case
       toast({
         title: "Success",
         description: `Carrier has been successfully ${modalState.mode === 'add' ? 'created' : 'updated'}.`,
@@ -245,12 +270,11 @@ export default function CarriersReportsPage() {
 
       await fetchCarrierData(1, columnFilters, sortConfig)
       handleModalClose()
+      return { success: true }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      })
+      return { 
+        error: error instanceof Error ? error.message : "An error occurred while saving the carrier"
+      }
     }
   }
 

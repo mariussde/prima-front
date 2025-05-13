@@ -51,7 +51,7 @@ interface CarrierFormModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   carrier?: Carrier
-  onSubmit: (data: CarrierFormValues) => Promise<void>
+  onSubmit: (data: CarrierFormValues) => Promise<{ error?: string } | void>
 }
 
 export function CarrierFormModal({
@@ -127,21 +127,41 @@ export function CarrierFormModal({
 
   const handleSubmit = async (data: CarrierFormValues) => {
     try {
-      await onSubmit(data)
-      toast({
-        title: isEditMode ? "Carrier Updated" : "Carrier Created",
-        description: isEditMode
-          ? "The carrier has been successfully updated."
-          : "The new carrier has been successfully created.",
-        variant: "default",
-        duration: 5000,
-        className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/50 dark:border-green-800 dark:text-green-100",
-      })
-      onOpenChange(false)
+      const response = await onSubmit(data)
+      
+      // Handle success case
+      if (response && 'success' in response) {
+        toast({
+          title: isEditMode ? "Carrier Updated" : "Carrier Created",
+          description: isEditMode
+            ? "The carrier has been successfully updated."
+            : "The new carrier has been successfully created.",
+          variant: "default",
+          duration: 5000,
+          className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/50 dark:border-green-800 dark:text-green-100",
+        })
+        onOpenChange(false)
+        return
+      }
+
+      // Handle error case
+      if (response && 'error' in response) {
+        throw new Error(response.error)
+      }
+
+      // If we get here, something unexpected happened
+      throw new Error("An unexpected error occurred")
     } catch (error) {
+      // Format the error message to be more user-friendly
+      let errorMessage = "An error occurred while saving the carrier."
+      
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred",
+        description: errorMessage,
         variant: "destructive",
         duration: 5000,
         className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-100",
