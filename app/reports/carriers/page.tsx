@@ -317,9 +317,9 @@ export default function CarriersReportsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-full flex flex-col">
       <main className="flex-1 p-4 md:p-8 w-full">
-        <Card className="w-full">
+        <Card className="w-full h-full">
           <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
             <CardTitle>Carrier Reports</CardTitle>
             <div className="flex flex-col min-[320px]:flex-row items-start min-[320px]:items-center gap-2">
@@ -346,7 +346,7 @@ export default function CarriersReportsPage() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="px-2 sm:px-6">
+          <CardContent className="px-2 sm:px-6 h-[calc(100vh-280px)] overflow-auto">
             <div className="w-full overflow-x-auto">
               <div className="min-w-[800px] max-w-full">
                 <CarrierTable

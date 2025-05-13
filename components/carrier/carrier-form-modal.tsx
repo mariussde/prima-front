@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import {
   Dialog,
   DialogContent,
@@ -129,10 +129,13 @@ export function CarrierFormModal({
     try {
       await onSubmit(data)
       toast({
-        title: isEditMode ? "Carrier updated" : "Carrier created",
+        title: isEditMode ? "Carrier Updated" : "Carrier Created",
         description: isEditMode
           ? "The carrier has been successfully updated."
           : "The new carrier has been successfully created.",
+        variant: "default",
+        duration: 5000,
+        className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/50 dark:border-green-800 dark:text-green-100",
       })
       onOpenChange(false)
     } catch (error) {
@@ -140,6 +143,8 @@ export function CarrierFormModal({
         title: "Error",
         description: error instanceof Error ? error.message : "An error occurred",
         variant: "destructive",
+        duration: 5000,
+        className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-100",
       })
     }
   }
