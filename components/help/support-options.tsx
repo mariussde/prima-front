@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { MessageSquare, Phone, Mail, FileText } from "lucide-react"
+import { MessageSquare, Phone, Mail } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -20,11 +20,10 @@ import { useToast } from "@/hooks/use-toast"
 
 export function SupportOptions() {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       <LiveChatCard />
       <PhoneSupportCard />
       <EmailSupportCard />
-      <DocumentationCard />
     </div>
   )
 }
@@ -153,26 +152,6 @@ function EmailSupportCard() {
           </DialogContent>
         </Dialog>
       </CardContent>
-    </Card>
-  )
-}
-
-function DocumentationCard() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center">
-          <FileText className="mr-2 h-5 w-5" />
-          Documentation
-        </CardTitle>
-        <CardDescription>Detailed guides and tutorials</CardDescription>
-      </CardHeader>
-      <CardContent className="flex justify-center">
-        <Button variant="outline">View Documentation</Button>
-      </CardContent>
-      <CardFooter className="text-xs text-muted-foreground text-center">
-        Comprehensive resources for all features
-      </CardFooter>
     </Card>
   )
 }

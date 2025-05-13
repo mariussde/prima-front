@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { HelpCircle, Home, LogOut, Settings, User } from "lucide-react"
+import { HelpCircle, Home, LogOut, Settings, User, FileText } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/ui/logo"
@@ -86,9 +86,9 @@ export function TopBar() {
         </Select>
 
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/help">
-            <HelpCircle className="h-5 w-5" />
-            <span className="sr-only">Help</span>
+          <Link href="https://docs.prima.com" target="_blank" rel="noopener noreferrer">
+            <FileText className="h-5 w-5" />
+            <span className="sr-only">Documentation</span>
           </Link>
         </Button>
 
@@ -108,6 +108,12 @@ export function TopBar() {
               <Link href="/session-info" className="flex items-center">
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/help" className="flex items-center">
+                <HelpCircle className="mr-2 h-4 w-4" />
+                <span>Help Center</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

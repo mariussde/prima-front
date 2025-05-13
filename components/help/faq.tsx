@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import Link from "next/link"
 
 const faqCategories = [
   {
@@ -131,7 +132,11 @@ export function FrequentlyAskedQuestions() {
 
       <div className="text-center mt-8">
         <p className="text-muted-foreground mb-2">Need more help? Check out our detailed documentation</p>
-        <Button variant="outline">View Documentation</Button>
+        <Button variant="outline" asChild>
+          <Link href="https://docs.prima.com" target="_blank" rel="noopener noreferrer">
+            View Documentation
+          </Link>
+        </Button>
       </div>
     </div>
   )
