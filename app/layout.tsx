@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { AppLayout } from "@/components/layout/app-layout"
 import { Toaster } from "@/components/ui/toaster"
-import { Providers } from "@/components/providers"
+import { ClientProviders } from "@/components/layout/client-providers"
 import "./globals.css"
 
 const geistSans = Geist({
@@ -33,10 +33,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
-        <Providers>
+        <ClientProviders>
           <AppLayout>{children}</AppLayout>
           <Toaster />
-        </Providers>
+        </ClientProviders>
       </body>
     </html>
   )
