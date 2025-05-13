@@ -129,43 +129,24 @@ export function CarrierFormModal({
     try {
       const response = await onSubmit(data)
       
-      // Handle success case
+      // If we get a success response, close the modal
       if (response && 'success' in response) {
-        toast({
-          title: isEditMode ? "Carrier Updated" : "Carrier Created",
-          description: isEditMode
-            ? "The carrier has been successfully updated."
-            : "The new carrier has been successfully created.",
-          variant: "default",
-          duration: 3000,
-          className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/50 dark:border-green-800 dark:text-green-100",
-        })
         onOpenChange(false)
         return
       }
 
-      // Handle error case
+      // If we get an error response, pass it back to the parent
       if (response && 'error' in response) {
-        throw new Error(response.error)
+        return response
       }
 
       // If we get here, something unexpected happened
-      throw new Error("An unexpected error occurred")
+      return { error: "An unexpected error occurred" }
     } catch (error) {
-      // Format the error message to be more user-friendly
-      let errorMessage = "An error occurred while saving the carrier."
-      
-      if (error instanceof Error) {
-        errorMessage = error.message
+      // Return the error instead of throwing it
+      return { 
+        error: error instanceof Error ? error.message : "An error occurred while saving the carrier"
       }
-
-      toast({
-        title: "Error",
-        description: errorMessage,
-        variant: "destructive",
-        duration: 8000,
-        className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-100",
-      })
     }
   }
 

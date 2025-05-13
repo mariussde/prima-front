@@ -14,7 +14,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import { defaultVisibleColumns } from '@/components/carrier/carrier-table'
 
 // Custom hook for debounce
@@ -253,17 +253,45 @@ export default function CarriersReportsPage() {
           }
         }
 
+        // Show error toast
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+          duration: 8000,
+          className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-100",
+        })
+
         return { error: errorMessage }
       }
 
-      // Success case - just refresh data and close modal
+      // Show success toast
+      toast({
+        title: modalState.mode === 'add' ? "Carrier Created" : "Carrier Updated",
+        description: modalState.mode === 'add'
+          ? "The new carrier has been successfully created."
+          : "The carrier has been successfully updated.",
+        duration: 3000,
+        className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/50 dark:border-green-800 dark:text-green-100",
+      })
+
+      // Refresh data and close modal
       await fetchCarrierData(1, columnFilters, sortConfig)
       handleModalClose()
       return { success: true }
     } catch (error) {
-      return { 
-        error: error instanceof Error ? error.message : "An error occurred while saving the carrier"
-      }
+      const errorMessage = error instanceof Error ? error.message : "An error occurred while saving the carrier"
+      
+      // Show error toast
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+        duration: 8000,
+        className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-100",
+      })
+      
+      return { error: errorMessage }
     }
   }
 
