@@ -316,7 +316,7 @@ export function CarrierFormModal({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input type="email" {...field} />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -329,7 +329,7 @@ export function CarrierFormModal({
                       <FormItem>
                         <FormLabel>Website</FormLabel>
                         <FormControl>
-                          <Input type="url" {...field} />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

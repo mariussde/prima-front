@@ -398,30 +398,32 @@ export default function ClientsPage() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="px-2 sm:px-6 h-[calc(100vh-280px)] overflow-auto">
-            <div className="w-full overflow-x-auto">
-              <div className="min-w-[800px] max-w-full">
-                <ClientTable
-                  data={clientData}
-                  onRowClick={handleRowClick}
-                  onLoadMore={handleLoadMore}
-                  isLoading={isLoading}
-                  hasMore={hasMore}
-                  columnVisibility={columnVisibility}
-                  onFilterChange={handleFilterChange}
-                  columnFilters={columnFilters}
-                  onSortChange={handleSortChange}
-                  showActions={true}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                />
+          <CardContent className="px-2 sm:px-6 h-[calc(100vh-280px)]">
+            <div className="w-full h-full relative">
+              <div className="absolute inset-0 overflow-auto">
+                <div className="min-w-[800px]">
+                  <ClientTable
+                    data={clientData}
+                    onRowClick={handleRowClick}
+                    onLoadMore={handleLoadMore}
+                    isLoading={isLoading}
+                    hasMore={hasMore}
+                    columnVisibility={columnVisibility}
+                    onFilterChange={handleFilterChange}
+                    columnFilters={columnFilters}
+                    onSortChange={handleSortChange}
+                    showActions={true}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                </div>
               </div>
+              {isLoading && page === 1 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-background/50">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                </div>
+              )}
             </div>
-            {isLoading && page === 1 && (
-              <div className="w-full flex justify-center py-4">
-                <Loader2 className="h-6 w-6 animate-spin" />
-              </div>
-            )}
           </CardContent>
         </Card>
       </main>

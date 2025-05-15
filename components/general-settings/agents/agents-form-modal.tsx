@@ -320,7 +320,7 @@ export function AgentFormModal({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input type="email" {...field} />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -333,7 +333,7 @@ export function AgentFormModal({
                       <FormItem>
                         <FormLabel>Website</FormLabel>
                         <FormControl>
-                          <Input type="url" {...field} />
+                          <Input {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
