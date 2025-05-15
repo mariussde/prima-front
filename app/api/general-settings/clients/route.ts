@@ -9,8 +9,30 @@ export async function GET(request: Request) {
       pageNumber: searchParams.get('pageNumber') || '1',
       pageSize: searchParams.get('pageSize') || '300',
       CLNTID: searchParams.get('CLNTID') || '',
-      FilterCLNTID: searchParams.get('FilterCLNTID') || '',
-      FilterCLNTDSC: searchParams.get('FilterCLNTDSC') || ''
+      CLNTDSC: searchParams.get('CLNTDSC') || '',
+      ADDRL1: searchParams.get('ADDRL1') || '',
+      ADDRL2: searchParams.get('ADDRL2') || '',
+      City: searchParams.get('City') || '',
+      ZIPCODE: searchParams.get('ZIPCODE') || '',
+      Phone: searchParams.get('Phone') || '',
+      Fax: searchParams.get('Fax') || '',
+      eMail: searchParams.get('eMail') || '',
+      WebSite: searchParams.get('WebSite') || '',
+      FEDTXID: searchParams.get('FEDTXID') || '',
+      STETXID: searchParams.get('STETXID') || '',
+      CLBILL: searchParams.get('CLBILL') || '',
+      CLEC1: searchParams.get('CLEC1') || '',
+      CLEC2: searchParams.get('CLEC2') || '',
+      CLEC3: searchParams.get('CLEC3') || '',
+      CLEC4: searchParams.get('CLEC4') || '',
+      CLEC5: searchParams.get('CLEC5') || '',
+      CLEN1: searchParams.get('CLEN1') || '',
+      CLEN2: searchParams.get('CLEN2') || '',
+      CLEN3: searchParams.get('CLEN3') || '',
+      CLEN4: searchParams.get('CLEN4') || '',
+      CLEN5: searchParams.get('CLEN5') || '',
+      CNTYCOD: searchParams.get('CNTYCOD') || '',
+      STAID: searchParams.get('STAID') || ''
     }
 
     return makeApiRequest('client', 'GET', {

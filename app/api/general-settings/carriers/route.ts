@@ -9,8 +9,18 @@ export async function GET(request: Request) {
       pageNumber: searchParams.get('pageNumber') || '1',
       pageSize: searchParams.get('pageSize') || '300',
       CARID: searchParams.get('CARID') || '',
-      FilterId: searchParams.get('FilterId') || '',
-      FilterName: searchParams.get('FilterName') || ''
+      CARDSC: searchParams.get('CARDSC') || '',
+      ADDRL1: searchParams.get('ADDRL1') || '',
+      ADDRL2: searchParams.get('ADDRL2') || '',
+      City: searchParams.get('City') || '',
+      ZIPCODE: searchParams.get('ZIPCODE') || '',
+      Phone: searchParams.get('Phone') || '',
+      Fax: searchParams.get('Fax') || '',
+      eMail: searchParams.get('eMail') || '',
+      WebSite: searchParams.get('WebSite') || '',
+      CONNME: searchParams.get('CONNME') || '',
+      CNTYCOD: searchParams.get('CNTYCOD') || '',
+      STAID: searchParams.get('STAID') || ''
     }
 
     return makeApiRequest('carrier', 'GET', {

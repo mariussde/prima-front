@@ -119,9 +119,12 @@ export default function ClientsPage() {
         pageSize: '100'
       })
       
-      // Add filters
+      // Add filters with new format
       Object.entries(currentFilters).forEach(([key, value]) => {
-        if (value) params.append(key, value)
+        if (value) {
+          // Use the original column name as the parameter
+          params.append(key, value)
+        }
       })
       
       // Add sorting if available

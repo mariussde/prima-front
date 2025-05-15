@@ -9,8 +9,19 @@ export async function GET(request: Request) {
       pageNumber: searchParams.get('pageNumber') || '1',
       pageSize: searchParams.get('pageSize') || '300',
       AGNTID: searchParams.get('AGNTID') || '',
-      FilterAGNTID: searchParams.get('FilterAGNTID') || '',
-      FilterAGNTDSC: searchParams.get('FilterAGNTDSC') || ''
+      AGNTDSC: searchParams.get('AGNTDSC') || '',
+      ADDRL1: searchParams.get('ADDRL1') || '',
+      ADDRL2: searchParams.get('ADDRL2') || '',
+      City: searchParams.get('City') || '',
+      ZIPCODE: searchParams.get('ZIPCODE') || '',
+      Phone: searchParams.get('Phone') || '',
+      Fax: searchParams.get('Fax') || '',
+      eMail: searchParams.get('eMail') || '',
+      WebSite: searchParams.get('WebSite') || '',
+      FEDTXID: searchParams.get('FEDTXID') || '',
+      STETXID: searchParams.get('STETXID') || '',
+      CNTYCOD: searchParams.get('CNTYCOD') || '',
+      STAID: searchParams.get('STAID') || ''
     }
 
     return makeApiRequest('agent', 'GET', {
