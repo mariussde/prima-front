@@ -433,7 +433,7 @@ export function ClientFormModal({
                     name="CLBILL"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Billing Code</FormLabel>
+                        <FormLabel>Billing Method</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -452,7 +452,7 @@ export function ClientFormModal({
                       name={`CLEC${num}` as keyof ClientFormValues}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Contact Email {num}</FormLabel>
+                          <FormLabel>ClientExChar{num}</FormLabel>
                           <FormControl>
                             <Input type="email" {...field} />
                           </FormControl>
@@ -471,7 +471,7 @@ export function ClientFormModal({
                       name={`CLEN${num}` as keyof ClientFormValues}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Contact Name {num}</FormLabel>
+                          <FormLabel>ClientExNum{num}</FormLabel>
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
