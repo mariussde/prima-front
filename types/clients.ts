@@ -18,11 +18,11 @@ export interface Client {
   CLEC3: string
   CLEC4: string
   CLEC5: string
-  CLEN1: string
-  CLEN2: string
-  CLEN3: string
-  CLEN4: string
-  CLEN5: string
+  CLEN1: number
+  CLEN2: number
+  CLEN3: number
+  CLEN4: number
+  CLEN5: number
   CNTYCOD: string
   STAID: string
   CRTUSR: string

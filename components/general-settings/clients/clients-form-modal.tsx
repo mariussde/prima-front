@@ -16,7 +16,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -47,11 +46,11 @@ const clientFormSchema = z.object({
   CLEC3: z.string().optional(),
   CLEC4: z.string().optional(),
   CLEC5: z.string().optional(),
-  CLEN1: z.string().optional(),
-  CLEN2: z.string().optional(),
-  CLEN3: z.string().optional(),
-  CLEN4: z.string().optional(),
-  CLEN5: z.string().optional(),
+  CLEN1: z.number().default(0),
+  CLEN2: z.number().default(0),
+  CLEN3: z.number().default(0),
+  CLEN4: z.number().default(0),
+  CLEN5: z.number().default(0),
   CNTYCOD: z.string().optional(),
   STAID: z.string().optional(),
   CRTUSR: z.string().optional(),
@@ -78,7 +77,7 @@ export function ClientFormModal({
   const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
     defaultValues: {
-      COMPID: "PLL", // Default company ID
+      COMPID: "PLL",
       CLNTID: "",
       CLNTDSC: "",
       ADDRL1: "",
@@ -97,11 +96,11 @@ export function ClientFormModal({
       CLEC3: "",
       CLEC4: "",
       CLEC5: "",
-      CLEN1: "",
-      CLEN2: "",
-      CLEN3: "",
-      CLEN4: "",
-      CLEN5: "",
+      CLEN1: 0,
+      CLEN2: 0,
+      CLEN3: 0,
+      CLEN4: 0,
+      CLEN5: 0,
       CNTYCOD: "",
       STAID: "",
       CRTUSR: "",
@@ -161,11 +160,11 @@ export function ClientFormModal({
         CLEC3: "",
         CLEC4: "",
         CLEC5: "",
-        CLEN1: "",
-        CLEN2: "",
-        CLEN3: "",
-        CLEN4: "",
-        CLEN5: "",
+        CLEN1: 0,
+        CLEN2: 0,
+        CLEN3: 0,
+        CLEN4: 0,
+        CLEN5: 0,
         CNTYCOD: "",
         STAID: "",
         CRTUSR: "",
@@ -454,7 +453,7 @@ export function ClientFormModal({
                         <FormItem>
                           <FormLabel>ClientExChar{num}</FormLabel>
                           <FormControl>
-                            <Input type="email" {...field} />
+                            <Input {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -473,7 +472,13 @@ export function ClientFormModal({
                         <FormItem>
                           <FormLabel>ClientExNum{num}</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input 
+                              type="number" 
+                              step="0.01"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                              value={field.value}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
