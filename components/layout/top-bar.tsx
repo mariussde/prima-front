@@ -50,8 +50,7 @@ export function TopBar() {
   const router = useRouter()
   const { toast } = useToast()
   const { state } = useSidebar()
-  const [selectedCountry, setSelectedCountry] = useState("spain")
-  const [selectedLanguage, setSelectedLanguage] = useState("en")
+  const [selectedCountry, setSelectedCountry] = useState("united-states")
 
   const handleLogout = async () => {
     try {
@@ -74,18 +73,6 @@ export function TopBar() {
 
   const handleCountryChange = (value: string) => {
     setSelectedCountry(value)
-    const country = countries.find(c => c.value === value)
-    if (country && !country.languages.includes(selectedLanguage)) {
-      setSelectedLanguage(country.languages[0])
-    }
-  }
-
-  const handleLanguageChange = (lang: string) => {
-    setSelectedLanguage(lang)
-    toast({
-      title: "Language changed",
-      description: `Application language changed to ${languageLabels[lang as keyof typeof languageLabels]}`,
-    })
   }
 
   return (
@@ -143,20 +130,6 @@ export function TopBar() {
                 <span>Help Center</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>Language</DropdownMenuLabel>
-            {countries.find(c => c.value === selectedCountry)?.languages.map((lang) => (
-              <DropdownMenuItem
-                key={lang}
-                onClick={() => handleLanguageChange(lang)}
-                className={selectedLanguage === lang ? "bg-accent" : ""}
-              >
-                <div className="flex items-center">
-                  <span className={`fi fi-${lang === 'en' ? 'gb' : lang} mr-2`}></span>
-                  <span>{languageLabels[lang as keyof typeof languageLabels]}</span>
-                </div>
-              </DropdownMenuItem>
-            ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem 
               className="text-red-600 dark:text-red-500 focus:text-red-600 dark:focus:text-red-500 font-semibold hover:font-semibold focus:font-semibold data-[highlighted]:font-semibold"

@@ -10,7 +10,7 @@ export function Logo({ className = "", showText = true }: LogoProps) {
   return (
     <Link href="/" className={`flex items-center gap-2 ${className}`}>
       <Image
-        src="/logo-mike.png"
+        src="/logo-marius.svg"
         alt="Prima Logo"
         width={80}
         height={80}
