@@ -150,7 +150,10 @@ export function GenericTable<T>({
                 <TableRow
                   key={index}
                   ref={isLastRow ? lastRowRef : undefined}
-                  className={onRowClick ? "cursor-pointer hover:bg-muted" : ""}
+                  className={cn(
+                    onRowClick ? "cursor-pointer hover:bg-muted" : "",
+                    "h-10"
+                  )}
                   onClick={() => onRowClick?.(row)}
                 >
                   {tableColumns.map((column) => {
@@ -164,7 +167,7 @@ export function GenericTable<T>({
                       return (
                         <TableCell
                           key={column.accessorKey as string}
-                          className="w-[50px] text-center"
+                          className="w-[50px] text-center py-2"
                         >
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -209,7 +212,7 @@ export function GenericTable<T>({
                     return (
                       <TableCell
                         key={column.accessorKey as string}
-                        className="whitespace-normal break-words min-w-[120px]"
+                        className="whitespace-normal break-words min-w-[120px] py-2"
                       >
                         {(row as any)[column.accessorKey]}
                       </TableCell>
