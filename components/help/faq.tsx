@@ -133,7 +133,7 @@ export function FrequentlyAskedQuestions() {
       <div className="text-center mt-8">
         <p className="text-muted-foreground mb-2">Need more help? Check out our detailed documentation</p>
         <Button variant="outline" asChild>
-          <Link href="https://docs.prima.com" target="_blank" rel="noopener noreferrer">
+          <Link href="/docs" target="_blank" rel="noopener noreferrer">
             View Documentation
           </Link>
         </Button>

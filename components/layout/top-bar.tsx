@@ -100,7 +100,7 @@ export function TopBar() {
         </Select>
 
         <Button variant="ghost" size="icon" asChild>
-          <Link href="https://docs.prima.com" target="_blank" rel="noopener noreferrer">
+          <Link href="/docs" target="_blank" rel="noopener noreferrer">
             <FileText className="h-5 w-5" />
             <span className="sr-only">Documentation</span>
           </Link>
