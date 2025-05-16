@@ -41,7 +41,7 @@ export const getAuthUsername = async () => {
   return session?.user?.username || ''
 }
 
-// Helper function to make API requests
+// Helper function to make API requests with automatic retry on token expiration
 export const makeApiRequest = async (
   endpoint: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
@@ -49,37 +49,79 @@ export const makeApiRequest = async (
     params?: Record<string, string>
     body?: any
     errorMessage?: string
+    retryCount?: number
   } = {}
 ) => {
-  const token = await getAuthToken()
-  const baseUrl = process.env.API_BASE_URL
+  const maxRetries = options.retryCount || 1
+  let currentRetry = 0
 
-  // Build query string from params
-  const queryString = options.params
-    ? '?' + new URLSearchParams(options.params).toString()
-    : ''
+  while (currentRetry <= maxRetries) {
+    try {
+      const token = await getAuthToken()
+      const baseUrl = process.env.API_BASE_URL
 
-  const url = `${baseUrl}/${endpoint}${queryString}`
-  
-  const response = await fetch(url, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      token,
-    },
-    body: options.body ? JSON.stringify(options.body) : undefined,
-    agent: createHttpsAgent()
-  })
+      // Build query string from params
+      const queryString = options.params
+        ? '?' + new URLSearchParams(options.params).toString()
+        : ''
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error('Error Response:', errorText)
-    return NextResponse.json(
-      { error: options.errorMessage || 'Failed to process request', details: errorText },
-      { status: response.status }
-    )
+      const url = `${baseUrl}/${endpoint}${queryString}`
+      
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: options.body ? JSON.stringify(options.body) : undefined,
+        agent: createHttpsAgent()
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        let errorData
+        try {
+          errorData = JSON.parse(errorText)
+        } catch {
+          errorData = { message: errorText }
+        }
+
+        // Check if token has expired
+        if (errorData.message?.includes('token has expired') && currentRetry < maxRetries) {
+          // Force a session refresh by throwing an error
+          throw new Error('TokenExpired')
+        }
+
+        console.error('Error Response:', errorText)
+        return NextResponse.json(
+          { error: options.errorMessage || 'Failed to process request', details: errorText },
+          { status: response.status }
+        )
+      }
+
+      const data = await response.json()
+      return addCorsHeaders(NextResponse.json(data))
+    } catch (error: any) {
+      if (error.message === 'TokenExpired' && currentRetry < maxRetries) {
+        currentRetry++
+        // Wait a bit before retrying to allow token refresh
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        continue
+      }
+      
+      if (error.message === 'Unauthorized') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+      
+      return NextResponse.json(
+        { error: options.errorMessage || 'Failed to process request', details: error.message },
+        { status: 500 }
+      )
+    }
   }
 
-  const data = await response.json()
-  return addCorsHeaders(NextResponse.json(data))
+  return NextResponse.json(
+    { error: 'Failed to process request after retries' },
+    { status: 500 }
+  )
 } 
