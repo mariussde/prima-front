@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Overview } from "@/components/dashboard/overview"
 import { RecentActivity } from "@/components/dashboard/recent-activity"
 import { DashboardStats } from "@/components/dashboard/dashboard-stats"
+import Image from "next/image"
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -12,6 +13,16 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-4 p-8">
+      <div className="flex justify-center mb-8">
+        <Image
+          src="/logo-marius.svg"
+          alt="Prima Logo"
+          width={400}
+          height={400}
+          className="opacity-20"
+          priority
+        />
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <DashboardStats />
       </div>
