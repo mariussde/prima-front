@@ -19,10 +19,10 @@ export const config = {
      * - api/auth (auth endpoints)
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
      * - login (login page)
-     * - public (public assets)
+     * - Specific public root files (e.g., favicon.ico, p-icon.png, logo-marius.svg, site.webmanifest, robots.txt)
+     * - Common public asset directories (e.g., /images/*, /assets/*)
      */
-    "/((?!api/auth|_next/static|_next/image|favicon.ico|login|public/|logo-marius.svg).*)",
+    "/((?!api/auth|_next/static|_next/image|login|favicon\.ico|p-icon\.png|logo-marius\.svg|site\.webmanifest|robots\.txt|images/|assets/).*)",
   ],
 };
