@@ -61,7 +61,7 @@ export function DocsSidebar() {
 
   return (
     <Sidebar variant="inset" className="w-64">
-      <SidebarHeader className="border-b border-border p-4">
+      <SidebarHeader className="border-b border-border p-4 pt-8">
         <div className="flex items-center justify-between">
           <Logo className="w-full" showText={state !== "collapsed"} />
         </div>

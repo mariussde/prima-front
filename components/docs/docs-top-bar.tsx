@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Search } from "lucide-react"
+import { Search, Globe } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -17,18 +17,32 @@ import {
   CommandShortcut,
 } from "@/components/ui/command"
 import { DialogTitle } from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import "flag-icons/css/flag-icons.min.css"
+
+const languages = [
+  { code: "en", name: "English", flag: "gb" },
+  { code: "es", name: "Español", flag: "es" },
+  { code: "fr", name: "Français", flag: "fr" },
+  { code: "de", name: "Deutsch", flag: "de" },
+  { code: "it", name: "Italiano", flag: "it" },
+]
 
 const topNavItems = [
   { title: "Quick Setup", href: "/docs/quick-setup" },
   { title: "Basics", href: "/docs/basics" },
   { title: "New Features", href: "/docs/new-features" },
-  { title: "FAQ", href: "/docs/faq" },
-  { title: "Others", href: "/docs/others" },
   { title: "Admin", href: "/docs/admin" },
 ]
 
 export function DocsTopBar() {
   const [open, setOpen] = React.useState(false)
+  const [language, setLanguage] = React.useState("en")
   const inputRef = React.useRef<HTMLInputElement>(null)
   const pathname = usePathname()
 
@@ -58,7 +72,7 @@ export function DocsTopBar() {
         <div className="flex items-center gap-2">
           <SidebarTrigger />
         </div>
-        <div className="relative mx-auto w-60 max-w-2xl">
+        <div className="relative mx-auto w-60 max-w-2xl flex items-center gap-2">
           <button
             type="button"
             className="group flex w-full items-center rounded-md border bg-background px-4 py-2 text-left text-muted-foreground shadow-sm transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
@@ -70,6 +84,28 @@ export function DocsTopBar() {
               <span className="text-xs">⌘</span>K
             </kbd>
           </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex h-10 aspect-square items-center justify-center rounded-md text-muted-foreground transition hover:bg-accent focus:outline-none focus:ring focus:ring-ring">
+              <Globe className="h-5 w-5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[160px]">
+              {languages.map((lang) => (
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={cn(
+                    "cursor-pointer",
+                    language === lang.code && "bg-accent"
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`fi fi-${lang.flag} rounded-sm`}></span>
+                    <span>{lang.name}</span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
           <CommandDialog open={open} onOpenChange={setOpen}>
             <DialogTitle className="sr-only">Search documentation</DialogTitle>
             <CommandInput
@@ -93,12 +129,11 @@ export function DocsTopBar() {
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <RightSidebarTrigger />
         </div>
       </div>
 
       {/* Navigation links section */}
-      <div className="flex h-8 items-center gap-6 px-4 overflow-x-auto">
+      <div className="flex h-12 items-center gap-6 px-4 overflow-x-auto">
         {topNavItems.map((item) => (
           <Link
             key={item.href}
@@ -113,6 +148,7 @@ export function DocsTopBar() {
             {item.title}
           </Link>
         ))}
+        <RightSidebarTrigger className="ml-auto" />
       </div>
     </div>
   )

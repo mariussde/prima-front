@@ -49,13 +49,13 @@ export function RightSidebarComponent() {
         state === "collapsed" ? "w-0 opacity-0" : isMobile ? "w-full opacity-100" : "w-[35rem] opacity-100"
       )}
     >
-      <RightSidebarHeader className="border-b border-border mb-4 px-6 pt-6">
+      <RightSidebarHeader className="border-b border-border mb-4 px-6 pt-10">
         <div className="flex items-center justify-between">
           <Logo className="w-full" showText />
         </div>
       </RightSidebarHeader>
 
-      <RightSidebarContent className="px-6 pb-6">
+      <RightSidebarContent className="px- pb-10">
         {rightNavigation.map((section) => (
           <div key={section.title} className="py-2">
             <h3 className="px-4 mb-2 text-sm font-medium text-muted-foreground">
