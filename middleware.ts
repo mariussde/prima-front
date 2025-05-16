@@ -22,7 +22,8 @@ export const config = {
      * - login (login page)
      * - Specific public root files (e.g., favicon.ico, p-icon.png, logo-marius.svg, site.webmanifest, robots.txt)
      * - Common public asset directories (e.g., /images/*, /assets/*)
+     * - not-found (404 page)
      */
-    "/((?!api/auth|_next/static|_next/image|login|favicon\.ico|p-icon\.png|logo-marius\.svg|site\.webmanifest|robots\.txt|images/|assets/).*)",
+    "/((?!api/auth|_next/static|_next/image|login|not-found|favicon\.ico|p-icon\.png|logo-marius\.svg|site\.webmanifest|robots\.txt|images/|assets/).*)",
   ],
 };
