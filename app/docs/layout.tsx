@@ -4,6 +4,7 @@ import type React from "react"
 import { DocsSidebar } from "@/components/docs/docs-sidebar"
 import { DocsTopBar } from "@/components/docs/docs-top-bar"
 import { RightSidebarComponent } from "@/components/docs/docs-right-sidebar"
+import { DocsBreadcrumbs } from "@/components/docs/docs-breadcrumbs"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { RightSidebarProvider } from "@/components/ui/right-sidebar"
 
@@ -20,6 +21,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
             <div className="flex h-full w-full flex-col overflow-hidden">
               <DocsTopBar />
               <main className="flex-1 overflow-auto p-6">
+                <DocsBreadcrumbs />
                 {children}
               </main>
             </div>
