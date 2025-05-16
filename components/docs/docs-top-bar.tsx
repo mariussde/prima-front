@@ -74,7 +74,7 @@ export function DocsTopBar() {
       <div className="flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <SidebarTrigger />
-          {state === "collapsed" && <Logo />}
+          {state === "collapsed" && <Logo href="/docs" />}
         </div>
         <div className="relative mx-auto w-60 max-w-2xl">
           <button
