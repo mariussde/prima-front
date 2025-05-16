@@ -68,7 +68,7 @@ async function refreshAccessToken(token: JWT) {
     return {
       ...token,
       accessToken: data.AuthenticationResult.AccessToken,
-      expiresAt: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
+      expiresAt: Math.floor(Date.now() / 1000) + data.AuthenticationResult.ExpiresIn,
     };
   } catch (error) {
     return {
@@ -146,7 +146,7 @@ export const authOptions = {
             email: idTokenPayload.email,
             accessToken: data.AuthenticationResult.AccessToken,
             refreshToken: data.AuthenticationResult.RefreshToken,
-            expiresAt: Math.floor(Date.now() / 1000) + 3600,
+            expiresAt: Math.floor(Date.now() / 1000) + data.AuthenticationResult.ExpiresIn,
             username: idTokenPayload["cognito:username"]
           };
         } catch (error) {
