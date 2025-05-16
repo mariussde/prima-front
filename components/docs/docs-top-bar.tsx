@@ -72,7 +72,7 @@ export function DocsTopBar() {
         <div className="flex items-center gap-2">
           <SidebarTrigger />
         </div>
-        <div className="relative mx-auto w-60 max-w-2xl flex items-center gap-2">
+        <div className="relative mx-auto w-60 max-w-2xl">
           <button
             type="button"
             className="group flex w-full items-center rounded-md border bg-background px-4 py-2 text-left text-muted-foreground shadow-sm transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
@@ -84,28 +84,6 @@ export function DocsTopBar() {
               <span className="text-xs">⌘</span>K
             </kbd>
           </button>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex h-10 aspect-square items-center justify-center rounded-md text-muted-foreground transition hover:bg-accent focus:outline-none focus:ring focus:ring-ring">
-              <Globe className="h-5 w-5" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-[160px]">
-              {languages.map((lang) => (
-                <DropdownMenuItem
-                  key={lang.code}
-                  onClick={() => setLanguage(lang.code)}
-                  className={cn(
-                    "cursor-pointer",
-                    language === lang.code && "bg-accent"
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    <span className={`fi fi-${lang.flag} rounded-sm`}></span>
-                    <span>{lang.name}</span>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <CommandDialog open={open} onOpenChange={setOpen}>
             <DialogTitle className="sr-only">Search documentation</DialogTitle>
             <CommandInput
@@ -129,6 +107,28 @@ export function DocsTopBar() {
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex h-10 aspect-square items-center justify-center rounded-md text-muted-foreground transition hover:bg-accent focus:outline-none focus:ring focus:ring-ring">
+              <Globe className="h-5 w-5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[160px]">
+              {languages.map((lang) => (
+                <DropdownMenuItem
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={cn(
+                    "cursor-pointer",
+                    language === lang.code && "bg-accent"
+                  )}
+                >
+                  <div className="flex items-center gap-2">
+                    <span className={`fi fi-${lang.flag} rounded-sm`}></span>
+                    <span>{lang.name}</span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
