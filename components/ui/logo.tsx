@@ -1,17 +1,23 @@
-import Link from "next/link"
+import Link from "next/link";
+import Image from "next/image";
 
 interface LogoProps {
-  className?: string
-  showText?: boolean
+  className?: string;
+  showText?: boolean;
 }
 
 export function Logo({ className = "", showText = true }: LogoProps) {
   return (
     <Link href="/" className={`flex items-center gap-2 ${className}`}>
-      <div className="flex h-8 w-8 items-center justify-center rounded-md bg-green-500 text-white">
-        <span className="font-bold">P</span>
-      </div>
-      {showText && <span className="font-bold">Prima</span>}
+      <Image
+        src="/logo-mike.png"
+        alt="Prima Logo"
+        width={80}
+        height={80}
+        className="h-16 w-16 object-contain"
+        priority
+      />
+      {/* {showText && <span className="font-bold">Prima</span>} */}
     </Link>
-  )
-} 
+  );
+}
