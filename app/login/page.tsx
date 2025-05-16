@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import { authOptions } from "@/lib/auth";
 import { LoginForm } from "@/components/auth/login-form";
-import { Logo } from "@/components/ui/logo";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { Suspense } from "react";
 
@@ -19,7 +19,14 @@ export default async function LoginPage() {
         <ThemeToggle />
       </div>
       <div className="mb-8">
-        <Logo className="text-2xl" />
+        <Image
+          src="/logo-marius.svg"
+          alt="Prima Logo"
+          width={400}
+          height={400}
+          priority
+          unoptimized
+        />
       </div>
       <Suspense fallback={<div className="w-[400px] h-[300px] animate-pulse bg-muted rounded-lg" />}>
         <LoginForm />
