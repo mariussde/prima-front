@@ -280,7 +280,7 @@ const RightSidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="sm"
-      className={cn("gap-2", className)}
+      className={cn("gap-2 transition-colors duration-200 hover:bg-[#00533e]/10 hover:text-[#00533e]", className)}
       onClick={handleClick}
       {...props}
     >

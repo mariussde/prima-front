@@ -133,6 +133,10 @@ export function DocsTopBar() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+          {/* <div className="h-6 w-px bg-border mx-2" />
+          <RightSidebarTrigger />
+          if you want to have the ask ai button on top right corner,
+          you can add it here and delete it from line 158 */}
         </div>
       </div>
 
