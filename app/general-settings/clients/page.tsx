@@ -403,24 +403,20 @@ export default function ClientsPage() {
           </CardHeader>
           <CardContent className="px-2 sm:px-6 h-[calc(100vh-280px)]">
             <div className="w-full h-full relative">
-              <div className="absolute inset-0 overflow-auto">
-                <div className="min-w-[800px]">
-                  <ClientTable
-                    data={clientData}
-                    onRowClick={handleRowClick}
-                    onLoadMore={handleLoadMore}
-                    isLoading={isLoading}
-                    hasMore={hasMore}
-                    columnVisibility={columnVisibility}
-                    onFilterChange={handleFilterChange}
-                    columnFilters={columnFilters}
-                    onSortChange={handleSortChange}
-                    showActions={true}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                  />
-                </div>
-              </div>
+              <ClientTable
+                data={clientData}
+                onRowClick={handleRowClick}
+                onLoadMore={handleLoadMore}
+                isLoading={isLoading}
+                hasMore={hasMore}
+                columnVisibility={columnVisibility}
+                onFilterChange={handleFilterChange}
+                columnFilters={columnFilters}
+                onSortChange={handleSortChange}
+                showActions={true}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
               {isLoading && page === 1 && (
                 <div className="absolute inset-0 flex items-center justify-center bg-background/50">
                   <Loader2 className="h-6 w-6 animate-spin" />

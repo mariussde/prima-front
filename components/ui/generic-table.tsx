@@ -79,10 +79,10 @@ export function GenericTable<T>({
   const displayData = onSortChange ? data : sortData(data);
 
   return (
-    <div className="w-full">
-      <div className="rounded-md border">
+    <div className="w-full h-full flex flex-col">
+      <div className="rounded-md border relative flex-1 overflow-auto">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-10 bg-background">
             <TableRow>
               {tableColumns.map((column) => {
                 if (
@@ -94,7 +94,7 @@ export function GenericTable<T>({
                   <TableHead
                     key={column.accessorKey as string}
                     className={cn(
-                      "h-[100px] relative align-top",
+                      "h-[100px] relative align-top bg-background",
                       column.accessorKey === "actions"
                         ? "w-[50px]"
                         : "min-w-[120px]"
@@ -150,10 +150,7 @@ export function GenericTable<T>({
                 <TableRow
                   key={index}
                   ref={isLastRow ? lastRowRef : undefined}
-                  className={cn(
-                    onRowClick ? "cursor-pointer hover:bg-muted" : "",
-                    "h-10"
-                  )}
+                  className={onRowClick ? "cursor-pointer hover:bg-muted" : ""}
                   onClick={() => onRowClick?.(row)}
                 >
                   {tableColumns.map((column) => {
@@ -167,7 +164,7 @@ export function GenericTable<T>({
                       return (
                         <TableCell
                           key={column.accessorKey as string}
-                          className="w-[50px] text-center py-2"
+                          className="w-[50px] text-center"
                         >
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -212,7 +209,7 @@ export function GenericTable<T>({
                     return (
                       <TableCell
                         key={column.accessorKey as string}
-                        className="whitespace-normal break-words min-w-[120px] py-2"
+                        className="whitespace-normal break-words min-w-[120px]"
                       >
                         {(row as any)[column.accessorKey]}
                       </TableCell>
@@ -248,7 +245,7 @@ export function GenericTable<T>({
         </Table>
       </div>
       {pagination && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between pt-2">
           <div className="text-sm text-muted-foreground">
             Showing{" "}
             {pagination.currentPage * pagination.pageSize -
