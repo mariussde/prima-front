@@ -6,8 +6,10 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { useSidebar } from "@/components/ui/sidebar"
 import { RightSidebarTrigger } from "@/components/ui/right-sidebar"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { Logo } from "@/components/ui/logo"
 import {
   CommandDialog,
   CommandInput,
@@ -45,6 +47,7 @@ export function DocsTopBar() {
   const [language, setLanguage] = React.useState("en")
   const inputRef = React.useRef<HTMLInputElement>(null)
   const pathname = usePathname()
+  const { state } = useSidebar()
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -71,6 +74,7 @@ export function DocsTopBar() {
       <div className="flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <SidebarTrigger />
+          {state === "collapsed" && <Logo />}
         </div>
         <div className="relative mx-auto w-60 max-w-2xl">
           <button
