@@ -79,9 +79,8 @@ export function GenericTable<T>({
   const displayData = onSortChange ? data : sortData(data);
 
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden">
-      <div className="rounded-md border relative flex-1 overflow-y-auto">
-        <div className="overflow-x-auto">
+<div className="w-full h-full flex flex-col">
+<div className="rounded-md border relative flex-1 overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 z-10 bg-background">
               <TableRow>
@@ -244,7 +243,6 @@ export function GenericTable<T>({
               )}
             </TableBody>
           </Table>
-        </div>
       </div>
       {pagination && (
         <div className="flex items-center justify-between pt-2">
