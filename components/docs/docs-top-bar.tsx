@@ -16,6 +16,7 @@ import {
   CommandItem,
   CommandShortcut,
 } from "@/components/ui/command"
+import { DialogTitle } from "@/components/ui/dialog"
 
 const topNavItems = [
   { title: "Quick Setup", href: "/docs/quick-setup" },
@@ -70,6 +71,7 @@ export function DocsTopBar() {
             </kbd>
           </button>
           <CommandDialog open={open} onOpenChange={setOpen}>
+            <DialogTitle className="sr-only">Search documentation</DialogTitle>
             <CommandInput
               ref={inputRef}
               placeholder="Search documentation..."
