@@ -71,14 +71,17 @@ const RightSidebarProvider = React.forwardRef<
     const [openMobile, setOpenMobile] = React.useState(false)
     const lastStateRef = React.useRef(defaultOpen)
     const isTransitioningRef = React.useRef(false)
+    const toggleTimeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined)
+    const manualToggleRef = React.useRef(false)
 
     // This is the internal state of the sidebar.
-    // We use openProp and setOpenProp for control from outside the component.
     const [_open, _setOpen] = React.useState(defaultOpen)
     const open = openProp ?? _open
+
     const setOpen = React.useCallback(
       (value: boolean | ((value: boolean) => boolean)) => {
         const openState = typeof value === "function" ? value(open) : value
+        
         if (setOpenProp) {
           setOpenProp(openState)
         } else {
@@ -96,16 +99,38 @@ const RightSidebarProvider = React.forwardRef<
       [setOpenProp, open]
     )
 
-    // Helper to toggle the sidebar.
+    // Helper to toggle the sidebar with debouncing
     const toggleSidebar = React.useCallback(() => {
-      return isMobile
-        ? setOpenMobile((open) => !open)
-        : setOpen((open) => !open)
-    }, [isMobile, setOpen, setOpenMobile])
+      // Clear any existing timeout
+      if (toggleTimeoutRef.current) {
+        clearTimeout(toggleTimeoutRef.current)
+      }
+
+      // Set manual toggle flag
+      manualToggleRef.current = true
+
+      // Set a new timeout to handle the toggle
+      toggleTimeoutRef.current = setTimeout(() => {
+        if (isMobile) {
+          setOpenMobile((prev) => !prev)
+        } else {
+          setOpen((prev) => !prev)
+        }
+      }, 50) // Small delay to prevent rapid toggling
+    }, [isMobile, setOpen])
+
+    // Cleanup timeout on unmount
+    React.useEffect(() => {
+      return () => {
+        if (toggleTimeoutRef.current) {
+          clearTimeout(toggleTimeoutRef.current)
+        }
+      }
+    }, [])
 
     // Handle mobile state changes
     React.useEffect(() => {
-      if (isTransitioningRef.current) return
+      if (isTransitioningRef.current || manualToggleRef.current) return
 
       if (isMobile) {
         // When going to mobile, remember the current state and collapse
@@ -127,6 +152,13 @@ const RightSidebarProvider = React.forwardRef<
       }
     }, [isMobile, setOpen, open])
 
+    // Reset manual toggle flag when state changes
+    React.useEffect(() => {
+      if (manualToggleRef.current) {
+        manualToggleRef.current = false
+      }
+    }, [open])
+
     // Adds a keyboard shortcut to toggle the sidebar.
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
@@ -144,7 +176,6 @@ const RightSidebarProvider = React.forwardRef<
     }, [toggleSidebar])
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
-    // This makes it easier to style the sidebar with Tailwind classes.
     const state = open ? "expanded" : "collapsed"
 
     const contextValue = React.useMemo<RightSidebarContext>(
@@ -193,7 +224,7 @@ const RightSidebar = React.forwardRef<
     variant?: "default" | "inset"
   }
 >(({ className, variant = "default", ...props }, ref) => {
-  const { isMobile, openMobile, setOpenMobile } = useRightSidebar()
+  const { isMobile, openMobile, setOpenMobile, state } = useRightSidebar()
 
   if (isMobile) {
     return (
@@ -201,6 +232,7 @@ const RightSidebar = React.forwardRef<
         <SheetContent
           data-sidebar="sidebar"
           data-mobile="true"
+          data-state={state}
           className="w-[--right-sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
           style={
             {
@@ -218,8 +250,9 @@ const RightSidebar = React.forwardRef<
   return (
     <div
       ref={ref}
+      data-state={state}
       className={cn(
-        "relative flex h-full flex-col border-l border-border bg-background text-foreground shadow-lg transition-all duration-300",
+        "relative flex h-full flex-col border-l border-border bg-background text-foreground shadow-lg transition-all duration-300 ease-in-out",
         variant === "inset" && "rounded-l-lg",
         className
       )}
@@ -233,7 +266,13 @@ const RightSidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
   React.ComponentProps<typeof Button>
 >(({ className, onClick, ...props }, ref) => {
-  const { toggleSidebar } = useRightSidebar()
+  const { toggleSidebar, state } = useRightSidebar()
+
+  const handleClick = React.useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    onClick?.(event)
+    toggleSidebar()
+  }, [onClick, toggleSidebar])
 
   return (
     <Button
@@ -242,10 +281,7 @@ const RightSidebarTrigger = React.forwardRef<
       variant="ghost"
       size="sm"
       className={cn("gap-2", className)}
-      onClick={(event) => {
-        onClick?.(event)
-        toggleSidebar()
-      }}
+      onClick={handleClick}
       {...props}
     >
       <Brain className="h-4 w-4" />

@@ -20,9 +20,6 @@ import {
 const topNavItems = [
   { title: "Quick Setup", href: "/docs/quick-setup" },
   { title: "Basics", href: "/docs/basics" },
-  { title: "Carriers", href: "/docs/carriers" },
-  { title: "Agents", href: "/docs/agents" },
-  { title: "Clients", href: "/docs/clients" },
   { title: "New Features", href: "/docs/new-features" },
   { title: "FAQ", href: "/docs/faq" },
   { title: "Others", href: "/docs/others" },

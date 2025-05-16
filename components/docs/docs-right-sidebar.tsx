@@ -45,45 +45,41 @@ export function RightSidebarComponent() {
     <RightSidebar
       variant="inset"
       className={cn(
-        "h-full transition-all duration-300 overflow-hidden",
-        state === "collapsed" ? "w-0" : isMobile ? "w-full" : "w-[35rem]"
+        "h-full transition-all duration-300",
+        state === "collapsed" ? "w-0 opacity-0" : isMobile ? "w-full opacity-100" : "w-[35rem] opacity-100"
       )}
     >
-      {state !== "collapsed" && (
-        <>
-          <RightSidebarHeader className="border-b border-border mb-4 px-6 pt-6">
-            <div className="flex items-center justify-between">
-              <Logo className="w-full" showText />
-            </div>
-          </RightSidebarHeader>
+      <RightSidebarHeader className="border-b border-border mb-4 px-6 pt-6">
+        <div className="flex items-center justify-between">
+          <Logo className="w-full" showText />
+        </div>
+      </RightSidebarHeader>
 
-          <RightSidebarContent className="px-6 pb-6">
-            {rightNavigation.map((section) => (
-              <div key={section.title} className="py-2">
-                <h3 className="px-4 mb-2 text-sm font-medium text-muted-foreground">
-                  {section.title}
-                </h3>
-                <RightSidebarMenu>
-                  {section.items.map((item) => (
-                    <RightSidebarMenuItem key={item.href}>
-                      <RightSidebarMenuButton
-                        asChild
-                        isActive={pathname === item.href}
-                        tooltip={item.title}
-                      >
-                        <Link href={item.href}>
-                          <ChevronRight className="h-4 w-4" />
-                          <span>{item.title}</span>
-                        </Link>
-                      </RightSidebarMenuButton>
-                    </RightSidebarMenuItem>
-                  ))}
-                </RightSidebarMenu>
-              </div>
-            ))}
-          </RightSidebarContent>
-        </>
-      )}
+      <RightSidebarContent className="px-6 pb-6">
+        {rightNavigation.map((section) => (
+          <div key={section.title} className="py-2">
+            <h3 className="px-4 mb-2 text-sm font-medium text-muted-foreground">
+              {section.title}
+            </h3>
+            <RightSidebarMenu>
+              {section.items.map((item) => (
+                <RightSidebarMenuItem key={item.href}>
+                  <RightSidebarMenuButton
+                    asChild
+                    isActive={pathname === item.href}
+                    tooltip={item.title}
+                  >
+                    <Link href={item.href}>
+                      <ChevronRight className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </RightSidebarMenuButton>
+                </RightSidebarMenuItem>
+              ))}
+            </RightSidebarMenu>
+          </div>
+        ))}
+      </RightSidebarContent>
     </RightSidebar>
   )
 }
