@@ -260,14 +260,16 @@ export default function ClientsPage() {
             const details = JSON.parse(responseData.details)
             if (details.error) {
               errorMessage = details.error
+            } else if (details.message) {
+              errorMessage = details.message
             }
           } catch (e) {
-            // If parsing fails, use the original error message
-            console.error('Failed to parse error details:', e)
+            // If parsing fails, use the response details as the error message
+            errorMessage = responseData.details || errorMessage
           }
         }
 
-        // Show error toast
+        // Show error toast with complete error message
         toast({
           title: "Error",
           description: errorMessage,
@@ -317,7 +319,32 @@ export default function ClientsPage() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to delete client')
+        let errorMessage = errorData.error || 'Failed to delete client'
+        
+        // If we have details, try to parse them for a more specific error message
+        if (errorData.details) {
+          try {
+            const details = JSON.parse(errorData.details)
+            if (details.error) {
+              errorMessage = details.error
+            } else if (details.message) {
+              errorMessage = details.message
+            }
+          } catch (e) {
+            // If parsing fails, use the response details as the error message
+            errorMessage = errorData.details || errorMessage
+          }
+        }
+        
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+          duration: 8000,
+          className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-100",
+        })
+        
+        return
       }
 
       toast({
@@ -334,6 +361,8 @@ export default function ClientsPage() {
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to delete client",
         variant: "destructive",
+        duration: 8000,
+        className: "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/50 dark:border-red-800 dark:text-red-100",
       })
     }
   }
