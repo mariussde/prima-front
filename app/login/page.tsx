@@ -14,11 +14,11 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background -mt-48">
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <div className="mb-8">
+      <div className="">
         <Image
           src="/logo-marius.svg"
           alt="Prima Logo"
@@ -29,7 +29,9 @@ export default async function LoginPage() {
         />
       </div>
       <Suspense fallback={<div className="w-[400px] h-[300px] animate-pulse bg-muted rounded-lg" />}>
-        <LoginForm />
+        <div className="-mt-16">
+          <LoginForm />
+        </div>
       </Suspense>
     </div>
   );

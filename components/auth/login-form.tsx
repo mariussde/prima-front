@@ -84,7 +84,6 @@ export function LoginForm() {
   return (
     <Card className="w-[400px] bg-[hsl(var(--sidebar-background))]">
       <CardHeader>
-        <CardTitle>Welcome to Prima</CardTitle>
         <CardDescription>Sign in to your account to continue</CardDescription>
         {errorMessage && (
           <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
