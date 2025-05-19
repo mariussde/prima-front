@@ -362,11 +362,11 @@ export default function AgentsPage() {
 
   return (
     <div className="h-full flex flex-col">
-      <main className="flex-1 p-4 md:p-8 w-full">
+      <main className="flex-1 p-2 md:p-4 w-full">
         <Card className="w-full h-full">
-          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-3 sm:space-y-0 py-4 px-2 sm:px-5">
             <CardTitle>Agents</CardTitle>
-            <div className="flex flex-col min-[320px]:flex-row items-start min-[320px]:items-center gap-2">
+            <div className="flex flex-col min-[320px]:flex-row items-start min-[320px]:items-center gap-1">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="default" className="w-full min-[320px]:w-[120px]">Columns</Button>
@@ -390,7 +390,7 @@ export default function AgentsPage() {
               </Button>
             </div>
           </CardHeader>
-          <CardContent className="px-2 sm:px-6 h-[calc(100vh-280px)]">
+          <CardContent className="px-2 sm:px-4 overflow-auto" style={{ height: "calc(100vh - 245px)" }}>
             <div className="w-full h-full relative">
               <AgentTable
                 data={agentData}
