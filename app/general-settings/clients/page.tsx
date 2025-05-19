@@ -323,6 +323,8 @@ export default function ClientsPage() {
       toast({
         title: "Success",
         description: "Client has been successfully deleted.",
+        duration: 3000,
+        className: "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/50 dark:border-green-800 dark:text-green-100",
       })
 
       // Refresh the client data
