@@ -79,7 +79,7 @@ export function AppSidebar() {
     },
     {
       title: "General Settings",
-      href: "/general-settings",
+      href: "",
       icon: Layers,
       isActive: pathname.startsWith("/general-settings"),
       submenu: [
@@ -91,7 +91,7 @@ export function AppSidebar() {
     },
     {
       title: "Users",
-      href: "/users",
+      href: "",
       icon: Users,
       isActive: pathname.startsWith("/users"),
     },
