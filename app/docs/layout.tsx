@@ -20,7 +20,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           <SidebarInset className="flex-1 min-w-0 overflow-hidden">
             <div className="flex h-full w-full flex-col overflow-hidden">
               <DocsTopBar />
-              <main className="flex-1 overflow-auto p-6">
+              <main className="flex-1 overflow-auto px-4 py-4">
                 <DocsBreadcrumbs />
                 {children}
               </main>

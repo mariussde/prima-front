@@ -76,13 +76,13 @@ export function TopBar() {
   }
 
   return (
-    <header className="top-0 z-30 flex h-16 items-center border-b bg-background px-4 md:px-6 w-full">
-      <div className="flex items-center gap-2 min-w-0">
-        <SidebarTrigger />
+    <header className="top-0 z-30 flex h-16 items-center border-b bg-background px-4 pr-2 md:px-6 md:pr-3 w-full">
+      <div className="flex items-center gap-4 min-w-0">
+        <SidebarTrigger className="h-6 w-2" />
         {state === "collapsed" && <Logo />}
       </div>
 
-      <div className="flex items-center gap-1 sm:gap-2 md:gap-4 ml-auto sticky right-0">
+      <div className="flex items-center gap-1 sm:gap-2 md:gap-3 ml-auto sticky right-0">
         <Select defaultValue={selectedCountry} onValueChange={handleCountryChange}>
           <SelectTrigger className="w-[60px] min-[340px]:w-[140px] sm:w-[180px]">
             <SelectValue placeholder="Select country" />

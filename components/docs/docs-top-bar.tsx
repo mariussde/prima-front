@@ -71,7 +71,7 @@ export function DocsTopBar() {
   return (
     <div className="flex flex-col border-b border-border">
       {/* Top section with search and controls */}
-      <div className="flex h-16 items-center justify-between px-4">
+      <div className="flex h-16 items-center justify-between px-4 pr-2">
         <div className="flex items-center gap-2">
           <SidebarTrigger />
           {state === "collapsed" && <Logo href="/docs" />}
@@ -141,7 +141,7 @@ export function DocsTopBar() {
       </div>
 
       {/* Navigation links section */}
-      <div className="flex h-12 items-center gap-6 px-4 overflow-x-auto">
+      <div className="flex h-12 items-center gap-6 px-4 pr-2 overflow-x-auto">
         {topNavItems.map((item) => (
           <Link
             key={item.href}
