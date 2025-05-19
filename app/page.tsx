@@ -1,8 +1,4 @@
 import type { Metadata } from "next"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Overview } from "@/components/dashboard/overview"
-import { RecentActivity } from "@/components/dashboard/recent-activity"
-import { DashboardStats } from "@/components/dashboard/dashboard-stats"
 import Image from "next/image"
 
 export const metadata: Metadata = {
