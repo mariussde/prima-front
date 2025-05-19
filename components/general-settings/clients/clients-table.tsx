@@ -91,6 +91,8 @@ interface ClientTableProps {
   showActions?: boolean
   onEdit?: (client: Client) => void
   onDelete?: (client: Client) => void
+  columnOrder?: string[]
+  onColumnOrderChange?: (newOrder: string[]) => void
 }
 
 export function ClientTable({
@@ -106,6 +108,8 @@ export function ClientTable({
   showActions = false,
   onEdit,
   onDelete,
+  columnOrder,
+  onColumnOrderChange,
 }: ClientTableProps) {
   const observer = useRef<IntersectionObserver | null>(null)
   
@@ -150,6 +154,8 @@ export function ClientTable({
       showActions={showActions}
       onEdit={onEdit}
       onDelete={onDelete}
+      columnOrder={columnOrder}
+      onColumnOrderChange={onColumnOrderChange}
     />
   )
 } 

@@ -69,6 +69,8 @@ interface AgentTableProps {
   showActions?: boolean
   onEdit?: (agent: Agent) => void
   onDelete?: (agent: Agent) => void
+  columnOrder?: string[]
+  onColumnOrderChange?: (newOrder: string[]) => void
 }
 
 export function AgentTable({
@@ -84,6 +86,8 @@ export function AgentTable({
   showActions = false,
   onEdit,
   onDelete,
+  columnOrder,
+  onColumnOrderChange,
 }: AgentTableProps) {
   const observer = useRef<IntersectionObserver | null>(null)
   
@@ -128,6 +132,8 @@ export function AgentTable({
       showActions={showActions}
       onEdit={onEdit}
       onDelete={onDelete}
+      columnOrder={columnOrder}
+      onColumnOrderChange={onColumnOrderChange}
     />
   )
 } 
