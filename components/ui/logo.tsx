@@ -13,9 +13,9 @@ export function Logo({ className = "", showText = true, href = "/" }: LogoProps)
       <Image
         src="/logo-marius.svg"
         alt="Prima Logo"
-        width={80}
-        height={80}
-        className="h-16 w-16 object-contain"
+        width={96}
+        height={96}
+        className="h-20 w-20 object-contain"
         priority
       />
       {/* {showText && <span className="font-bold">Prima</span>} */}

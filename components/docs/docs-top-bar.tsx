@@ -76,10 +76,10 @@ export function DocsTopBar() {
           <SidebarTrigger />
           {state === "collapsed" && <Logo href="/docs" />}
         </div>
-        <div className="relative mx-auto w-60 max-w-2xl">
+        <div className="relative mx-auto w-40 sm:w-60 max-w-2xl">
           <button
             type="button"
-            className="group flex w-full items-center rounded-md border bg-background px-4 py-2 text-left text-muted-foreground shadow-sm transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
+            className="group flex w-full items-center rounded-md border bg-background px-3 sm:px-4 py-2 text-left text-muted-foreground shadow-sm transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
             onClick={() => setOpen(true)}
           >
             <Search className="mr-2 h-4 w-4 text-muted-foreground" />
