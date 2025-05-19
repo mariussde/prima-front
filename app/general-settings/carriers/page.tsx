@@ -397,7 +397,7 @@ export default function CarriersReportsPage() {
         <Card className="w-full h-full">
           <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-3 sm:space-y-0 py-4 px-2 sm:px-5">
             <CardTitle>Carriers</CardTitle>
-            <div className="flex flex-col min-[320px]:flex-row items-start min-[320px]:items-center gap-1">
+            <div className="flex flex-col min-[320px]:flex-row items-start min-[320px]:items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="default" className="w-full min-[320px]:w-[120px]">Columns</Button>
