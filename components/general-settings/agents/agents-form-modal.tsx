@@ -156,7 +156,7 @@ export function AgentFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] h-[90vh] flex flex-col p-0">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle>{isEditMode ? "Edit Agent" : "Add New Agent"}</DialogTitle>
           <DialogDescription>

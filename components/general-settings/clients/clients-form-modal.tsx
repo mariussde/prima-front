@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { useToast } from "@/hooks/use-toast"
+import { type SubmitHandler } from "react-hook-form"
 import {
   Dialog,
   DialogContent,
@@ -56,13 +57,14 @@ const clientFormSchema = z.object({
   CRTUSR: z.string().optional(),
 })
 
-type ClientFormValues = z.infer<typeof clientFormSchema>
+// Define the precise type for the form
+export type ClientFormValues = z.infer<typeof clientFormSchema>
 
 interface ClientFormModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   client?: Client
-  onSubmit: (data: ClientFormValues) => Promise<{ error?: string } | void>
+  onSubmit: (data: ClientFormValues) => Promise<{ error?: string; success?: boolean } | void>
 }
 
 export function ClientFormModal({
@@ -75,7 +77,7 @@ export function ClientFormModal({
   const isEditMode = !!client
 
   const form = useForm<ClientFormValues>({
-    resolver: zodResolver(clientFormSchema),
+    resolver: zodResolver(clientFormSchema) as any,
     defaultValues: {
       COMPID: "PLL",
       CLNTID: "",
@@ -172,7 +174,7 @@ export function ClientFormModal({
     }
   }, [isEditMode, client, form, open])
 
-  const handleSubmit = async (data: ClientFormValues) => {
+  const handleSubmit: SubmitHandler<ClientFormValues> = async (data) => {
     try {
       const response = await onSubmit(data)
       
@@ -187,8 +189,9 @@ export function ClientFormModal({
         return response
       }
 
-      // If we get here, something unexpected happened
-      return { error: "An unexpected error occurred" }
+      // Close the modal by default if no specific handling is needed
+      onOpenChange(false)
+      return { success: true }
     } catch (error) {
       // Return the error instead of throwing it
       return { 
@@ -199,7 +202,7 @@ export function ClientFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px] h-[90vh] flex flex-col p-0">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] flex flex-col p-0 overflow-hidden">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle>{isEditMode ? "Edit Client" : "Add New Client"}</DialogTitle>
           <DialogDescription>
@@ -209,7 +212,7 @@ export function ClientFormModal({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="flex-1 flex flex-col min-h-0">
+          <form onSubmit={form.handleSubmit(handleSubmit as any)} className="flex-1 flex flex-col min-h-0">
             <div className="flex-1 overflow-y-auto px-6">
               <div className="space-y-4 py-4">
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -476,7 +479,10 @@ export function ClientFormModal({
                               type="number" 
                               step="0.01"
                               {...field}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                              onChange={(e) => {
+                                const value = e.target.value === '' ? 0 : parseFloat(e.target.value);
+                                field.onChange(isNaN(value) ? 0 : value);
+                              }}
                               value={field.value}
                             />
                           </FormControl>
@@ -500,4 +506,4 @@ export function ClientFormModal({
       </DialogContent>
     </Dialog>
   )
-} 
+}

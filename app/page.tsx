@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function DashboardPage() {
   return (
-    <div className="flex flex-col gap-4 p-8">
-      <div className="flex justify-center mb-8">
+    <div className="flex flex-col items-center justify-center min-h-[70vh] p-8">
+      <div className="flex justify-center">
         <Image
           src="/logo-marius.svg"
           alt="Prima Logo"
