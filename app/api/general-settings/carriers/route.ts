@@ -7,7 +7,8 @@ export async function GET(request: Request) {
     const params = {
       COMPID: searchParams.get('COMPID') || 'PLL',
       pageNumber: searchParams.get('pageNumber') || '1',
-      pageSize: searchParams.get('pageSize') || '300',
+      pageSize: searchParams.get('pageSize') || '100',
+      GetOne_CarId: searchParams.get('GetOne_CarId') || '',
       CARID: searchParams.get('CARID') || '',
       CARDSC: searchParams.get('CARDSC') || '',
       ADDRL1: searchParams.get('ADDRL1') || '',
