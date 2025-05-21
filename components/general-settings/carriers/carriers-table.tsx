@@ -46,11 +46,11 @@ export const defaultVisibleColumns = {
   'CNTYCOD': false, // hidden by default
   'STAID': false, // hidden by default
   'CRTUSR': false, // hidden by default
-  'CRTDAT': false, // hidden by default 
+  'CRTDAT': false, // hidden by default
   'CRTTIM': false, // hidden by default
-  'CHGTIM': false, // hidden by default
   'CHGUSR': true,
   'CHGDAT': true,
+  'CHGTIM': false, // hidden by default
   'actions': true
 }
 
@@ -67,6 +67,8 @@ interface CarrierTableProps {
   showActions?: boolean
   onEdit?: (carrier: Carrier) => void
   onDelete?: (carrier: Carrier) => void
+  columnOrder?: string[]
+  onColumnOrderChange?: (newOrder: string[]) => void
 }
 
 export function CarrierTable({
@@ -82,6 +84,8 @@ export function CarrierTable({
   showActions = false,
   onEdit,
   onDelete,
+  columnOrder,
+  onColumnOrderChange,
 }: CarrierTableProps) {
   const observer = useRef<IntersectionObserver | null>(null)
   
@@ -131,6 +135,8 @@ export function CarrierTable({
       showActions={showActions}
       onEdit={onEdit}
       onDelete={onDelete}
+      columnOrder={columnOrder}
+      onColumnOrderChange={onColumnOrderChange}
     />
   )
 }

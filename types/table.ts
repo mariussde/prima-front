@@ -1,3 +1,5 @@
+import { DropResult } from "@hello-pangea/dnd"
+
 export interface TableColumn<T> {
   accessorKey: keyof T
   header: string
@@ -31,4 +33,6 @@ export interface TableProps<T> {
   showActions?: boolean
   onEdit?: (row: T) => void
   onDelete?: (row: T) => void
+  columnOrder?: string[]
+  onColumnOrderChange?: (newOrder: string[]) => void
 } 

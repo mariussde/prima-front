@@ -1,21 +1,15 @@
 'use client'
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, Plus } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { ClientTable } from '@/components/general-settings/clients/clients-table'
+import { ClientTable, defaultVisibleColumns } from '@/components/general-settings/clients/clients-table'
 import { ClientFormModal } from '@/components/general-settings/clients/clients-form-modal'
 import { Client } from '@/types/clients'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from "@/hooks/use-toast"
-import { defaultVisibleColumns } from '@/components/general-settings/clients/clients-table'
+import { TableWrapper } from '@/components/ui/table-wrapper'
+import { useTablePreferencesContext } from '@/lib/table-preferences-context'
 
 // Custom hook for debounce
 function useDebounce<T>(value: T, delay: number): T {
@@ -35,49 +29,48 @@ function useDebounce<T>(value: T, delay: number): T {
 }
 
 const CLIENT_COLUMNS = [
-  "COMPID",
-  "CLNTID",
-  "CLNTDSC",
-  "ADDRL1",
-  "ADDRL2",
-  "City",
-  "ZIPCODE",
-  "Phone",
-  "Fax",
-  "eMail",
-  "WebSite",
-  "FEDTXID",
-  "STETXID",
-  "CLBILL",
-  "CLEC1",
-  "CLEC2",
-  "CLEC3",
-  "CLEC4",
-  "CLEC5",
-  "CLEN1",
-  "CLEN2",
-  "CLEN3",
-  "CLEN4",
-  "CLEN5",
-  "CNTYCOD",
-  "STAID",
-  "CRTUSR",
-  "CRTDAT",
-  "CRTTIM",
-  "CHGUSR",
-  "CHGDAT",
-  "CHGTIM",
-  "actions"
+  'COMPID',
+  'CLNTID',
+  'CLNTDSC',
+  'ADDRL1',
+  'ADDRL2',
+  'City',
+  'ZIPCODE',
+  'Phone',
+  'Fax',
+  'eMail',
+  'WebSite',
+  'FEDTXID',
+  'STETXID',
+  'CLBILL',
+  'CLEC1',
+  'CLEC2',
+  'CLEC3',
+  'CLEC4',
+  'CLEC5',
+  'CLEN1',
+  'CLEN2',
+  'CLEN3',
+  'CLEN4',
+  'CLEN5',
+  'CNTYCOD',
+  'STAID',
+  'CRTUSR',
+  'CRTDAT',
+  'CRTTIM',
+  'CHGUSR',
+  'CHGDAT',
+  'CHGTIM',
+  'actions'
 ]
 
-export default function ClientsPage() {
+function ClientsContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const { toast } = useToast()
   const [clientData, setClientData] = useState<Client[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(defaultVisibleColumns)
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
@@ -93,9 +86,25 @@ export default function ClientsPage() {
     isOpen: false,
     mode: 'add'
   })
+
+  const { preferences, updateColumnOrder } = useTablePreferencesContext();
+
   const debouncedFilters = useDebounce(columnFilters, 300)
   const initialFetchDone = useRef(false)
   const abortControllerRef = useRef<AbortController | null>(null)
+
+  // Add event listener for the custom event
+  useEffect(() => {
+    const handleAddNewEvent = () => {
+      handleAddNew();
+    };
+    
+    document.addEventListener('client:add', handleAddNewEvent);
+    
+    return () => {
+      document.removeEventListener('client:add', handleAddNewEvent);
+    };
+  }, []);
 
   const fetchClientData = useCallback(async (
     pageNum: number = 1, 
@@ -403,6 +412,23 @@ export default function ClientsPage() {
   }
 
   return (
+    <>
+      <ClientTable
+        data={clientData}
+        onRowClick={handleRowClick}
+        onLoadMore={handleLoadMore}
+        isLoading={isLoading}
+        hasMore={hasMore}
+        columnVisibility={preferences.columnVisibility}
+        onFilterChange={handleFilterChange}
+        columnFilters={columnFilters}
+        onSortChange={handleSortChange}
+        showActions={true}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        columnOrder={preferences.columnOrder}
+        onColumnOrderChange={updateColumnOrder}
+      />
     <div className="h-full flex flex-col">
       <main className="flex-1 p-2 md:p-4 w-full">
         <Card className="w-full h-full">
@@ -464,6 +490,28 @@ export default function ClientsPage() {
         client={modalState.client}
         onSubmit={handleClientSubmit}
       />
-    </div>
-  )
+    </>
+  );
+}
+
+export default function ClientsPage() {
+  const { data: session, status } = useSession();
+  
+  // We need to check authentication at the top level
+  if (status === 'unauthenticated') {
+    return null; // Router will redirect in the ClientsContent component
+  }
+  
+  return (
+    <TableWrapper
+      tableId="clients-table"
+      defaultColumns={CLIENT_COLUMNS}
+      defaultVisibility={defaultVisibleColumns}
+      title="Clients"
+      onAddNew={() => document.dispatchEvent(new CustomEvent('client:add'))}
+      isLoading={status === 'loading'}
+    >
+      {status === 'authenticated' && <ClientsContent />}
+    </TableWrapper>
+  );
 } 

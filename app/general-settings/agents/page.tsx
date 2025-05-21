@@ -1,21 +1,15 @@
 'use client'
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, Plus } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { AgentTable } from '@/components/general-settings/agents/agents-table'
+import { AgentTable, defaultVisibleColumns } from '@/components/general-settings/agents/agents-table'
 import { AgentFormModal } from '@/components/general-settings/agents/agents-form-modal'
 import { Agent } from '@/types/agents'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from "@/hooks/use-toast"
-import { defaultVisibleColumns } from '@/components/general-settings/agents/agents-table'
+import { TableWrapper } from '@/components/ui/table-wrapper'
+import { useTablePreferencesContext } from '@/lib/table-preferences-context'
 
 // Custom hook for debounce
 function useDebounce<T>(value: T, delay: number): T {
@@ -59,14 +53,13 @@ const AGENT_COLUMNS = [
   "actions"
 ]
 
-export default function AgentsPage() {
+function AgentsContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const { toast } = useToast()
   const [agentData, setAgentData] = useState<Agent[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [columnVisibility, setColumnVisibility] = useState<Record<string, boolean>>(defaultVisibleColumns)
   const [page, setPage] = useState<number>(1)
   const [hasMore, setHasMore] = useState<boolean>(true)
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({})
@@ -82,9 +75,25 @@ export default function AgentsPage() {
     isOpen: false,
     mode: 'add'
   })
+
+  const { preferences, updateColumnOrder } = useTablePreferencesContext();
+
   const debouncedFilters = useDebounce(columnFilters, 300)
   const initialFetchDone = useRef(false)
   const abortControllerRef = useRef<AbortController | null>(null)
+
+  // Add event listener for the custom event
+  useEffect(() => {
+    const handleAddNewEvent = () => {
+      handleAddNew();
+    };
+    
+    document.addEventListener('agent:add', handleAddNewEvent);
+    
+    return () => {
+      document.removeEventListener('agent:add', handleAddNewEvent);
+    };
+  }, []);
 
   const fetchAgentData = useCallback(async (
     pageNum: number = 1, 
@@ -392,6 +401,23 @@ export default function AgentsPage() {
   }
 
   return (
+    <>
+      <AgentTable
+        data={agentData}
+        onRowClick={handleRowClick}
+        onLoadMore={handleLoadMore}
+        isLoading={isLoading}
+        hasMore={hasMore}
+        columnVisibility={preferences.columnVisibility}
+        onFilterChange={handleFilterChange}
+        columnFilters={columnFilters}
+        onSortChange={handleSortChange}
+        showActions={true}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        columnOrder={preferences.columnOrder}
+        onColumnOrderChange={updateColumnOrder}
+      />
     <div className="h-full flex flex-col">
       <main className="flex-1 p-2 md:p-4 w-full">
         <Card className="w-full h-full">
@@ -453,6 +479,28 @@ export default function AgentsPage() {
         agent={modalState.agent}
         onSubmit={handleAgentSubmit}
       />
-    </div>
-  )
+    </>
+  );
+}
+
+export default function AgentsPage() {
+  const { data: session, status } = useSession();
+  
+  // We need to check authentication at the top level
+  if (status === 'unauthenticated') {
+    return null; // Router will redirect in the AgentsContent component
+  }
+  
+  return (
+    <TableWrapper
+      tableId="agents-table"
+      defaultColumns={AGENT_COLUMNS}
+      defaultVisibility={defaultVisibleColumns}
+      title="Agents"
+      onAddNew={() => document.dispatchEvent(new CustomEvent('agent:add'))}
+      isLoading={status === 'loading'}
+    >
+      {status === 'authenticated' && <AgentsContent />}
+    </TableWrapper>
+  );
 } 
