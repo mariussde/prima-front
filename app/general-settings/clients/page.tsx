@@ -1,12 +1,19 @@
 'use client'
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Plus } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { ClientTable, defaultVisibleColumns } from '@/components/general-settings/clients/clients-table'
 import { ClientFormModal } from '@/components/general-settings/clients/clients-form-modal'
 import { Client } from '@/types/clients'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { 
+  DropdownMenu, 
+  DropdownMenuTrigger, 
+  DropdownMenuContent, 
+  DropdownMenuCheckboxItem 
+} from '@/components/ui/dropdown-menu'
 import { useToast } from "@/hooks/use-toast"
 import { TableWrapper } from '@/components/ui/table-wrapper'
 import { useTablePreferencesContext } from '@/lib/table-preferences-context'
@@ -429,60 +436,6 @@ function ClientsContent() {
         columnOrder={preferences.columnOrder}
         onColumnOrderChange={updateColumnOrder}
       />
-    <div className="h-full flex flex-col">
-      <main className="flex-1 p-2 md:p-4 w-full">
-        <Card className="w-full h-full">
-          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-3 sm:space-y-0 py-4 px-2 sm:px-5">
-            <CardTitle>Clients</CardTitle>
-            <div className="flex flex-col min-[320px]:flex-row items-start min-[320px]:items-center gap-3">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="default" className="w-full min-[320px]:w-[120px]">Columns</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="max-h-[300px] overflow-y-auto">
-                  {CLIENT_COLUMNS.map((column) => (
-                    <DropdownMenuCheckboxItem
-                      key={column}
-                      className="capitalize"
-                      checked={columnVisibility[column]}
-                      onCheckedChange={(value) => setColumnVisibility(prev => ({ ...prev, [column]: value }))}
-                    >
-                      {column}
-                    </DropdownMenuCheckboxItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <Button onClick={handleAddNew} className="w-full min-[320px]:w-[120px]">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Client
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="px-2 sm:px-4 overflow-auto" style={{ height: "calc(100vh - 245px)" }}>
-            <div className="w-full h-full relative">
-              <ClientTable
-                data={clientData}
-                onRowClick={handleRowClick}
-                onLoadMore={handleLoadMore}
-                isLoading={isLoading}
-                hasMore={hasMore}
-                columnVisibility={columnVisibility}
-                onFilterChange={handleFilterChange}
-                columnFilters={columnFilters}
-                onSortChange={handleSortChange}
-                showActions={true}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-              {isLoading && page === 1 && (
-                <div className="absolute inset-0 flex items-center justify-center bg-background/50">
-                  <Loader2 className="h-6 w-6 animate-spin" />
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </main>
 
       <ClientFormModal
         open={modalState.isOpen}
