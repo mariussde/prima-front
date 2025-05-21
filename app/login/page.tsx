@@ -18,20 +18,26 @@ export default async function LoginPage() {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <div className="flex flex-col items-center gap-8">
-        <Image
-          src="/logo-marius.svg"
-          alt="Prima Logo"
-          width={400}
-          height={400}
-          priority
-          unoptimized
-          className="w-[300px] h-[300px] md:w-[400px] md:h-[400px] object-contain"
-        />
-        <Suspense fallback={<div className="w-[400px] h-[300px] animate-pulse bg-muted rounded-lg" />}>
+      <div className="flex flex-col items-center gap-1 w-full max-w-md mx-auto">
+        <div className="relative w-full aspect-square max-w-[320px] md:max-w-[380px] mb-[-20px]">
+          <Image
+            src="/logo-marius.svg"
+            alt="Prima Logo"
+            fill
+            priority
+            unoptimized
+            className="object-contain"
+            style={{ margin: "0 auto" }}
+          />
+        </div>
+        <Suspense
+          fallback={
+            <div className="w-full h-[300px] animate-pulse bg-muted rounded-lg" />
+          }
+        >
           <LoginForm />
         </Suspense>
       </div>
     </div>
   );
-} 
+}
