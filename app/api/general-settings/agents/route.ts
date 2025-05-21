@@ -21,7 +21,9 @@ export async function GET(request: Request) {
       FEDTXID: searchParams.get('FEDTXID') || '',
       STETXID: searchParams.get('STETXID') || '',
       CNTYCOD: searchParams.get('CNTYCOD') || '',
-      STAID: searchParams.get('STAID') || ''
+      STAID: searchParams.get('STAID') || '',
+      SortField: searchParams.get('sortColumn') || '',
+      SortDirection: searchParams.get('sortDirection') || ''
     }
 
     return makeApiRequest('agent', 'GET', {

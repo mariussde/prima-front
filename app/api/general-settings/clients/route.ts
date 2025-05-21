@@ -32,7 +32,9 @@ export async function GET(request: Request) {
       CLEN4: searchParams.get('CLEN4') || '',
       CLEN5: searchParams.get('CLEN5') || '',
       CNTYCOD: searchParams.get('CNTYCOD') || '',
-      STAID: searchParams.get('STAID') || ''
+      STAID: searchParams.get('STAID') || '',
+      SortField: searchParams.get('sortColumn') || '',
+      SortDirection: searchParams.get('sortDirection') || ''
     }
 
     return makeApiRequest('client', 'GET', {
