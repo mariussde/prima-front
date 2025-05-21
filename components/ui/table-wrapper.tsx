@@ -47,7 +47,7 @@ export function TableWrapper({
               <CardTitle>{title}</CardTitle>
               <TableControls onAddNew={onAddNew} />
             </CardHeader>
-            <CardContent className="px-2 sm:px-5 h-[calc(100vh-230px)]">
+            <CardContent className="px-2 sm:px-5 h-[calc(100vh-200px)]">
               <div className="w-full h-full relative">
                 {children}
                 {isLoading && (
