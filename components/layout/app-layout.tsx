@@ -25,9 +25,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="w-full">
               <TopBar />
             </div>
+            {/* Commented out breadcrumbs to utilize whitespace
             <div className="pl-3 pr-5 md:px-5 py-4">
               <Breadcrumbs />
             </div>
+            */}
             <div className="flex-1 w-full overflow-hidden">
               {children}
             </div>
