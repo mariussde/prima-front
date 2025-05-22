@@ -7,7 +7,8 @@ export async function GET(request: Request) {
     const params = {
       COMPID: searchParams.get('COMPID') || 'PLL',
       pageNumber: searchParams.get('pageNumber') || '1',
-      pageSize: searchParams.get('pageSize') || '300',
+      pageSize: searchParams.get('pageSize') || '100',
+      GetOne_CLNTID: searchParams.get('GetOne_CLNTID') || '',
       CLNTID: searchParams.get('CLNTID') || '',
       CLNTDSC: searchParams.get('CLNTDSC') || '',
       ADDRL1: searchParams.get('ADDRL1') || '',
@@ -26,15 +27,15 @@ export async function GET(request: Request) {
       CLEC3: searchParams.get('CLEC3') || '',
       CLEC4: searchParams.get('CLEC4') || '',
       CLEC5: searchParams.get('CLEC5') || '',
-      CLEN1: searchParams.get('CLEN1') || '',
-      CLEN2: searchParams.get('CLEN2') || '',
-      CLEN3: searchParams.get('CLEN3') || '',
-      CLEN4: searchParams.get('CLEN4') || '',
-      CLEN5: searchParams.get('CLEN5') || '',
+      CLEN1: searchParams.get('CLEN1') || '0',
+      CLEN2: searchParams.get('CLEN2') || '0',
+      CLEN3: searchParams.get('CLEN3') || '0',
+      CLEN4: searchParams.get('CLEN4') || '0',
+      CLEN5: searchParams.get('CLEN5') || '0',
       CNTYCOD: searchParams.get('CNTYCOD') || '',
       STAID: searchParams.get('STAID') || '',
-      SortField: searchParams.get('sortColumn') || '',
-      SortDirection: searchParams.get('sortDirection') || ''
+      SortField: searchParams.get('sortColumn') || 'CLNTID',
+      SortDirection: searchParams.get('sortDirection') || 'ASC'
     }
 
     return makeApiRequest('client', 'GET', {

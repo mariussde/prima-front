@@ -7,7 +7,8 @@ export async function GET(request: Request) {
     const params = {
       COMPID: searchParams.get('COMPID') || 'PLL',
       pageNumber: searchParams.get('pageNumber') || '1',
-      pageSize: searchParams.get('pageSize') || '300',
+      pageSize: searchParams.get('pageSize') || '100',
+      GetOne_AGNTID: searchParams.get('GetOne_AGNTID') || '',
       AGNTID: searchParams.get('AGNTID') || '',
       AGNTDSC: searchParams.get('AGNTDSC') || '',
       ADDRL1: searchParams.get('ADDRL1') || '',
@@ -22,8 +23,8 @@ export async function GET(request: Request) {
       STETXID: searchParams.get('STETXID') || '',
       CNTYCOD: searchParams.get('CNTYCOD') || '',
       STAID: searchParams.get('STAID') || '',
-      SortField: searchParams.get('sortColumn') || '',
-      SortDirection: searchParams.get('sortDirection') || ''
+      SortField: searchParams.get('sortColumn') || 'AGNTID',
+      SortDirection: searchParams.get('sortDirection') || 'ASC'
     }
 
     return makeApiRequest('agent', 'GET', {

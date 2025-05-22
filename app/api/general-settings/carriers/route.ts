@@ -22,8 +22,8 @@ export async function GET(request: Request) {
       CONNME: searchParams.get('CONNME') || '',
       CNTYCOD: searchParams.get('CNTYCOD') || '',
       STAID: searchParams.get('STAID') || '',
-      SortField: searchParams.get('sortColumn') || '',
-      SortDirection: searchParams.get('sortDirection') || ''
+      SortField: searchParams.get('sortColumn') || 'CARID',
+      SortDirection: searchParams.get('sortDirection') || 'ASC'
     }
 
     return makeApiRequest('carrier', 'GET', {
